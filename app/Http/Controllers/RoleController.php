@@ -14,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        return Role::where('active', 1)->get();
     }
 
     /**

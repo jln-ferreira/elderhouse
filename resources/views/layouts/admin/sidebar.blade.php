@@ -24,7 +24,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 @php
-                    $roles = App\RoleUser::getMenu()->where('users.id', '=', Auth::user()->id)->get();
+                    $roles = App\RoleUser::getMenu()->where('users.id', '=', Auth::user()->id)->distinct()->get();
                 @endphp
                 @foreach($roles as $role)
                     <li class="nav-item">

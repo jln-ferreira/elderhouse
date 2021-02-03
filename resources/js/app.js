@@ -18,6 +18,15 @@ import Form from "./utilities/Form";
 window.Form = Form;
 
 import router from './routes';
+
+
+// TOASTER-----------
+import Toaster from 'v-toaster'
+// You need a specific loader for CSS files like https://github.com/webpack/css-loader
+import 'v-toaster/dist/v-toaster.css'
+Vue.use(Toaster, {timeout: 3000})
+// END TOASTER
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
