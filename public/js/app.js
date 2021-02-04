@@ -2545,10 +2545,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       isShowing: false,
+      newUser: true,
       roles: [],
       users: [],
       form: new Form({
@@ -2579,6 +2582,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     newUserToggle: function newUserToggle() {
       this.isShowing = !this.isShowing;
+    },
+    faChanging: function faChanging() {
+      return this.isShowing == true ? "fa fa-minus" : "fa fa-plus";
     },
     // -----ADD-----
     onSubmit: function onSubmit() {
@@ -7080,7 +7086,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.block-enter {\n    Opacity: 0;\n}\n.block-enter-active {\n        transition : opacity 0.7s;\n}\n.block-leave-active {\n         transition : opacity 0.3s;\n        Opacity: 0;\n}\n", ""]);
+exports.push([module.i, "\n.block-enter {\n    Opacity: 0;\n}\n.block-enter-active {\n        transition : opacity 0.7s;\n}\n.block-leave-active {\n        transition : opacity 0.3s;\n        Opacity: 0;\n}\n\n\n", ""]);
 
 // exports
 
@@ -39516,7 +39522,12 @@ var render = function() {
                   [
                     _c("h3", { staticClass: "card-title font-weight-bold" }, [
                       _vm._v("New User Form")
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _c("i", {
+                      class: [_vm.faChanging(), "float-right"],
+                      attrs: { "aria-hidden": "true" }
+                    })
                   ]
                 ),
                 _vm._v(" "),
@@ -40056,10 +40067,61 @@ var render = function() {
                         _c(
                           "button",
                           {
-                            staticClass: "btn btn-success ",
-                            attrs: { type: "submit" }
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: this.newUser,
+                                expression: "this.newUser"
+                              }
+                            ],
+                            staticClass: "btn btn-success",
+                            attrs: { type: "save" }
                           },
-                          [_vm._v("Add User")]
+                          [
+                            _c("i", { staticClass: "fa fa-plus" }),
+                            _vm._v(" Save")
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: this.newUser,
+                                expression: "this.newUser"
+                              }
+                            ],
+                            staticClass: "btn btn-primary",
+                            attrs: { type: "edit" }
+                          },
+                          [
+                            _c("i", { staticClass: "far fa-edit" }),
+                            _vm._v(" Edit")
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: this.newUser,
+                                expression: "this.newUser"
+                              }
+                            ],
+                            staticClass: "btn btn-warning text-white",
+                            attrs: { type: "cancel" }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-times" }),
+                            _vm._v(" Cancel")
+                          ]
                         )
                       ])
                     ]

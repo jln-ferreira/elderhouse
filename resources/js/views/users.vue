@@ -33,7 +33,7 @@
 
                         <div class="card card-dark">
                             <div class="card-header" @click="newUserToggle">
-                                <h3 class="card-title font-weight-bold">New User Form</h3>
+                                <h3 class="card-title font-weight-bold">New User Form</h3> <i :class="[faChanging(), 'float-right']" aria-hidden="true"></i>
                             </div>
                             <!-- /.card-header -->
                             <!-- form start -->
@@ -116,7 +116,9 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-success ">Add User</button>
+                                        <button type="save" v-show="this.newUser" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
+                                        <button type="edit" v-show="this.newUser" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
+                                        <a type="cancel" v-show="this.newUser" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                                     </div>
                                     <!-- /.card-footer -->
                                 </form>
@@ -196,9 +198,9 @@
 
             return {
                 isShowing: false,
+                newUser: true,
 
                 roles: [],
-
                 users: [],
                 form: new Form({
                     'name': '',
@@ -229,6 +231,9 @@
         methods: {
             newUserToggle(){
                 this.isShowing = !this.isShowing;
+            },
+            faChanging(){
+                return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus"
             },
 
             // -----ADD-----
@@ -265,7 +270,9 @@
             transition : opacity 0.7s;
     }
     .block-leave-active {
-             transition : opacity 0.3s;
+            transition : opacity 0.3s;
             Opacity: 0;
     }
+
+
 </style>
