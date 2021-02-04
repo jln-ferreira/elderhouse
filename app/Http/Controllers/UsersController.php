@@ -15,10 +15,14 @@ use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
 
-    public function index() {
+    public function index()
+    {
+
         return User::where('active', 1)->get();
+
     }
 
+    // ---== CREATE ==---
     public function create(Request $request)
     {
 
@@ -59,6 +63,17 @@ class UsersController extends Controller
             ]);
         }
 
+        return $user;
+
+    }
+
+    // ---== DELETE ==---
+    public function destroy($id)
+    {
+
+        $user = User::find($id);
+        $user->active = 0;
+        $user->save();
 
         return $user;
 

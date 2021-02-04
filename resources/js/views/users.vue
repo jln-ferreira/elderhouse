@@ -164,7 +164,7 @@
                                             <td>{{user.email}}</td>
                                             <td>
                                                 <button type="edit" class="btn btn-primary"><i class="far fa-edit"></i></button>
-                                                <a type="delete" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i></a>
+                                                <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -230,14 +230,28 @@
             newUserToggle(){
                 this.isShowing = !this.isShowing;
             },
+
+            // -----ADD-----
             onSubmit(){
                 this.form
                     .post('/users')
                     .then(user => {
                         this.users.push(user)
-                        this.$toaster.success('Just added a new User');
+                        this.$toaster.success('Succeful added ' + user.name);
                     });
+            },
+
+            // -----DELETE-----
+            deleteUser(id){
+                axios.post('/users/' + id, {
+                _method: 'DELETE'
+                })
+                .then(response => {
+                    console.log(response);
+                    this.$toaster.success('Succeful deleted ' + response.data.name);
+                })
             }
+
         }
     }
 

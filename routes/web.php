@@ -34,6 +34,7 @@ Route::get('/home/', function () {
 
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
+Route::delete('users/{id}', 'UsersController@destroy');
 
 // END USERS
 // ------------------

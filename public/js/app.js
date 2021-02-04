@@ -2580,13 +2580,26 @@ __webpack_require__.r(__webpack_exports__);
     newUserToggle: function newUserToggle() {
       this.isShowing = !this.isShowing;
     },
+    // -----ADD-----
     onSubmit: function onSubmit() {
       var _this2 = this;
 
       this.form.post('/users').then(function (user) {
         _this2.users.push(user);
 
-        _this2.$toaster.success('Just added a new User');
+        _this2.$toaster.success('Succeful added ' + user.name);
+      });
+    },
+    // -----DELETE-----
+    deleteUser: function deleteUser(id) {
+      var _this3 = this;
+
+      axios.post('/users/' + id, {
+        _method: 'DELETE'
+      }).then(function (response) {
+        console.log(response);
+
+        _this3.$toaster.success('Succeful deleted ' + response.data.name);
       });
     }
   }
@@ -40075,7 +40088,23 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(user.email))]),
                         _vm._v(" "),
-                        _vm._m(3, true)
+                        _c("td", [
+                          _vm._m(3, true),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger text-white",
+                              attrs: { type: "delete" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteUser(user.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "far fa-trash-alt" })]
+                          )
+                        ])
                       ])
                     }),
                     0
@@ -40174,19 +40203,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "edit" } },
-        [_c("i", { staticClass: "far fa-edit" })]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        { staticClass: "btn btn-danger text-white", attrs: { type: "delete" } },
-        [_c("i", { staticClass: "far fa-trash-alt" })]
-      )
-    ])
+    return _c(
+      "button",
+      { staticClass: "btn btn-primary", attrs: { type: "edit" } },
+      [_c("i", { staticClass: "far fa-edit" })]
+    )
   }
 ]
 render._withStripped = true
