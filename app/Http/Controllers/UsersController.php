@@ -15,12 +15,14 @@ use Illuminate\Support\Facades\Validator;
 class UsersController extends Controller
 {
 
+
     public function index()
     {
 
         return User::where('active', 1)->get();
 
     }
+
 
     // ---== CREATE ==---
     public function create(Request $request)
@@ -67,6 +69,7 @@ class UsersController extends Controller
 
     }
 
+
     // ---== DELETE ==---
     public function destroy($id)
     {
@@ -77,5 +80,62 @@ class UsersController extends Controller
 
         return $user;
 
+    }
+
+
+    // ---== MODIFY ==---
+    public function update(Request $request)
+    {
+        Validator::make($request->all(), [
+            'name'         => ['required', 'string', 'max:255'],
+            'email'        => ['required', 'string', 'email', 'max:255'],
+            'password'     => ['nullable', 'string', 'min:8'],
+            'street'       => ['nullable', 'string', 'max:55'],
+            'number'       => ['nullable', 'numeric', 'min:1'],
+            'city'         => ['nullable', 'string', 'max:55'],
+            'state'        => ['nullable', 'string', 'max:55'],
+            'country'      => ['nullable', 'string', 'max:55'],
+            'checkedRoles' => ['required'],
+        ])->validate();
+
+        // modify user
+        $user = User::find($request['id']);
+        $user->name = $request['name'];
+        is_null(!$request['password']) ? $user->password = Hash::make($request['password']) : "";
+        $user->save();
+
+        // modify address
+        $address = Address::where([['active', 1],['user_id', $request['id']]])->get()->first();
+        $address->street  = $request['street'];
+        $address->number  = $request['number'];
+        $address->city    = $request['city'];
+        $address->state   = $request['state'];
+        $address->country = $request['country'];
+        $address->save();
+
+        // modify roles
+        $roles = RoleUser::where([['active', 1],['user_id', $request['id']]])->update(['active' => 0]);
+
+        foreach ($request['checkedRoles'] as $key => $value) {
+            RoleUser::updateOrCreate(
+                ['user_id' => $request['id'], 'role_id' => $value],
+                ['role_id' => $value, 'active' => 1]
+            );
+        };
+
+        return $user;
+
+    }
+
+    // ---------======GET INFORMATIONS API======---------
+
+    public function showUserAddress($user_id)
+    {
+        return Address::where([['active', 1],['user_id', $user_id]])->get();
+    }
+
+    public function showUserRoles($user_id)
+    {
+        return RoleUser::where([['active', 1],['user_id', $user_id]])->get();
     }
 }

@@ -31,7 +31,7 @@
                     <!-- ---------------------- -->
                     <div class="col-lg-12">
 
-                        <div class="card card-dark">
+                        <div class="card card-dark" style="cursor:pointer;">
                             <div class="card-header" @click="newUserToggle">
                                 <h3 class="card-title font-weight-bold">New User Form</h3> <i :class="[faChanging(), 'float-right']" aria-hidden="true"></i>
                             </div>
@@ -49,12 +49,12 @@
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="email">Email</label>
-                                                <input type="text" class="form-control" id="email" placeholder="Email" v-model="form.email" required>
+                                                <input type="text" class="form-control" id="email" placeholder="Email" v-model="form.email" :disabled="!newUser" required>
                                                 <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('email')" v-text="form.errors.get('email')"></span>
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="email">Password</label>
-                                                <input type="password" class="form-control" id="password" placeholder="Password" v-model="form.password" required>
+                                                <input type="password" class="form-control" id="password" placeholder="Password" v-model="form.password" :required="newUser">
                                                 <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('password')" v-text="form.errors.get('password')"></span>
                                             </div>
                                         </div>
@@ -117,8 +117,8 @@
                                     <!-- /.card-body -->
                                     <div class="card-footer">
                                         <button type="save" v-show="this.newUser" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                                        <button type="edit" v-show="this.newUser" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
-                                        <a type="cancel" v-show="this.newUser" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                                        <button type="edit" v-show="!this.newUser" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
+                                        <a type="cancel" v-show="!this.newUser" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                                     </div>
                                     <!-- /.card-footer -->
                                 </form>
@@ -140,7 +140,7 @@
 
                                 <div class="card-tools">
                                     <div class="input-group input-group-sm" style="width: 150px;">
-                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                                        <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
 
                                         <div class="input-group-append">
                                             <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
@@ -160,12 +160,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="user in users" v-bind:key="user.id">
+                                        <tr v-for="(user, index) in filteredList" v-bind:key="user.id">
                                             <td>{{user.id}}</td>
                                             <td>{{user.name}}</td>
                                             <td>{{user.email}}</td>
                                             <td>
-                                                <button type="edit" class="btn btn-primary"><i class="far fa-edit"></i></button>
+                                                <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
                                                 <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
                                             </td>
                                         </tr>
@@ -199,10 +199,12 @@
             return {
                 isShowing: false,
                 newUser: true,
+                search:'',
 
                 roles: [],
                 users: [],
                 form: new Form({
+                    'id':'',
                     'name': '',
                     'email': '',
                     'password': '',
@@ -223,28 +225,70 @@
             axios.get('/users')
                 .then(response => this.users = response.data);
 
+
              // Fetch all roles
             axios.get('/roles')
             .then(response => this.roles = response.data);
         },
+
+
+        computed: {
+            filteredList() {
+                return this.users.filter(post => {
+                    return post.name.toLowerCase().includes(this.search.toLowerCase());
+                });
+            }
+        },
+
 
         methods: {
             newUserToggle(){
                 this.isShowing = !this.isShowing;
             },
             faChanging(){
-                return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus"
+                return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus";
+            },
+            cleanFields(){
+                // clean form
+                this.form.name = '';
+                this.form.email = '';
+                this.form.password = '';
+                this.form.street = '';
+                this.form.number = '';
+                this.form.city = '';
+                this.form.state = '';
+                this.form.country = '';
+                this.form.checkedRoles = [];
             },
 
-            // -----ADD-----
+
+            // ----- ADD / MODIFY -----
             onSubmit(){
-                this.form
-                    .post('/users')
-                    .then(user => {
-                        this.users.push(user)
-                        this.$toaster.success('Succeful added ' + user.name);
-                    });
+                if(this.newUser){ //-------- ADD --------
+
+                    this.form
+                        .post('/users')
+                        .then(user => {
+                            this.users.push(user);
+                            this.isShowing = false;
+                            this.newUser   = true;
+                            this.$toaster.success('Successful added ' + user.name);
+                        })
+
+                }else{           //-------- MODIFY --------
+
+                    this.form
+                        .patch('/users')
+                        .then(response => {
+                            this.users.find(user => user.id == response.id).name = response.name;
+                            this.isShowing = false;
+                            this.newUser   = true;
+                            this.$toaster.success('Successful Updated ' + response.name);
+                        });
+
+                }
             },
+
 
             // -----DELETE-----
             deleteUser(id){
@@ -252,9 +296,62 @@
                 _method: 'DELETE'
                 })
                 .then(response => {
-                    console.log(response);
-                    this.$toaster.success('Succeful deleted ' + response.data.name);
+                    var count = 0
+                    this.users.forEach(element => {
+                        element.id == (response.data.id) ? this.users.splice(count,1) : count +=1;
+                    });
+
+                    this.isShowing = false;
+                    this.newUser = true;
+                    this.cleanFields();
+                    this.$toaster.success('Successful deleted ' + response.data.name);
+                });
+            },
+
+
+            // -----EDIT-----
+            editUser(index){
+                this.isShowing = true;          //open new user
+                this.newUser   = false;         //button cancel and edit show
+
+                let user = this.users[index];   //user clicked
+
+                this.cleanFields();             //clean all fields
+
+                //show values user
+                this.form.id = user.id;
+                this.form.name = user.name;
+                this.form.email = user.email;
+
+                // Fetch all address of the user
+                axios.get('/address/' + user.id)
+                .then(response => {
+                    // show value address
+                    this.form.street = response.data[0].street;
+                    this.form.number = response.data[0].number;
+                    this.form.city = response.data[0].city;
+                    this.form.state = response.data[0].state;
+                    this.form.country = response.data[0].country;
+                });
+
+                // Fetch all roles of the user
+                axios.get('/userRoles/' + user.id)
+                .then(response => {
+                    // show value roles
+                    this.form.checkedRoles = [];
+                    response.data.forEach(element => {
+                        this.form.checkedRoles.push(element.role_id)
+                    });
                 })
+
+
+            },
+
+
+            cancelEdit(){
+                this.newUser = true; //show button add User
+                // clean form
+                this.cleanFields();
             }
 
         }

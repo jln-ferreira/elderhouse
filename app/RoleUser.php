@@ -22,4 +22,5 @@ class RoleUser extends Model
                     ["menu_roles.active", "=", 1]
         ]);
     }
+
 }

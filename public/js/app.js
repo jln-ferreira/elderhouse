@@ -2552,9 +2552,11 @@ __webpack_require__.r(__webpack_exports__);
     return {
       isShowing: false,
       newUser: true,
+      search: '',
       roles: [],
       users: [],
       form: new Form({
+        'id': '',
         'name': '',
         'email': '',
         'password': '',
@@ -2579,6 +2581,15 @@ __webpack_require__.r(__webpack_exports__);
       return _this.roles = response.data;
     });
   },
+  computed: {
+    filteredList: function filteredList() {
+      var _this2 = this;
+
+      return this.users.filter(function (post) {
+        return post.name.toLowerCase().includes(_this2.search.toLowerCase());
+      });
+    }
+  },
   methods: {
     newUserToggle: function newUserToggle() {
       this.isShowing = !this.isShowing;
@@ -2586,27 +2597,105 @@ __webpack_require__.r(__webpack_exports__);
     faChanging: function faChanging() {
       return this.isShowing == true ? "fa fa-minus" : "fa fa-plus";
     },
-    // -----ADD-----
+    cleanFields: function cleanFields() {
+      // clean form
+      this.form.name = '';
+      this.form.email = '';
+      this.form.password = '';
+      this.form.street = '';
+      this.form.number = '';
+      this.form.city = '';
+      this.form.state = '';
+      this.form.country = '';
+      this.form.checkedRoles = [];
+    },
+    // ----- ADD / MODIFY -----
     onSubmit: function onSubmit() {
-      var _this2 = this;
+      var _this3 = this;
 
-      this.form.post('/users').then(function (user) {
-        _this2.users.push(user);
+      if (this.newUser) {
+        //-------- ADD --------
+        this.form.post('/users').then(function (user) {
+          _this3.users.push(user);
 
-        _this2.$toaster.success('Succeful added ' + user.name);
-      });
+          _this3.isShowing = false;
+          _this3.newUser = true;
+
+          _this3.$toaster.success('Successful added ' + user.name);
+        });
+      } else {
+        //-------- MODIFY --------
+        this.form.patch('/users').then(function (response) {
+          _this3.users.find(function (user) {
+            return user.id == response.id;
+          }).name = response.name;
+          _this3.isShowing = false;
+          _this3.newUser = true;
+
+          _this3.$toaster.success('Successful Updated ' + response.name);
+        });
+      }
     },
     // -----DELETE-----
     deleteUser: function deleteUser(id) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.post('/users/' + id, {
         _method: 'DELETE'
       }).then(function (response) {
-        console.log(response);
+        var count = 0;
 
-        _this3.$toaster.success('Succeful deleted ' + response.data.name);
+        _this4.users.forEach(function (element) {
+          element.id == response.data.id ? _this4.users.splice(count, 1) : count += 1;
+        });
+
+        _this4.isShowing = false;
+        _this4.newUser = true;
+
+        _this4.cleanFields();
+
+        _this4.$toaster.success('Successful deleted ' + response.data.name);
       });
+    },
+    // -----EDIT-----
+    editUser: function editUser(index) {
+      var _this5 = this;
+
+      this.isShowing = true; //open new user
+
+      this.newUser = false; //button cancel and edit show
+
+      var user = this.users[index]; //user clicked
+
+      this.cleanFields(); //clean all fields
+      //show values user
+
+      this.form.id = user.id;
+      this.form.name = user.name;
+      this.form.email = user.email; // Fetch all address of the user
+
+      axios.get('/address/' + user.id).then(function (response) {
+        // show value address
+        _this5.form.street = response.data[0].street;
+        _this5.form.number = response.data[0].number;
+        _this5.form.city = response.data[0].city;
+        _this5.form.state = response.data[0].state;
+        _this5.form.country = response.data[0].country;
+      }); // Fetch all roles of the user
+
+      axios.get('/userRoles/' + user.id).then(function (response) {
+        // show value roles
+        _this5.form.checkedRoles = [];
+        response.data.forEach(function (element) {
+          _this5.form.checkedRoles.push(element.role_id);
+        });
+      });
+    },
+    cancelEdit: function cancelEdit() {
+      this.newUser = true; //show button add User
+      // clean form
+
+      this.cleanFields();
     }
   }
 });
@@ -39511,7 +39600,10 @@ var render = function() {
           _c("div", { staticClass: "col-lg-12" }, [
             _c(
               "div",
-              { staticClass: "card card-dark" },
+              {
+                staticClass: "card card-dark",
+                staticStyle: { cursor: "pointer" }
+              },
               [
                 _c(
                   "div",
@@ -39628,6 +39720,7 @@ var render = function() {
                                 type: "text",
                                 id: "email",
                                 placeholder: "Email",
+                                disabled: !_vm.newUser,
                                 required: ""
                               },
                               domProps: { value: _vm.form.email },
@@ -39677,7 +39770,7 @@ var render = function() {
                                 type: "password",
                                 id: "password",
                                 placeholder: "Password",
-                                required: ""
+                                required: _vm.newUser
                               },
                               domProps: { value: _vm.form.password },
                               on: {
@@ -40091,8 +40184,8 @@ var render = function() {
                               {
                                 name: "show",
                                 rawName: "v-show",
-                                value: this.newUser,
-                                expression: "this.newUser"
+                                value: !this.newUser,
+                                expression: "!this.newUser"
                               }
                             ],
                             staticClass: "btn btn-primary",
@@ -40111,12 +40204,13 @@ var render = function() {
                               {
                                 name: "show",
                                 rawName: "v-show",
-                                value: this.newUser,
-                                expression: "this.newUser"
+                                value: !this.newUser,
+                                expression: "!this.newUser"
                               }
                             ],
                             staticClass: "btn btn-warning text-white",
-                            attrs: { type: "cancel" }
+                            attrs: { type: "cancel" },
+                            on: { click: _vm.cancelEdit }
                           },
                           [
                             _c("i", { staticClass: "fa fa-times" }),
@@ -40134,7 +40228,50 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-lg-12" }, [
             _c("div", { staticClass: "card" }, [
-              _vm._m(1),
+              _c("div", { staticClass: "card-header" }, [
+                _c("h3", { staticClass: "card-title font-weight-bold" }, [
+                  _vm._v("List Users")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card-tools" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "input-group input-group-sm",
+                      staticStyle: { width: "150px" }
+                    },
+                    [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.search,
+                            expression: "search"
+                          }
+                        ],
+                        staticClass: "form-control float-right",
+                        attrs: {
+                          type: "text",
+                          name: "table_search",
+                          placeholder: "Search"
+                        },
+                        domProps: { value: _vm.search },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.search = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(1)
+                    ]
+                  )
+                ])
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "card-body table-responsive p-0" }, [
                 _c("table", { staticClass: "table table-hover" }, [
@@ -40142,7 +40279,7 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.users, function(user) {
+                    _vm._l(_vm.filteredList, function(user, index) {
                       return _c("tr", { key: user.id }, [
                         _c("td", [_vm._v(_vm._s(user.id))]),
                         _vm._v(" "),
@@ -40151,7 +40288,19 @@ var render = function() {
                         _c("td", [_vm._v(_vm._s(user.email))]),
                         _vm._v(" "),
                         _c("td", [
-                          _vm._m(3, true),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "edit" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.editUser(index)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "far fa-edit" })]
+                          ),
                           _vm._v(" "),
                           _c(
                             "a",
@@ -40211,38 +40360,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h3", { staticClass: "card-title font-weight-bold" }, [
-        _vm._v("List Users")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-tools" }, [
-        _c(
-          "div",
-          {
-            staticClass: "input-group input-group-sm",
-            staticStyle: { width: "150px" }
-          },
-          [
-            _c("input", {
-              staticClass: "form-control float-right",
-              attrs: {
-                type: "text",
-                name: "table_search",
-                placeholder: "Search"
-              }
-            }),
-            _vm._v(" "),
-            _c("div", { staticClass: "input-group-append" }, [
-              _c(
-                "button",
-                { staticClass: "btn btn-default", attrs: { type: "submit" } },
-                [_c("i", { staticClass: "fas fa-search" })]
-              )
-            ])
-          ]
-        )
-      ])
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-default", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fas fa-search" })]
+      )
     ])
   },
   function() {
@@ -40260,16 +40383,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Actions")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-primary", attrs: { type: "edit" } },
-      [_c("i", { staticClass: "far fa-edit" })]
-    )
   }
 ]
 render._withStripped = true
