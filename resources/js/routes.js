@@ -9,7 +9,16 @@ let routes = [
     {
         path: '/users',
         component: require('./views/users').default
-    }
+    },
+    {
+        path: '/profile',
+        component: require('./views/profile').default
+    },
+    {
+        path: '/settings',
+        component: require('./views/settings').default
+    },
+
 ];
 
 

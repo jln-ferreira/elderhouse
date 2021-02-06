@@ -23,4 +23,11 @@ class RoleUser extends Model
         ]);
     }
 
+
+    // Get user auth role
+    public static function getUserRole($user_id)
+    {
+        return RoleUser::where([['active', 1],['user_id', $user_id]])->get();
+    }
+
 }

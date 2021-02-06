@@ -323,26 +323,25 @@
                 this.form.name = user.name;
                 this.form.email = user.email;
 
-                // Fetch all address of the user
-                axios.get('/address/' + user.id)
-                .then(response => {
-                    // show value address
-                    this.form.street = response.data[0].street;
-                    this.form.number = response.data[0].number;
-                    this.form.city = response.data[0].city;
-                    this.form.state = response.data[0].state;
-                    this.form.country = response.data[0].country;
-                });
 
-                // Fetch all roles of the user
-                axios.get('/userRoles/' + user.id)
+                // Fetch all address of the user
+                axios.get('/getUserAddressRole/' + user.id)
                 .then(response => {
+                    // console.log(response);
+                    // show value address
+                    this.form.street = response.data.address.street;
+                    this.form.number = response.data.address.number;
+                    this.form.city = response.data.address.city;
+                    this.form.state = response.data.address.state;
+                    this.form.country = response.data.address.country;
+
                     // show value roles
                     this.form.checkedRoles = [];
-                    response.data.forEach(element => {
+                    response.data.role.forEach(element => {
                         this.form.checkedRoles.push(element.role_id)
                     });
-                })
+
+                });
 
 
             },

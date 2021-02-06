@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Address;
 use App\RoleUser;
+use DB;
 
 
 use Illuminate\Http\Request;
@@ -127,15 +128,16 @@ class UsersController extends Controller
 
     }
 
+
     // ---------======GET INFORMATIONS API======---------
-
-    public function showUserAddress($user_id)
+    public function getUserAddressRole($user_id)
     {
-        return Address::where([['active', 1],['user_id', $user_id]])->get();
+
+        $address = Address::userAddress($user_id);
+        $role = RoleUser::getUserRole($user_id);
+
+        return ['address' => $address, 'role' => $role];
+
     }
 
-    public function showUserRoles($user_id)
-    {
-        return RoleUser::where([['active', 1],['user_id', $user_id]])->get();
-    }
 }

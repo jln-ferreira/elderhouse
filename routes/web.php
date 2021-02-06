@@ -38,11 +38,21 @@ Route::delete('/users/{id}', 'UsersController@destroy');
 Route::patch('/users', 'UsersController@update');
 
 
-Route::get('/address/{user_id}', 'UsersController@showUserAddress');
-Route::get('/userRoles/{user_id}', 'UsersController@showUserRoles');
+Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole');
 
 // END USERS
 // ------------------
+
+
+// ---------------
+// PROFILE
+
+Route::get('/settings/user', 'SettingsController@settingsUser');
+
+
+// END PROFILE
+// ------------------
+
 
 // ---------------
 // ROLES
