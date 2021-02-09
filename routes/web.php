@@ -31,7 +31,6 @@ Route::get('/home/', function () {
 
 // ---------------
 // USERS
-
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
 Route::delete('/users/{id}', 'UsersController@destroy');
@@ -39,26 +38,26 @@ Route::patch('/users', 'UsersController@update');
 
 
 Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole');
-
 // END USERS
 // ------------------
 
+// ---------------
+// CLIENTS
+Route::get('/clients', 'ClientController@index');
+// END CLIENTS
+// ------------------
 
 // ---------------
 // PROFILE
-
 Route::get('/settings/user', 'SettingsController@settingsUser');
-
-
+route::post('/setting/user', 'SettingsController@updateInformation');
 // END PROFILE
 // ------------------
 
 
 // ---------------
 // ROLES
-
 Route::get('/roles', 'RoleController@index');
-
 // END ROLES
 // ------------------
 

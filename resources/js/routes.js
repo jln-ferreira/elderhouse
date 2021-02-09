@@ -7,6 +7,14 @@ let routes = [
         component: require('./views/dashboard').default
     },
     {
+        path: '/clients',
+        component: require('./views/clients/index').default
+    },
+    {
+        path: '/clients/:id',
+        component: require('./views/clients/show').default
+    },
+    {
         path: '/users',
         component: require('./views/users').default
     },
