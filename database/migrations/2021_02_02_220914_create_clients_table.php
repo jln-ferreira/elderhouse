@@ -22,6 +22,7 @@ class CreateClientsTable extends Migration
             $table->text('url');
             $table->date('datastart');
             $table->text('appartament');
+            $table->text('phonenumber');
             $table->smallInteger('active')->default('1');
             $table->timestamps();
         });

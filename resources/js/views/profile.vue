@@ -28,7 +28,7 @@
               <div class="card-body box-profile">
                 <div class="text-center">
                   <img class="profile-user-img img-fluid img-circle"
-                       :src="form.photo + '.png'"
+                       :src="'images/images_profile/' + form.photo + '.png'"
                        alt="User profile picture">
                 </div>
 

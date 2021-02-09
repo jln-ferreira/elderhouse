@@ -36,14 +36,17 @@
                   <div class="row">
                     <div class="col-7">
                       <h3><b>{{ client.name }} {{ client.surname }}</b></h3>
-                      <p class="text-muted text-sm"><b>Databirth: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p>
-                      <ul class="ml-4 mb-0 fa-ul text-muted">
-                        <li class="small"><span class="fa-li"><i class="far fa-calendar-alt"></i></span> {{ client.datastart }}</li>
-                        <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
-                      </ul>
+
+                      <hr>
+
+                      <p class="text-muted"><i class="fas fa-birthday-cake" style="color: #2b2b2b;"></i> <b>Databirth: </b> {{ client.databirth }}</p>
+                      <p class="text-muted"><i v-if="client.gender =='male'" class="fas fa-male fa-2x" style="color: #1464f4;"></i><i v-else class="fas fa-female fa-2x"  style="color: #ff1493;"></i> <b>Gender:</b> {{ client.gender }}</p>
+                      <p class="text-muted"><i class="fas fa-lg fa-phone" style="color: #2b2b2b;"></i> <b>Phone:</b> {{ client.phonenumber }}</p>
+                      <p class="text-muted"><i class="far fa-calendar-alt" style="color: #2b2b2b;"></i> <b>Datastart: </b> {{ client.datastart }}</p>
+
                     </div>
                     <div class="col-5 text-center">
-                      <img src="" alt="" class="img-circle img-fluid">
+                      <img :src="'images/images_clients/' + client.url + '.jpg'" alt="" class="img-circle img-fluid">
                     </div>
                   </div>
                 </div>
@@ -113,6 +116,8 @@
 </script>
 
 <style>
+    i .fas{
 
+    }
 
 </style>
