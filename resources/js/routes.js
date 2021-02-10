@@ -15,6 +15,10 @@ let routes = [
         component: require('./views/clients/show').default
     },
     {
+        path: '/newclient',
+        component: require('./views/clients/create').default
+    },
+    {
         path: '/users',
         component: require('./views/users').default
     },

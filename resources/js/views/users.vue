@@ -100,6 +100,7 @@
                                             <label class="col-lg-2">
                                                 <!-- Roles: -->
                                             </label>
+
                                             <div class="col-lg-9">
                                                 <label class="col-lg-3" v-for='role in roles' v-bind:key="role.id">
                                                     <label>

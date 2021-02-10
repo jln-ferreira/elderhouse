@@ -23,7 +23,7 @@
 
       <!-- Default box -->
       <div class="card card-solid">
-        <div class="card-body pb-0">
+        <div class="card-body pb-1">
           <div class="row d-flex align-items-stretch">
 
             <!-- CARD CLIENT -->
@@ -46,7 +46,8 @@
 
                     </div>
                     <div class="col-5 text-center">
-                      <img :src="'images/images_clients/' + client.url + '.jpg'" alt="" class="img-circle img-fluid">
+                      <img v-if="client.url" :src="'images/images_clients/' + client.url + '.jpg'" alt="" class="img-circle img-fluid">
+                      <img v-else :src="'images/AdminLTELogo.png'" alt="" class="img-circle img-fluid">
                     </div>
                   </div>
                 </div>
@@ -65,6 +66,11 @@
             <!-- END CARD CLIENT -->
 
           </div>
+
+          <div class="row float-right">
+              <button @click="gotoCreate" class="btn btn-warning"><b>New Client</b></button>
+          </div>
+
         </div>
         <!-- /.card-body -->
         <div class="card-footer"></div>
@@ -109,6 +115,9 @@
             gotoProfile(id){
                 this.$router.push('/clients/' + id);
             },
+            gotoCreate(){
+                this.$router.push('/newclient/');
+            },
 
         }
     }
@@ -116,8 +125,6 @@
 </script>
 
 <style>
-    i .fas{
 
-    }
 
 </style>
