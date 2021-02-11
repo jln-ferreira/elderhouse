@@ -17,11 +17,10 @@ class CreateClientsTable extends Migration
             $table->id();
             $table->text('name');
             $table->text('surname');
-            $table->integer('age');
             $table->date('databirth');
-            $table->text('url');
+            $table->text('url')->nullable();
             $table->date('datastart');
-            $table->text('appartament');
+            $table->text('appartament')->nullable();
             $table->text('phonenumber');
             $table->smallInteger('active')->default('1');
             $table->timestamps();

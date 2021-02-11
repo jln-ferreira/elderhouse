@@ -46,7 +46,7 @@
 
                     </div>
                     <div class="col-5 text-center">
-                      <img v-if="client.url" :src="'images/images_clients/' + client.url + '.jpg'" alt="" class="img-circle img-fluid">
+                      <img v-if="client.url" :src="'images/images_clients/' + client.url" alt="" class="img-circle img-fluid">
                       <img v-else :src="'images/AdminLTELogo.png'" alt="" class="img-circle img-fluid">
                     </div>
                   </div>
@@ -68,7 +68,7 @@
           </div>
 
           <div class="row float-right">
-              <button @click="gotoCreate" class="btn btn-warning"><b>New Client</b></button>
+              <button @click="gotoCreate" class="btn btn-warning"><i class="fas fa-users"></i> <b>New Client</b></button>
           </div>
 
         </div>

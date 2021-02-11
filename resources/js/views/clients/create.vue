@@ -38,14 +38,24 @@
 
                                     <!-- INFORMATION TAB -->
                                     <div class="tab-pane active" id="information">
-                                        <form class="form-horizontal">
+                                        <form class="form-horizontal" @submit.prevent="onSubmit_Information">
                                             <div class="card-body">
 
 
                                                 <div class="row">
                                                     <!-- PHOTO -->
-                                                    <div class="col-md-4">
-
+                                                    <div class="col-md-4 text-center">
+                                                        <div class="col-12">
+                                                            <img :src="'images/shadow.png'" class="img-thumbnail" alt="">
+                                                        </div>
+                                                        <div class="col-12 mt-1">
+                                                            <div class="input-group">
+                                                                <div class="custom-file">
+                                                                    <input type="file" class="custom-file-input" id="exampleInputFile" @change="onFileChange">
+                                                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <!-- INFORMATIONS -->
@@ -55,40 +65,36 @@
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="name">Name</label>
-                                                                <input type="text" class="form-control" id="name" name="name" placeholder="Name" required autofocus >
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.name" id="name" name="name" placeholder="Name" required autofocus >
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('name')" v-text="formInformation.errors.get('name')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="surname">Surname</label>
-                                                                <input type="text" class="form-control" id="surname" placeholder="Surname" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('surname')" v-text="form.errors.get('surname')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.surname" id="surname" placeholder="Surname" required>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('surname')" v-text="formInformation.errors.get('surname')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="datastart">Datastart</label>
-                                                                <input type="date" class="form-control" id="datastart" placeholder="datastart" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('datastart')" v-text="form.errors.get('datastart')"></span> -->
+                                                                <input type="date" class="form-control" v-model="formInformation.datastart" id="datastart" placeholder="datastart" required>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('datastart')" v-text="formInformation.errors.get('datastart')"></span>
                                                             </div>
                                                         </div>
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="databirth">Databirth</label>
-                                                                <input type="data" class="form-control" id="databirth" placeholder="databirth" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('databirth')" v-text="form.errors.get('databirth')"></span> -->
+                                                                <input type="date" class="form-control" v-model="formInformation.databirth" id="databirth" placeholder="databirth" required>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('databirth')" v-text="formInformation.errors.get('databirth')"></span>
                                                             </div>
-                                                            <div class="form-group col-md-2">
-                                                                <label for="age">Age</label>
-                                                                <input type="text" class="form-control" id="age" placeholder="age" disabled>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('age')" v-text="form.errors.get('age')"></span> -->
-                                                            </div>
+
                                                             <div class="form-group col-md-4">
                                                                 <label for="phonenumber">Phone Number</label>
-                                                                <input type="text" class="form-control" id="phonenumber" placeholder="phonenumber" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('phonenumber')" v-text="form.errors.get('phonenumber')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.phonenumber" id="phonenumber" placeholder="phonenumber" required>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('phonenumber')" v-text="formInformation.errors.get('phonenumber')"></span>
                                                             </div>
                                                             <div class="form-group col-md-2">
                                                                 <label for="appartament">Appartament</label>
-                                                                <input type="number" class="form-control" id="appartament" placeholder="appartament">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('appartament')" v-text="form.errors.get('appartament')"></span> -->
+                                                                <input type="number" class="form-control" v-model="formInformation.appartament" id="appartament" placeholder="appartament" min="1">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('appartament')" v-text="formInformation.errors.get('appartament')"></span>
                                                             </div>
                                                         </div>
 
@@ -98,76 +104,78 @@
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="CPF">CPF</label>
-                                                                <input type="text" class="form-control" id="CPF" name="CPF" placeholder="421-110-223-27" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('CPF')" v-text="form.errors.get('CPF')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.CPF" id="CPF" name="CPF" placeholder="421-110-223-27">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('CPF')" v-text="formInformation.errors.get('CPF')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="RG">RG</label>
-                                                                <input type="text" class="form-control" id="RG" placeholder="42.188.403-3" required>
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('RG')" v-text="form.errors.get('RG')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.RG" id="RG" placeholder="42.188.403-3">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('RG')" v-text="formInformation.errors.get('RG')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
-                                                                <label for="other_doc">Other Document</label>
-                                                                <input type="text" class="form-control" id="other_doc">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('other_doc')" v-text="form.errors.get('other_doc')"></span> -->
+                                                                <label for="otherdoc">Other Document</label>
+                                                                <input type="text" class="form-control" v-model="formInformation.otherdoc" id="otherdoc">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('otherdoc')" v-text="formInformation.errors.get('otherdoc')"></span>
                                                             </div>
                                                         </div>
                                                         <div class="form-row">
                                                             <div class="form-group col-md-3">
                                                                 <label for="gender">Gender</label>
-                                                                <input type="text" class="form-control" id="gender" name="gender" placeholder="Gender">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('city')" v-text="form.errors.get('city')"></span> -->
+                                                                <select class="form-control" v-model="formInformation.gender" id="gender" name="gender" required>
+                                                                    <option>Male</option>
+                                                                    <option>Female</option>
+                                                                    <option>Other</option>
+                                                                </select>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('gender')" v-text="formInformation.errors.get('gender')"></span>
                                                             </div>
                                                             <div class="form-group col-md-3">
                                                                 <label for="height">Height</label>
-                                                                <input type="text" class="form-control" id="height" name="height" placeholder="height">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('state')" v-text="form.errors.get('state')"></span> -->
+                                                                <input type="number" class="form-control" v-model="formInformation.height" id="height" name="height" placeholder="height" max="200" min="30">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('height')" v-text="formInformation.errors.get('height')"></span>
                                                             </div>
                                                             <div class="form-group col-md-3">
                                                                 <label for="color">Color</label>
-                                                                <input type="text" class="form-control" id="color" name="color" placeholder="Color">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('state')" v-text="form.errors.get('state')"></span> -->
+                                                                <select class="form-control" v-model="formInformation.color" id="color" name="color" required>
+                                                                    <option>Black</option>
+                                                                    <option>White</option>
+                                                                    <option>Pardo</option>
+                                                                    <option>Other</option>
+                                                                </select>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('color')" v-text="formInformation.errors.get('color')"></span>
                                                             </div>
                                                             <div class="form-group col-md-3">
                                                                 <label for="religion">Religion</label>
-                                                                <input type="text" class="form-control" id="religion" name="religion" placeholder="religion">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('country')" v-text="form.errors.get('country')"></span> -->
+                                                                <select class="form-control" v-model="formInformation.religion" id="religion" name="religion" required>
+                                                                    <option>Christianity</option>
+                                                                    <option>Judaism</option>
+                                                                    <option>Islam</option>
+                                                                    <option>Other</option>
+                                                                    <option>None</option>
+                                                                </select>
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('religion')" v-text="formInformation.errors.get('religion')"></span>
                                                             </div>
                                                         </div>
                                                         <div class="form-row">
                                                             <div class="form-group col-md-3">
                                                                 <div class="custom-control custom-switch">
-                                                                    <input type="checkbox" class="custom-control-input" id="available">
+                                                                    <input type="checkbox" class="custom-control-input" v-model="formInformation.available" id="available">
                                                                     <label class="custom-control-label" for="available">Available</label>
                                                                 </div>
                                                             </div>
                                                             <div class="form-group col-md-9">
                                                                 <label for="ocupation">Ocupation</label>
-                                                                <input type="text" class="form-control" id="ocupation" name="ocupation" placeholder="Ocupation">
-                                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('country')" v-text="form.errors.get('country')"></span> -->
+                                                                <input type="text" class="form-control" v-model="formInformation.ocupation" id="ocupation" name="ocupation" placeholder="Ocupation">
+                                                                <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('ocupation')" v-text="formInformation.errors.get('ocupation')"></span>
                                                             </div>
                                                         </div>
                                                         <!-- END ESPECIFICATIONS -->
 
                                                         <hr>
-
-                                                        <!-- ROLE -->
-                                                        <div class="form-group row">
-                                                            <label class="col-lg-2">
-                                                                <!-- Roles: -->
-                                                            </label>
-                                                            <!-- <div class="col-lg-9">
-                                                                <label class="col-lg-3" v-for='role in roles' v-bind:key="role.id">
-                                                                    <label>
-                                                                        <input type="checkbox" :value="role.id" v-model="form.checkedRoles">
-                                                                            {{role.name}}
-                                                                        <span></span>
-                                                                    </label>
-                                                                </label>
-                                                            </div> -->
-                                                            <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('checkedRoles')" v-text="form.errors.get('checkedRoles')"></span> -->
+                                                        <div class="float-right">
+                                                            <button type="save" v-show="information_save" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
+                                                            <button type="edit" v-show="!information_save" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</button>
+                                                            <a type="cancel" @click="gotoClient" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                                                         </div>
-                                                        <!-- END ROLE -->
 
 
                                                     </div>
@@ -176,13 +184,6 @@
                                                 </div>
 
                                             </div>
-                                            <!-- /.card-body -->
-                                            <div class="card-footer">
-                                                <!-- <button type="save" v-show="this.newUser" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                                                <button type="edit" v-show="!this.newUser" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
-                                                <a type="cancel" v-show="!this.newUser" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a> -->
-                                            </div>
-                                            <!-- /.card-footer -->
                                         </form>
                                     </div>
                                     <!-- END INFORMATION TAB -->
@@ -195,29 +196,29 @@
                                             <div class="form-group col-md-4">
                                                 <label for="name">Street</label>
                                                 <input type="text" class="form-control" id="street" name="street" autocomplete="street" autofocus placeholder="street">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('street')" v-text="form.errors.get('street')"></span> -->
+                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('street')" v-text="formInformation.errors.get('street')"></span> -->
                                             </div>
                                             <div class="form-group col-md-2">
                                                 <label for="email">Number</label>
                                                 <input type="text" class="form-control" id="number" placeholder="92">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('number')" v-text="form.errors.get('number')"></span> -->
+                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('number')" v-text="formInformation.errors.get('number')"></span> -->
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md-4">
                                                 <label for="name">City</label>
                                                 <input type="text" class="form-control" id="city" name="city" autocomplete="City" autofocus placeholder="City">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('city')" v-text="form.errors.get('city')"></span> -->
+                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('city')" v-text="formInformation.errors.get('city')"></span> -->
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="name">State</label>
                                                 <input type="text" class="form-control" id="state" name="state" autocomplete="State" autofocus placeholder="State">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('state')" v-text="form.errors.get('state')"></span> -->
+                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('state')" v-text="formInformation.errors.get('state')"></span> -->
                                             </div>
                                             <div class="form-group col-md-4">
                                                 <label for="name">Country</label>
                                                 <input type="text" class="form-control" id="country" name="country" autocomplete="Country" autofocus placeholder="Country">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('country')" v-text="form.errors.get('country')"></span> -->
+                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('country')" v-text="formInformation.errors.get('country')"></span> -->
                                             </div>
                                         </div>
                                         <!-- END ADDRESS -->
@@ -254,7 +255,33 @@
         data() {
 
             return {
-                clients: "",
+                information_save: true,
+
+                // Information
+                formInformation: new Form({
+
+                    //client
+                    'id':'',
+                    'name': '',
+                    'surname': '',
+                    'datastart': '',
+                    'photo': '',
+                    'photoName': '',
+                    'databirth': '',
+                    'phonenumber': '',
+                    'appartament': '',
+
+                    //information
+                    'CPF': '',
+                    'RG': '',
+                    'otherdoc': '',
+                    'gender': '',
+                    'height': '',
+                    'color': '',
+                    'religion': '',
+                    'available': false,
+                    'ocupation': '',
+                })
             }
 
         },
@@ -269,6 +296,53 @@
 
         methods: {
 
+            // Save information of the photo
+            onFileChange(event)
+            {
+                this.formInformation.photo = event.target.files[0];
+                this.formInformation.photoName = event.target.files[0].name;
+            },
+
+
+            // ----- ADD NEW CLIENT -----
+            onSubmit_Information(){
+                this.formInformation
+                    .post('/clients')
+                    .then(response => {
+
+                        //client
+                        this.formInformation.id          = response.client.id;
+                        this.formInformation.name        = response.client.name;
+                        this.formInformation.surname     = response.client.surname;
+                        this.formInformation.datastart   = response.client.datastart;
+                        this.formInformation.photo       = response.client.photo;
+                        this.formInformation.photoName   = response.client.photoName;
+                        this.formInformation.databirth   = response.client.databirth;
+                        this.formInformation.phonenumber = response.client.phonenumber;
+                        this.formInformation.appartament = response.client.appartament;
+
+                        //information
+                        this.formInformation.CPF       = response.specification.CPF;
+                        this.formInformation.RG        = response.specification.RG;
+                        this.formInformation.otherdoc  = response.specification.otherdoc;
+                        this.formInformation.gender    = response.specification.gender;
+                        this.formInformation.height    = response.specification.height;
+                        this.formInformation.color     = response.specification.color;
+                        this.formInformation.religion  = response.specification.religion;
+                        this.formInformation.available = response.specification.available;
+                        this.formInformation.ocupation = response.specification.ocupation;
+
+                        console.log(response)
+                        this.information_save = false;
+                        this.$toaster.success('Successful added');
+                    })
+            },
+
+
+            // Go back to all clients
+            gotoClient(){
+                this.$router.push('/clients/');
+            },
 
         }
     }

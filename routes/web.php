@@ -44,6 +44,7 @@ Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole'
 // ---------------
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
+Route::post('/clients', 'ClientController@create');
 // END CLIENTS
 // ------------------
 
