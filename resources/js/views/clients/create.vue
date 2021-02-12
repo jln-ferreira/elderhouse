@@ -51,8 +51,9 @@
                                                         <div class="col-12 mt-1">
                                                             <div class="input-group">
                                                                 <div class="custom-file">
-                                                                    <input type="file" class="custom-file-input" id="exampleInputFile" @change="onFileChange">
-                                                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                                                    <input type="file" class="custom-file-input" id="image-client" @change="onFileChange">
+                                                                    <label v-if="formInformation.photoName == ''" class="custom-file-label" for="image-client">Choose file</label>
+                                                                    <label v-else  class="custom-file-label" for="image-client">{{ formInformation.photoName }}</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -191,37 +192,46 @@
 
 
                                     <div class="tab-pane" id="address">
-                                        <!-- ADDRESS -->
-                                        <div class="form-row">
-                                            <div class="form-group col-md-4">
-                                                <label for="name">Street</label>
-                                                <input type="text" class="form-control" id="street" name="street" autocomplete="street" autofocus placeholder="street">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('street')" v-text="formInformation.errors.get('street')"></span> -->
+                                        <form class="form-horizontal" @submit.prevent="onSubmit_Address">
+                                            <!-- ADDRESS -->
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="name">Street</label>
+                                                    <input type="text" class="form-control" id="street" name="street" autocomplete="street" placeholder="street"  v-model="formAddress.street">
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="formAddress.errors.has('street')" v-text="formAddress.errors.get('street')"></span>
+                                                </div>
+                                                <div class="form-group col-md-2">
+                                                    <label for="email">Number</label>
+                                                    <input type="number" class="form-control" id="number" placeholder="92" min="1" v-model="formAddress.number">
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="formAddress.errors.has('number')" v-text="formAddress.errors.get('number')"></span>
+                                                </div>
                                             </div>
-                                            <div class="form-group col-md-2">
-                                                <label for="email">Number</label>
-                                                <input type="text" class="form-control" id="number" placeholder="92">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('number')" v-text="formInformation.errors.get('number')"></span> -->
+                                            <div class="form-row">
+                                                <div class="form-group col-md-4">
+                                                    <label for="name">City</label>
+                                                    <input type="text" class="form-control" id="city" name="city" autocomplete="City" placeholder="City" v-model="formAddress.city">
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="formAddress.errors.has('city')" v-text="formAddress.errors.get('city')"></span>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="name">State</label>
+                                                    <input type="text" class="form-control" id="state" name="state" autocomplete="State" placeholder="State" v-model="formAddress.state">
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="formAddress.errors.has('state')" v-text="formAddress.errors.get('state')"></span>
+                                                </div>
+                                                <div class="form-group col-md-4">
+                                                    <label for="name">Country</label>
+                                                    <input type="text" class="form-control" id="country" name="country" autocomplete="Country" placeholder="Country" v-model="formAddress.country">
+                                                    <span class="invalid-feedback d-block" role="alert" v-if="formAddress.errors.has('country')" v-text="formAddress.errors.get('country')"></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-4">
-                                                <label for="name">City</label>
-                                                <input type="text" class="form-control" id="city" name="city" autocomplete="City" autofocus placeholder="City">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('city')" v-text="formInformation.errors.get('city')"></span> -->
+
+                                            <hr>
+                                            <div class="float-right" v-show="!information_save">
+                                                <button type="save" v-show="address_save" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
+                                                <button type="edit" v-show="!address_save" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</button>
+                                                <a type="cancel" @click="gotoClient" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                                             </div>
-                                            <div class="form-group col-md-4">
-                                                <label for="name">State</label>
-                                                <input type="text" class="form-control" id="state" name="state" autocomplete="State" autofocus placeholder="State">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('state')" v-text="formInformation.errors.get('state')"></span> -->
-                                            </div>
-                                            <div class="form-group col-md-4">
-                                                <label for="name">Country</label>
-                                                <input type="text" class="form-control" id="country" name="country" autocomplete="Country" autofocus placeholder="Country">
-                                                <!-- <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('country')" v-text="formInformation.errors.get('country')"></span> -->
-                                            </div>
-                                        </div>
-                                        <!-- END ADDRESS -->
+                                            <!-- END ADDRESS -->
+                                        </form>
                                     </div>
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="tab_3">
@@ -256,6 +266,7 @@
 
             return {
                 information_save: true,
+                address_save: true,
 
                 // Information
                 formInformation: new Form({
@@ -281,6 +292,18 @@
                     'religion': '',
                     'available': false,
                     'ocupation': '',
+                }),
+
+                // address
+                formAddress: new Form({
+
+                    //client
+                    'client_id':'',
+                    'street':'',
+                    'number': '',
+                    'city': '',
+                    'state': '',
+                    'country': '',
                 })
             }
 
@@ -303,14 +326,13 @@
                 this.formInformation.photoName = event.target.files[0].name;
             },
 
-
             // ----- ADD NEW CLIENT -----
             onSubmit_Information(){
                 this.formInformation
                     .post('/clients')
                     .then(response => {
 
-                        //client
+                        // //client
                         this.formInformation.id          = response.client.id;
                         this.formInformation.name        = response.client.name;
                         this.formInformation.surname     = response.client.surname;
@@ -332,11 +354,35 @@
                         this.formInformation.available = response.specification.available;
                         this.formInformation.ocupation = response.specification.ocupation;
 
-                        console.log(response)
+                        // use client_id into address
+                        this.formAddress.client_id = this.formInformation.id;
+
                         this.information_save = false;
-                        this.$toaster.success('Successful added');
+                        this.$toaster.success(this.formInformation.name + ' successful added');
                     })
             },
+            // END NEW CLIENT
+
+
+            // ----- ADD ADDRESS -----
+            onSubmit_Address(){
+                this.formAddress
+                    .post('/clientAddress')
+                    .then(response => {
+
+                        // //address
+                        this.formAddress.client_id = response.client_id;
+                        this.formAddress.street    = response.street;
+                        this.formAddress.number    = response.number;
+                        this.formAddress.city      = response.city;
+                        this.formAddress.state     = response.state;
+                        this.formAddress.country   = response.country;
+
+                        this.address_save = false;
+                        this.$toaster.success('Address added');
+                    })
+            },
+            // END NEW ADDRESS
 
 
             // Go back to all clients

@@ -2255,10 +2255,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       information_save: true,
+      address_save: true,
       // Information
       formInformation: new Form({
         //client
@@ -2281,6 +2292,16 @@ __webpack_require__.r(__webpack_exports__);
         'religion': '',
         'available': false,
         'ocupation': ''
+      }),
+      // address
+      formAddress: new Form({
+        //client
+        'client_id': '',
+        'street': '',
+        'number': '',
+        'city': '',
+        'state': '',
+        'country': ''
       })
     };
   },
@@ -2296,7 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.formInformation.post('/clients').then(function (response) {
-        //client
+        // //client
         _this.formInformation.id = response.client.id;
         _this.formInformation.name = response.client.name;
         _this.formInformation.surname = response.client.surname;
@@ -2315,13 +2336,33 @@ __webpack_require__.r(__webpack_exports__);
         _this.formInformation.color = response.specification.color;
         _this.formInformation.religion = response.specification.religion;
         _this.formInformation.available = response.specification.available;
-        _this.formInformation.ocupation = response.specification.ocupation;
-        console.log(response);
+        _this.formInformation.ocupation = response.specification.ocupation; // use client_id into address
+
+        _this.formAddress.client_id = _this.formInformation.id;
         _this.information_save = false;
 
-        _this.$toaster.success('Successful added');
+        _this.$toaster.success(_this.formInformation.name + ' successful added');
       });
     },
+    // END NEW CLIENT
+    // ----- ADD ADDRESS -----
+    onSubmit_Address: function onSubmit_Address() {
+      var _this2 = this;
+
+      this.formAddress.post('/clientAddress').then(function (response) {
+        // //address
+        _this2.formAddress.client_id = response.client_id;
+        _this2.formAddress.street = response.street;
+        _this2.formAddress.number = response.number;
+        _this2.formAddress.city = response.city;
+        _this2.formAddress.state = response.state;
+        _this2.formAddress.country = response.country;
+        _this2.address_save = false;
+
+        _this2.$toaster.success('Address added');
+      });
+    },
+    // END NEW ADDRESS
     // Go back to all clients
     gotoClient: function gotoClient() {
       this.$router.push('/clients/');
@@ -2438,8 +2479,7 @@ __webpack_require__.r(__webpack_exports__);
 
     // Fetch especific User / address / role -> auth
     axios.get('/clients').then(function (response) {
-      console.log(response.data);
-      _this.clients = response.data;
+      return _this.clients = response.data;
     });
   },
   methods: {
@@ -39889,19 +39929,34 @@ var render = function() {
                                       staticClass: "custom-file-input",
                                       attrs: {
                                         type: "file",
-                                        id: "exampleInputFile"
+                                        id: "image-client"
                                       },
                                       on: { change: _vm.onFileChange }
                                     }),
                                     _vm._v(" "),
-                                    _c(
-                                      "label",
-                                      {
-                                        staticClass: "custom-file-label",
-                                        attrs: { for: "exampleInputFile" }
-                                      },
-                                      [_vm._v("Choose file")]
-                                    )
+                                    _vm.formInformation.photoName == ""
+                                      ? _c(
+                                          "label",
+                                          {
+                                            staticClass: "custom-file-label",
+                                            attrs: { for: "image-client" }
+                                          },
+                                          [_vm._v("Choose file")]
+                                        )
+                                      : _c(
+                                          "label",
+                                          {
+                                            staticClass: "custom-file-label",
+                                            attrs: { for: "image-client" }
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.formInformation.photoName
+                                              )
+                                            )
+                                          ]
+                                        )
                                   ])
                                 ])
                               ])
@@ -40976,7 +41031,349 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _vm._m(2),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "address" } },
+                  [
+                    _c(
+                      "form",
+                      {
+                        staticClass: "form-horizontal",
+                        on: {
+                          submit: function($event) {
+                            $event.preventDefault()
+                            return _vm.onSubmit_Address($event)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "form-row" }, [
+                          _c("div", { staticClass: "form-group col-md-4" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("Street")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formAddress.street,
+                                  expression: "formAddress.street"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "street",
+                                name: "street",
+                                autocomplete: "street",
+                                placeholder: "street"
+                              },
+                              domProps: { value: _vm.formAddress.street },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formAddress,
+                                    "street",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.formAddress.errors.has("street")
+                              ? _c("span", {
+                                  staticClass: "invalid-feedback d-block",
+                                  attrs: { role: "alert" },
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.formAddress.errors.get("street")
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group col-md-2" }, [
+                            _c("label", { attrs: { for: "email" } }, [
+                              _vm._v("Number")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formAddress.number,
+                                  expression: "formAddress.number"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "number",
+                                id: "number",
+                                placeholder: "92",
+                                min: "1"
+                              },
+                              domProps: { value: _vm.formAddress.number },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formAddress,
+                                    "number",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.formAddress.errors.has("number")
+                              ? _c("span", {
+                                  staticClass: "invalid-feedback d-block",
+                                  attrs: { role: "alert" },
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.formAddress.errors.get("number")
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "form-row" }, [
+                          _c("div", { staticClass: "form-group col-md-4" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("City")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formAddress.city,
+                                  expression: "formAddress.city"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "city",
+                                name: "city",
+                                autocomplete: "City",
+                                placeholder: "City"
+                              },
+                              domProps: { value: _vm.formAddress.city },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formAddress,
+                                    "city",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.formAddress.errors.has("city")
+                              ? _c("span", {
+                                  staticClass: "invalid-feedback d-block",
+                                  attrs: { role: "alert" },
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.formAddress.errors.get("city")
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group col-md-4" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("State")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formAddress.state,
+                                  expression: "formAddress.state"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "state",
+                                name: "state",
+                                autocomplete: "State",
+                                placeholder: "State"
+                              },
+                              domProps: { value: _vm.formAddress.state },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formAddress,
+                                    "state",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.formAddress.errors.has("state")
+                              ? _c("span", {
+                                  staticClass: "invalid-feedback d-block",
+                                  attrs: { role: "alert" },
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.formAddress.errors.get("state")
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group col-md-4" }, [
+                            _c("label", { attrs: { for: "name" } }, [
+                              _vm._v("Country")
+                            ]),
+                            _vm._v(" "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formAddress.country,
+                                  expression: "formAddress.country"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "country",
+                                name: "country",
+                                autocomplete: "Country",
+                                placeholder: "Country"
+                              },
+                              domProps: { value: _vm.formAddress.country },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formAddress,
+                                    "country",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.formAddress.errors.has("country")
+                              ? _c("span", {
+                                  staticClass: "invalid-feedback d-block",
+                                  attrs: { role: "alert" },
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.formAddress.errors.get("country")
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: !_vm.information_save,
+                                expression: "!information_save"
+                              }
+                            ],
+                            staticClass: "float-right"
+                          },
+                          [
+                            _c(
+                              "button",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.address_save,
+                                    expression: "address_save"
+                                  }
+                                ],
+                                staticClass: "btn btn-success",
+                                attrs: { type: "save" }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-plus" }),
+                                _vm._v(" Save")
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: !_vm.address_save,
+                                    expression: "!address_save"
+                                  }
+                                ],
+                                staticClass: "btn btn-primary",
+                                attrs: { type: "edit" }
+                              },
+                              [
+                                _c("i", { staticClass: "fas fa-user-edit" }),
+                                _vm._v(" Edit")
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "a",
+                              {
+                                staticClass: "btn btn-warning text-white",
+                                attrs: { type: "cancel" },
+                                on: { click: _vm.gotoClient }
+                              },
+                              [
+                                _c("i", { staticClass: "fa fa-times" }),
+                                _vm._v(" Cancel")
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ]
+                ),
                 _vm._v(" "),
                 _c("div", { staticClass: "tab-pane", attrs: { id: "tab_3" } }, [
                   _vm._v(
@@ -41061,89 +41458,6 @@ var staticRenderFns = [
             },
             [_vm._v("Tab 3")]
           )
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "tab-pane", attrs: { id: "address" } }, [
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { attrs: { for: "name" } }, [_vm._v("Street")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "street",
-              name: "street",
-              autocomplete: "street",
-              autofocus: "",
-              placeholder: "street"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-2" }, [
-          _c("label", { attrs: { for: "email" } }, [_vm._v("Number")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "number", placeholder: "92" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-row" }, [
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { attrs: { for: "name" } }, [_vm._v("City")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "city",
-              name: "city",
-              autocomplete: "City",
-              autofocus: "",
-              placeholder: "City"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { attrs: { for: "name" } }, [_vm._v("State")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "state",
-              name: "state",
-              autocomplete: "State",
-              autofocus: "",
-              placeholder: "State"
-            }
-          })
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4" }, [
-          _c("label", { attrs: { for: "name" } }, [_vm._v("Country")]),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "text",
-              id: "country",
-              name: "country",
-              autocomplete: "Country",
-              autofocus: "",
-              placeholder: "Country"
-            }
-          })
         ])
       ])
     ])
@@ -41966,7 +42280,7 @@ var render = function() {
                   _c("img", {
                     staticClass: "profile-user-img img-fluid img-circle",
                     attrs: {
-                      src: "images/images_profile/" + _vm.form.photo + ".png",
+                      src: "images/images_profile/" + _vm.form.photo,
                       alt: "User profile picture"
                     }
                   })

@@ -102,11 +102,7 @@
 
             // Fetch especific User / address / role -> auth
             axios.get('/clients')
-                .then(response => {
-                    console.log(response.data)
-                    this.clients = response.data
-                });
-
+                .then(response => this.clients = response.data);
         },
 
 

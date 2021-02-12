@@ -7,27 +7,19 @@ use App\Specification;
 use DB;
 
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Validator;
-use Carbon\Carbon;
+
 
 class ClientController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index()
     {
         return Client::activeclients();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create(Request $request)
     {
         Validator::make($request->all(), [
@@ -63,7 +55,6 @@ class ClientController extends Controller
                 'appartament' => $request['appartament'],
             ]
         );
-
         $client->save();
 
 
@@ -85,8 +76,11 @@ class ClientController extends Controller
                 'ocupation' => $request['ocupation'],
             ]
         );
-
         $specification->save();
+
+
+        // SAVE IMAGE
+
 
         return response([
             'client'      => $client,

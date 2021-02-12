@@ -29,6 +29,7 @@ Route::get('/home/', function () {
     return redirect('/login');
 });
 
+
 // ---------------
 // USERS
 Route::get('/users', 'UsersController@index');
@@ -41,12 +42,15 @@ Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole'
 // END USERS
 // ------------------
 
+
 // ---------------
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
 Route::post('/clients', 'ClientController@create');
+Route::post('/clientAddress', 'AddressController@createClient');
 // END CLIENTS
 // ------------------
+
 
 // ---------------
 // PROFILE
