@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $address->country = $request['country'];
         $address->save();
 
-        return $user;
+        return ['user' => $user, 'address' => $address];
 
     }
 

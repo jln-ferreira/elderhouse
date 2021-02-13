@@ -2333,6 +2333,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2474,6 +2475,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.familyList.push(newFamily); // input information onto checkbox
 
 
+        _this3.formFamily.client_id = response.client_id;
         _this3.formFamily.gender = false;
         _this3.formFamily.responsable = false;
 
@@ -2481,23 +2483,19 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     // ----- EDIT FAMILY -----
-    editFamily: function editFamily(id) {
-      var _this4 = this;
+    editFamily: function editFamily(index) {
+      // Populate Inputs
+      this.formFamily.id = this.familyList[index].id;
+      this.formFamily.client_id = this.familyList[index].client_id;
+      this.formFamily.name = this.familyList[index].name;
+      this.formFamily.surname = this.familyList[index].surname;
+      this.formFamily.parent = this.familyList[index].parent;
+      this.formFamily.gender = this.familyList[index].gender;
+      this.formFamily.phonenumber = this.familyList[index].phonenumber;
+      this.formFamily.email = this.familyList[index].email;
+      this.formFamily.responsable = this.familyList[index].responsable; //edit button
 
-      axios.get('/family/' + id).then(function (response) {
-        // Populate Inputs
-        _this4.formFamily.id = response.id;
-        _this4.formFamily.client_id = response.client_id;
-        _this4.formFamily.name = response.name;
-        _this4.formFamily.surname = response.surname;
-        _this4.formFamily.parent = response.parent;
-        _this4.formFamily.gender = response.gender;
-        _this4.formFamily.phonenumber = response.phonenumber;
-        _this4.formFamily.email = response.email;
-        _this4.formFamily.responsable = response.responsable; //edit button
-
-        _this4.family_save = false;
-      });
+      this.family_save = false;
     },
     // ----- MODIFY FAMILY -----
     modifyFamily: function modifyFamily() {
@@ -3298,8 +3296,19 @@ __webpack_require__.r(__webpack_exports__);
     onSubmitInfo: function onSubmitInfo() {
       var _this2 = this;
 
-      this.form.post('/setting/user').then(function (user) {
-        _this2.$toaster.success('Successful added ' + user.name);
+      this.form.post('/setting/user').then(function (response) {
+        _this2.form.id = response.user.id;
+        _this2.form.name = response.user.name;
+        _this2.form.email = response.user.email;
+        _this2.form.photo = response.user.photo;
+        _this2.form.password = response.user.password;
+        _this2.form.street = response.address.street;
+        _this2.form.number = response.address.number;
+        _this2.form.city = response.address.city;
+        _this2.form.state = response.address.state;
+        _this2.form.country = response.address.country;
+
+        _this2.$toaster.success('Saved!');
       });
     }
   }
@@ -41948,6 +41957,26 @@ var render = function() {
                                       expression: "!family_save"
                                     }
                                   ],
+                                  staticClass: "btn btn-danger text-white",
+                                  attrs: { type: "delete" }
+                                },
+                                [
+                                  _c("i", { staticClass: "far fa-trash-alt" }),
+                                  _vm._v(" Delete")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.family_save,
+                                      expression: "!family_save"
+                                    }
+                                  ],
                                   staticClass: "btn btn-warning text-white",
                                   attrs: { type: "cancel" },
                                   on: {
@@ -41981,7 +42010,7 @@ var render = function() {
                           _c(
                             "div",
                             { staticClass: "row" },
-                            _vm._l(_vm.familyList, function(family) {
+                            _vm._l(_vm.familyList, function(family, index) {
                               return _c(
                                 "div",
                                 {
@@ -41990,7 +42019,7 @@ var render = function() {
                                   staticStyle: { cursor: "pointer" },
                                   on: {
                                     click: function($event) {
-                                      return _vm.editFamily(family.id)
+                                      return _vm.editFamily(index)
                                     }
                                   }
                                 },

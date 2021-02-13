@@ -300,16 +300,16 @@
             axios.get('/settings/user')
                 .then(response => {
 
-                    this.form.id           = response.data.user.id;
-                    this.form.name         =  response.data.user.name;
-                    this.form.email        =  response.data.user.email;
-                    this.form.photo        =  response.data.user.photo;
-                    this.form.password     =  response.data.user.password;
-                    this.form.street       =  response.data.address.street;
-                    this.form.number       =  response.data.address.number;
-                    this.form.city         =  response.data.address.city;
-                    this.form.state        =  response.data.address.state;
-                    this.form.country      =  response.data.address.country;
+                    this.form.id       = response.data.user.id;
+                    this.form.name     =  response.data.user.name;
+                    this.form.email    =  response.data.user.email;
+                    this.form.photo    =  response.data.user.photo;
+                    this.form.password =  response.data.user.password;
+                    this.form.street   =  response.data.address.street;
+                    this.form.number   =  response.data.address.number;
+                    this.form.city     =  response.data.address.city;
+                    this.form.state    =  response.data.address.state;
+                    this.form.country  =  response.data.address.country;
 
                 });
 
@@ -322,8 +322,20 @@
             {
                 this.form
                     .post('/setting/user')
-                    .then(user => {
-                        this.$toaster.success('Successful added ' + user.name);
+                    .then(response => {
+
+                        this.form.id       = response.user.id;
+                        this.form.name     =  response.user.name;
+                        this.form.email    =  response.user.email;
+                        this.form.photo    =  response.user.photo;
+                        this.form.password =  response.user.password;
+                        this.form.street   =  response.address.street;
+                        this.form.number   =  response.address.number;
+                        this.form.city     =  response.address.city;
+                        this.form.state    =  response.address.state;
+                        this.form.country  =  response.address.country;
+
+                        this.$toaster.success('Saved!');
                     })
             },
 

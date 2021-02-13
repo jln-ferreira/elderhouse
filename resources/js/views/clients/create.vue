@@ -285,6 +285,7 @@
                                                         <!-- <div v-show="!information_save"> -->
                                                             <button type="save" v-show="family_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
                                                             <a type="edit" v-show="!family_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
+                                                            <a type="delete" v-show="!family_save" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
                                                             <a type="cancel" v-show="!family_save" @click="family_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                                                         <!-- </div> -->
                                                     </div>
@@ -295,7 +296,7 @@
                                                 <h3 class="font-weight-bolder text-center">Family List:</h3>
                                                 <hr/>
                                                 <div class="row">
-                                                    <div class="card col-lg-3 col-4" v-for="family in familyList" @click="editFamily(family.id)" v-bind:key="family.id" style="cursor:pointer;">
+                                                    <div class="card col-lg-3 col-4" v-for="(family, index) in familyList" @click="editFamily(index)" v-bind:key="family.id" style="cursor:pointer;">
                                                         <div class="ribbon-wrapper" v-if="family.responsable == true">
                                                             <div class="ribbon bg-primary">responsable</div>
                                                         </div>
@@ -511,6 +512,7 @@
                         this.familyList.push(newFamily);
 
                         // input information onto checkbox
+                        this.formFamily.client_id   = response.client_id;
                         this.formFamily.gender      = false;
                         this.formFamily.responsable = false;
 
@@ -522,26 +524,23 @@
 
 
             // ----- EDIT FAMILY -----
-            editFamily(id)
+            editFamily(index)
             {
-                axios.get('/family/' + id)
-                .then(response => {
+                // Populate Inputs
+                this.formFamily.id          = this.familyList[index].id;
+                this.formFamily.client_id   = this.familyList[index].client_id;
+                this.formFamily.name        = this.familyList[index].name;
+                this.formFamily.surname     = this.familyList[index].surname;
+                this.formFamily.parent      = this.familyList[index].parent;
+                this.formFamily.gender      = this.familyList[index].gender;
+                this.formFamily.phonenumber = this.familyList[index].phonenumber;
+                this.formFamily.email       = this.familyList[index].email;
+                this.formFamily.responsable = this.familyList[index].responsable;
 
-                    // Populate Inputs
-                    this.formFamily.id          = response.id;
-                    this.formFamily.client_id   = response.client_id;
-                    this.formFamily.name        = response.name;
-                    this.formFamily.surname     = response.surname;
-                    this.formFamily.parent      = response.parent;
-                    this.formFamily.gender      = response.gender;
-                    this.formFamily.phonenumber = response.phonenumber;
-                    this.formFamily.email       = response.email;
-                    this.formFamily.responsable = response.responsable;
+                //edit button
+                this.family_save = false;
 
-                    //edit button
-                    this.family_save = false;
 
-                });
 
             },
 
