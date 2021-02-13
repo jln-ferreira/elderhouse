@@ -29,7 +29,7 @@
                                 <ul class="nav nav-pills ml-auto p-2">
                                     <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Information</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#tab_3" data-toggle="tab">Tab 3</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -59,7 +59,7 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- INFORMATIONS -->
+                                                    <!-- [INFORMATIONS] -->
                                                     <div class="col-md-8">
 
 
@@ -89,7 +89,7 @@
 
                                                             <div class="form-group col-md-4">
                                                                 <label for="phonenumber">Phone Number</label>
-                                                                <input type="text" class="form-control" v-model="formInformation.phonenumber" id="phonenumber" placeholder="phonenumber" required>
+                                                                <input type="number" class="form-control" v-model="formInformation.phonenumber" id="phonenumber" placeholder="phonenumber" required>
                                                                 <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('phonenumber')" v-text="formInformation.errors.get('phonenumber')"></span>
                                                             </div>
                                                             <div class="form-group col-md-2">
@@ -193,7 +193,7 @@
 
                                     <div class="tab-pane" id="address">
                                         <form class="form-horizontal" @submit.prevent="onSubmit_Address">
-                                            <!-- ADDRESS -->
+                                            <!-- [ADD ADDRESS] -->
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="name">Street</label>
@@ -233,15 +233,83 @@
                                             <!-- END ADDRESS -->
                                         </form>
                                     </div>
+
+
+
                                     <!-- /.tab-pane -->
-                                    <div class="tab-pane" id="tab_3">
-                                        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                                        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                                        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-                                        It has survived not only five centuries, but also the leap into electronic typesetting,
-                                        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-                                        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-                                        like Aldus PageMaker including versions of Lorem Ipsum.
+                                    <div class="tab-pane" id="family">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <!-- ----------[ADD FAMILY]------------ -->
+                                                <form method="post" @submit.prevent="onSubmit_Family">
+                                                    <div class="form-group">
+                                                        <label for="familyName">Name</label>
+                                                        <input type="text" class="form-control" id="familyName" v-model="formFamily.name" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familySurname">Surname</label>
+                                                        <input type="text" class="form-control" id="familySurname" v-model="formFamily.surname" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="family_list">Family</label>
+                                                        <select id="family_list" class="form-control" v-model="formFamily.parent" required>
+                                                            <option>Marido/ Dama</option>
+                                                            <option>Filho(a)</option>
+                                                            <option>Irmão(a)</option>
+                                                            <option>Outros</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                            <input type="checkbox" class="custom-control-input" id="familyGender" v-model="formFamily.gender">
+                                                            <label class="custom-control-label" for="familyGender">Male</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familyPhonenumber">Phone Number</label>
+                                                        <input type="number" class="form-control" id="familyPhonenumber" v-model="formFamily.phonenumber" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familyEmail">Email</label>
+                                                        <input type="email" class="form-control" id="familyEmail" v-model="formFamily.email" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="responsable" v-model="formFamily.responsable">
+                                                                <label class="custom-control-label" for="responsable">Responsable</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <!-- <div v-show="!information_save"> -->
+                                                            <button type="save" v-show="family_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                            <a type="edit" v-show="!family_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
+                                                            <a type="cancel" v-show="!family_save" @click="family_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                                                        <!-- </div> -->
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- [ALL FAMILY] -->
+                                            <div class="col-md-7 rounded-lg shadow-sm p-4">
+                                                <h3 class="font-weight-bolder text-center">Family List:</h3>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="card col-lg-3 col-4" v-for="family in familyList" @click="editFamily(family.id)" v-bind:key="family.id" style="cursor:pointer;">
+                                                        <div class="ribbon-wrapper" v-if="family.responsable == true">
+                                                            <div class="ribbon bg-primary">responsable</div>
+                                                        </div>
+                                                        <img class="card-img-top" :src="'images/family/' + family.gender + '.png'" alt="Card image">
+                                                        <div>
+                                                            <p class="text-center mb-0"><b>{{ family.name }} {{ family.surname }}</b></p>
+                                                            <p class="text-center mb-0">{{ family.parent }}</p>
+                                                            <p class="text-center mb-0">{{ family.phonenumber }}</p>
+                                                            <p class="text-center mb-0">{{ family.email }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!-- /.tab-pane -->
                                 </div>
@@ -266,7 +334,8 @@
 
             return {
                 information_save: true,
-                address_save: true,
+                address_save:     true,
+                family_save:      true,
 
                 // Information
                 formInformation: new Form({
@@ -294,17 +363,34 @@
                     'ocupation': '',
                 }),
 
+
                 // address
                 formAddress: new Form({
 
-                    //client
                     'client_id':'',
                     'street':'',
                     'number': '',
                     'city': '',
                     'state': '',
                     'country': '',
-                })
+                }),
+
+
+                // family
+                formFamily: new Form({
+
+                    'id': '',
+                    'client_id': '',
+                    'name':'',
+                    'surname':'',
+                    'parent': '',
+                    'gender': false,
+                    'phonenumber': '',
+                    'email': '',
+                    'responsable': false,
+                }),
+
+                familyList: [],
             }
 
         },
@@ -319,6 +405,9 @@
 
         methods: {
 
+            // --------------------------- [ INFORMATION ] ---------------------------
+            // =======================================================================
+
             // Save information of the photo
             onFileChange(event)
             {
@@ -327,7 +416,8 @@
             },
 
             // ----- ADD NEW CLIENT -----
-            onSubmit_Information(){
+            onSubmit_Information()
+            {
                 this.formInformation
                     .post('/clients')
                     .then(response => {
@@ -354,18 +444,22 @@
                         this.formInformation.available = response.specification.available;
                         this.formInformation.ocupation = response.specification.ocupation;
 
-                        // use client_id into address
+                        // use client_id into address | family
                         this.formAddress.client_id = this.formInformation.id;
+                        this.formFamily.client_id = this.formInformation.id;
 
                         this.information_save = false;
                         this.$toaster.success(this.formInformation.name + ' successful added');
                     })
             },
-            // END NEW CLIENT
 
+
+            // --------------------------- [ ADDRESS ] ---------------------------
+            // ===================================================================
 
             // ----- ADD ADDRESS -----
-            onSubmit_Address(){
+            onSubmit_Address()
+            {
                 this.formAddress
                     .post('/clientAddress')
                     .then(response => {
@@ -386,9 +480,83 @@
 
 
             // Go back to all clients
-            gotoClient(){
+            gotoClient()
+            {
                 this.$router.push('/clients/');
             },
+
+
+            // --------------------------- [ FAMILY ] ---------------------------
+            // ==================================================================
+
+            // ----- ADD FAMILY -----
+            onSubmit_Family()
+            {
+                this.formFamily
+                    .post('/family')
+                    .then(response => {
+
+                        let newFamily = new Object({
+                            'id':          response.id,
+                            'client_id':   response.client_id,
+                            'name':        response.name,
+                            'surname':     response.surname,
+                            'parent':      response.parent,
+                            'gender':      response.gender,
+                            'phonenumber': response.phonenumber,
+                            'email':       response.email,
+                            'responsable': response.responsable,
+                        });
+
+                        this.familyList.push(newFamily);
+
+                        // input information onto checkbox
+                        this.formFamily.gender      = false;
+                        this.formFamily.responsable = false;
+
+                        this.$toaster.success('Address added');
+                    })
+
+
+            },
+
+
+            // ----- EDIT FAMILY -----
+            editFamily(id)
+            {
+                axios.get('/family/' + id)
+                .then(response => {
+
+                    // Populate Inputs
+                    this.formFamily.id          = response.id;
+                    this.formFamily.client_id   = response.client_id;
+                    this.formFamily.name        = response.name;
+                    this.formFamily.surname     = response.surname;
+                    this.formFamily.parent      = response.parent;
+                    this.formFamily.gender      = response.gender;
+                    this.formFamily.phonenumber = response.phonenumber;
+                    this.formFamily.email       = response.email;
+                    this.formFamily.responsable = response.responsable;
+
+                    //edit button
+                    this.family_save = false;
+
+                });
+
+            },
+
+
+            // ----- MODIFY FAMILY -----
+            modifyFamily(){
+
+                this.formFamily
+                    .patch('/family')
+                    .than(response => {
+
+                    });
+
+
+            }
 
         }
     }

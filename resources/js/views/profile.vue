@@ -318,12 +318,13 @@
 
         methods: {
 
-            onSubmitInfo(){
-                    this.form
-                        .post('/setting/user')
-                        .then(user => {
-                            this.$toaster.success('Successful added ' + user.name);
-                        })
+            onSubmitInfo()
+            {
+                this.form
+                    .post('/setting/user')
+                    .then(user => {
+                        this.$toaster.success('Successful added ' + user.name);
+                    })
             },
 
         }

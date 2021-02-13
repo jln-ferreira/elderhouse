@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Family;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FamilyController extends Controller
 {
@@ -17,14 +19,39 @@ class FamilyController extends Controller
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+
+    public function create(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+
+            'name'        => ['required', 'string', 'max:100'],
+            'surname'     => ['required', 'string', 'max:100'],
+            'parent'      => ['required', 'string', 'max:100'],
+            'gender'      => ['required'],
+            'phonenumber' => ['required', 'numeric'],
+            'email'       => ['required', 'string', 'max:100'],
+            'responsable' => ['required']
+
+        ])->validate();
+
+
+        // FAMILY
+        $family = Family::Create([
+
+            'client_id'   => $request['client_id'],
+            'name'        => $request['name'],
+            'surname'     => $request['surname'],
+            'parent'      => $request['parent'],
+            'gender'      => $request['gender'],
+            'phonenumber' => $request['phonenumber'],
+            'email'       => $request['email'],
+            'responsable' => $request['responsable'],
+        ]);
+        $family->save();
+
+
+        return $family;
     }
 
     /**

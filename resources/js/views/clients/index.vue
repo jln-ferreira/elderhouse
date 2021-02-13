@@ -108,10 +108,12 @@
 
         methods: {
 
-            gotoProfile(id){
+            gotoProfile(id)
+            {
                 this.$router.push('/clients/' + id);
             },
-            gotoCreate(){
+            gotoCreate()
+            {
                 this.$router.push('/newclient/');
             },
 

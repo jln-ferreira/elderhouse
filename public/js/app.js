@@ -2265,11 +2265,80 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       information_save: true,
       address_save: true,
+      family_save: true,
       // Information
       formInformation: new Form({
         //client
@@ -2295,18 +2364,32 @@ __webpack_require__.r(__webpack_exports__);
       }),
       // address
       formAddress: new Form({
-        //client
         'client_id': '',
         'street': '',
         'number': '',
         'city': '',
         'state': '',
         'country': ''
-      })
+      }),
+      // family
+      formFamily: new Form({
+        'id': '',
+        'client_id': '',
+        'name': '',
+        'surname': '',
+        'parent': '',
+        'gender': false,
+        'phonenumber': '',
+        'email': '',
+        'responsable': false
+      }),
+      familyList: []
     };
   },
   created: function created() {},
   methods: {
+    // --------------------------- [ INFORMATION ] ---------------------------
+    // =======================================================================
     // Save information of the photo
     onFileChange: function onFileChange(event) {
       this.formInformation.photo = event.target.files[0];
@@ -2336,15 +2419,17 @@ __webpack_require__.r(__webpack_exports__);
         _this.formInformation.color = response.specification.color;
         _this.formInformation.religion = response.specification.religion;
         _this.formInformation.available = response.specification.available;
-        _this.formInformation.ocupation = response.specification.ocupation; // use client_id into address
+        _this.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family
 
         _this.formAddress.client_id = _this.formInformation.id;
+        _this.formFamily.client_id = _this.formInformation.id;
         _this.information_save = false;
 
         _this.$toaster.success(_this.formInformation.name + ' successful added');
       });
     },
-    // END NEW CLIENT
+    // --------------------------- [ ADDRESS ] ---------------------------
+    // ===================================================================
     // ----- ADD ADDRESS -----
     onSubmit_Address: function onSubmit_Address() {
       var _this2 = this;
@@ -2366,6 +2451,57 @@ __webpack_require__.r(__webpack_exports__);
     // Go back to all clients
     gotoClient: function gotoClient() {
       this.$router.push('/clients/');
+    },
+    // --------------------------- [ FAMILY ] ---------------------------
+    // ==================================================================
+    // ----- ADD FAMILY -----
+    onSubmit_Family: function onSubmit_Family() {
+      var _this3 = this;
+
+      this.formFamily.post('/family').then(function (response) {
+        var newFamily = new Object({
+          'id': response.id,
+          'client_id': response.client_id,
+          'name': response.name,
+          'surname': response.surname,
+          'parent': response.parent,
+          'gender': response.gender,
+          'phonenumber': response.phonenumber,
+          'email': response.email,
+          'responsable': response.responsable
+        });
+
+        _this3.familyList.push(newFamily); // input information onto checkbox
+
+
+        _this3.formFamily.gender = false;
+        _this3.formFamily.responsable = false;
+
+        _this3.$toaster.success('Address added');
+      });
+    },
+    // ----- EDIT FAMILY -----
+    editFamily: function editFamily(id) {
+      var _this4 = this;
+
+      axios.get('/family/' + id).then(function (response) {
+        // Populate Inputs
+        _this4.formFamily.id = response.id;
+        _this4.formFamily.client_id = response.client_id;
+        _this4.formFamily.name = response.name;
+        _this4.formFamily.surname = response.surname;
+        _this4.formFamily.parent = response.parent;
+        _this4.formFamily.gender = response.gender;
+        _this4.formFamily.phonenumber = response.phonenumber;
+        _this4.formFamily.email = response.email;
+        _this4.formFamily.responsable = response.responsable; //edit button
+
+        _this4.family_save = false;
+      });
+    },
+    // ----- MODIFY FAMILY -----
+    modifyFamily: function modifyFamily() {
+      this.formFamily.patch('/family').than(function (response) {});
     }
   }
 });
@@ -40229,7 +40365,7 @@ var render = function() {
                                       ],
                                       staticClass: "form-control",
                                       attrs: {
-                                        type: "text",
+                                        type: "number",
                                         id: "phonenumber",
                                         placeholder: "phonenumber",
                                         required: ""
@@ -41375,11 +41511,560 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "tab-pane", attrs: { id: "tab_3" } }, [
-                  _vm._v(
-                    "\n                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n                                    Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,\n                                    when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n                                    It has survived not only five centuries, but also the leap into electronic typesetting,\n                                    remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset\n                                    sheets containing Lorem Ipsum passages, and more recently with desktop publishing software\n                                    like Aldus PageMaker including versions of Lorem Ipsum.\n                                "
-                  )
-                ])
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "family" } },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-5" }, [
+                        _c(
+                          "form",
+                          {
+                            attrs: { method: "post" },
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.onSubmit_Family($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familyName" } }, [
+                                _vm._v("Name")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.name,
+                                    expression: "formFamily.name"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  id: "familyName",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.name },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "name",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familySurname" } }, [
+                                _vm._v("Surname")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.surname,
+                                    expression: "formFamily.surname"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  id: "familySurname",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.surname },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "surname",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "family_list" } }, [
+                                _vm._v("Family")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.formFamily.parent,
+                                      expression: "formFamily.parent"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { id: "family_list", required: "" },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.formFamily,
+                                        "parent",
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("option", [_vm._v("Marido/ Dama")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Filho(a)")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Irmão(a)")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Outros")])
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "custom-control custom-switch custom-switch-off-danger custom-switch-on-success"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.formFamily.gender,
+                                        expression: "formFamily.gender"
+                                      }
+                                    ],
+                                    staticClass: "custom-control-input",
+                                    attrs: {
+                                      type: "checkbox",
+                                      id: "familyGender"
+                                    },
+                                    domProps: {
+                                      checked: Array.isArray(
+                                        _vm.formFamily.gender
+                                      )
+                                        ? _vm._i(_vm.formFamily.gender, null) >
+                                          -1
+                                        : _vm.formFamily.gender
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$a = _vm.formFamily.gender,
+                                          $$el = $event.target,
+                                          $$c = $$el.checked ? true : false
+                                        if (Array.isArray($$a)) {
+                                          var $$v = null,
+                                            $$i = _vm._i($$a, $$v)
+                                          if ($$el.checked) {
+                                            $$i < 0 &&
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "gender",
+                                                $$a.concat([$$v])
+                                              )
+                                          } else {
+                                            $$i > -1 &&
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "gender",
+                                                $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1))
+                                              )
+                                          }
+                                        } else {
+                                          _vm.$set(
+                                            _vm.formFamily,
+                                            "gender",
+                                            $$c
+                                          )
+                                        }
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "label",
+                                    {
+                                      staticClass: "custom-control-label",
+                                      attrs: { for: "familyGender" }
+                                    },
+                                    [_vm._v("Male")]
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "familyPhonenumber" } },
+                                [_vm._v("Phone Number")]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.phonenumber,
+                                    expression: "formFamily.phonenumber"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "number",
+                                  id: "familyPhonenumber",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.phonenumber },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "phonenumber",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familyEmail" } }, [
+                                _vm._v("Email")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.email,
+                                    expression: "formFamily.email"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "email",
+                                  id: "familyEmail",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.email },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "email",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-3" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "custom-control custom-switch"
+                                    },
+                                    [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.formFamily.responsable,
+                                            expression: "formFamily.responsable"
+                                          }
+                                        ],
+                                        staticClass: "custom-control-input",
+                                        attrs: {
+                                          type: "checkbox",
+                                          id: "responsable"
+                                        },
+                                        domProps: {
+                                          checked: Array.isArray(
+                                            _vm.formFamily.responsable
+                                          )
+                                            ? _vm._i(
+                                                _vm.formFamily.responsable,
+                                                null
+                                              ) > -1
+                                            : _vm.formFamily.responsable
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            var $$a =
+                                                _vm.formFamily.responsable,
+                                              $$el = $event.target,
+                                              $$c = $$el.checked ? true : false
+                                            if (Array.isArray($$a)) {
+                                              var $$v = null,
+                                                $$i = _vm._i($$a, $$v)
+                                              if ($$el.checked) {
+                                                $$i < 0 &&
+                                                  _vm.$set(
+                                                    _vm.formFamily,
+                                                    "responsable",
+                                                    $$a.concat([$$v])
+                                                  )
+                                              } else {
+                                                $$i > -1 &&
+                                                  _vm.$set(
+                                                    _vm.formFamily,
+                                                    "responsable",
+                                                    $$a
+                                                      .slice(0, $$i)
+                                                      .concat(
+                                                        $$a.slice($$i + 1)
+                                                      )
+                                                  )
+                                              }
+                                            } else {
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "responsable",
+                                                $$c
+                                              )
+                                            }
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "custom-control-label",
+                                          attrs: { for: "responsable" }
+                                        },
+                                        [_vm._v("Responsable")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "button",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.family_save,
+                                      expression: "family_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-success",
+                                  attrs: { type: "save" }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-plus" }),
+                                  _vm._v(" Add")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.family_save,
+                                      expression: "!family_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-primary",
+                                  attrs: { type: "edit" },
+                                  on: { click: _vm.modifyFamily }
+                                },
+                                [
+                                  _c("i", { staticClass: "fas fa-user-edit" }),
+                                  _vm._v(" Edit")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.family_save,
+                                      expression: "!family_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-warning text-white",
+                                  attrs: { type: "cancel" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.family_save = true
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-times" }),
+                                  _vm._v(" Cancel")
+                                ]
+                              )
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-7 rounded-lg shadow-sm p-4" },
+                        [
+                          _c(
+                            "h3",
+                            { staticClass: "font-weight-bolder text-center" },
+                            [_vm._v("Family List:")]
+                          ),
+                          _vm._v(" "),
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "row" },
+                            _vm._l(_vm.familyList, function(family) {
+                              return _c(
+                                "div",
+                                {
+                                  key: family.id,
+                                  staticClass: "card col-lg-3 col-4",
+                                  staticStyle: { cursor: "pointer" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.editFamily(family.id)
+                                    }
+                                  }
+                                },
+                                [
+                                  family.responsable == true
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "ribbon-wrapper" },
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass: "ribbon bg-primary"
+                                            },
+                                            [_vm._v("responsable")]
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("img", {
+                                    staticClass: "card-img-top",
+                                    attrs: {
+                                      src:
+                                        "images/family/" +
+                                        family.gender +
+                                        ".png",
+                                      alt: "Card image"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("div", [
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [
+                                        _c("b", [
+                                          _vm._v(
+                                            _vm._s(family.name) +
+                                              " " +
+                                              _vm._s(family.surname)
+                                          )
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.parent))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.phonenumber))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.email))]
+                                    )
+                                  ])
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                )
               ])
             ])
           ])
@@ -41454,9 +42139,9 @@ var staticRenderFns = [
             "a",
             {
               staticClass: "nav-link",
-              attrs: { href: "#tab_3", "data-toggle": "tab" }
+              attrs: { href: "#family", "data-toggle": "tab" }
             },
-            [_vm._v("Tab 3")]
+            [_vm._v("Family")]
           )
         ])
       ])

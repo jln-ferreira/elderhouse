@@ -61,6 +61,14 @@ route::post('/setting/user', 'SettingsController@updateInformation');
 
 
 // ---------------
+// FAMILY
+route::post('/family', 'FamilyController@create');
+Route::patch('/family', 'FamilyController@update');
+// END FAMILY
+// ------------------
+
+
+// ---------------
 // ROLES
 Route::get('/roles', 'RoleController@index');
 // END ROLES
