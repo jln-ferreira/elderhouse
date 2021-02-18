@@ -85,7 +85,7 @@ class UsersController extends Controller
 
 
     // ---== MODIFY ==---
-    public function update(Request $request)
+    public function update(Request $request, $client_id)
     {
         Validator::make($request->all(), [
             'name'         => ['required', 'string', 'max:255'],

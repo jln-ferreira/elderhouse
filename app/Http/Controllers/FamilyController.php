@@ -87,16 +87,37 @@ class FamilyController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Family  $family
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Family $family)
+
+    // ---== MODIFY ==---
+    public function update(Request $request)
     {
-        //
+
+        Validator::make($request->all(), [
+
+            'name'        => ['required', 'string', 'max:100'],
+            'surname'     => ['required', 'string', 'max:100'],
+            'parent'      => ['required', 'string', 'max:100'],
+            'gender'      => ['required'],
+            'phonenumber' => ['required', 'numeric'],
+            'email'       => ['required', 'string', 'max:100'],
+            'responsable' => ['required']
+
+        ])->validate();
+
+        // modify family
+        $family = Family::find($request['id']);
+
+        $family->name        = $request['name'];
+        $family->surname     = $request['surname'];
+        $family->parent      = $request['parent'];
+        $family->gender      = $request['gender'];
+        $family->phonenumber = $request['phonenumber'];
+        $family->email       = $request['email'];
+        $family->responsable = $request['responsable'];
+
+        $family->save();
+
+        return $family;
     }
 
     /**

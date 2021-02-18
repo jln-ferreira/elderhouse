@@ -2334,6 +2334,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2499,7 +2503,26 @@ __webpack_require__.r(__webpack_exports__);
     },
     // ----- MODIFY FAMILY -----
     modifyFamily: function modifyFamily() {
-      this.formFamily.patch('/family').than(function (response) {});
+      var _this4 = this;
+
+      this.formFamily.patch('/family').then(function (response) {
+        var index = _this4.familyList.findIndex(function (x) {
+          return x.id === response.id;
+        });
+
+        _this4.familyList[index].client_id = response.client_id;
+        _this4.familyList[index].name = response.name;
+        _this4.familyList[index].surname = response.surname;
+        _this4.familyList[index].parent = response.parent;
+        _this4.familyList[index].gender = response.gender;
+        _this4.familyList[index].phonenumber = response.phonenumber;
+        _this4.familyList[index].email = response.email;
+        _this4.familyList[index].responsable = response.responsable; //edit button
+
+        _this4.family_save = true;
+
+        _this4.$toaster.success('Family edited');
+      });
     }
   }
 });
@@ -41571,7 +41594,19 @@ var render = function() {
                                     )
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("name")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("name")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
@@ -41607,7 +41642,19 @@ var render = function() {
                                     )
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("surname")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("surname")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
@@ -41776,7 +41823,19 @@ var render = function() {
                                     )
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("phonenumber")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("phonenumber")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
@@ -41812,7 +41871,19 @@ var render = function() {
                                     )
                                   }
                                 }
-                              })
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("email")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("email")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [

@@ -245,10 +245,12 @@
                                                     <div class="form-group">
                                                         <label for="familyName">Name</label>
                                                         <input type="text" class="form-control" id="familyName" v-model="formFamily.name" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('name')" v-text="formFamily.errors.get('name')"></span>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="familySurname">Surname</label>
                                                         <input type="text" class="form-control" id="familySurname" v-model="formFamily.surname" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('surname')" v-text="formFamily.errors.get('surname')"></span>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="family_list">Family</label>
@@ -268,10 +270,12 @@
                                                     <div class="form-group">
                                                         <label for="familyPhonenumber">Phone Number</label>
                                                         <input type="number" class="form-control" id="familyPhonenumber" v-model="formFamily.phonenumber" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('phonenumber')" v-text="formFamily.errors.get('phonenumber')"></span>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="familyEmail">Email</label>
                                                         <input type="email" class="form-control" id="familyEmail" v-model="formFamily.email" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('email')" v-text="formFamily.errors.get('email')"></span>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="form-group col-md-3">
@@ -548,11 +552,27 @@
             // ----- MODIFY FAMILY -----
             modifyFamily(){
 
-                this.formFamily
-                    .patch('/family')
-                    .than(response => {
 
-                    });
+                    this.formFamily
+                        .patch('/family')
+                        .then(response => {
+
+                            var index = this.familyList.findIndex(x => x.id === response.id);
+
+                            this.familyList[index].client_id = response.client_id;
+                            this.familyList[index].name = response.name;
+                            this.familyList[index].surname = response.surname;
+                            this.familyList[index].parent = response.parent;
+                            this.familyList[index].gender = response.gender;
+                            this.familyList[index].phonenumber = response.phonenumber;
+                            this.familyList[index].email = response.email;
+                            this.familyList[index].responsable = response.responsable;
+
+                            //edit button
+                            this.family_save = true;
+
+                            this.$toaster.success('Family edited');
+                        });
 
 
             }
