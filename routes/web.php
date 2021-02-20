@@ -76,5 +76,12 @@ Route::get('/roles', 'RoleController@index');
 // ------------------
 
 
+// ---------------
+// DIAGNOSTIC
+Route::get('/diagnostics', 'DiagnosticController@index');
+// END DIAGNOSTIC
+// ------------------
+
+
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809
 // https://adminlte.io/themes/AdminLTE/documentation/index.html#download

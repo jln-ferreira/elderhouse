@@ -14,7 +14,7 @@ class DiagnosticController extends Controller
      */
     public function index()
     {
-        //
+        return Diagnostic::where('active', 1)->get();
     }
 
     /**

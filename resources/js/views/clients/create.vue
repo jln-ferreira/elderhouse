@@ -322,50 +322,33 @@
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="diagnostic">
                                         <div class="row">
-                                            <div class="col-md-5">
-                                                <!-- ----------[ADD FAMILY]------------ -->
+                                            <div class="col-lg-5">
+                                                <!-- ----------[ADD DIAGNOSTIC]------------ -->
                                                 <form method="post" @submit.prevent="onSubmit_Family">
-                                                    <div class="form-group">
-                                                        <label for="familyName">Name</label>
-                                                        <input type="text" class="form-control" id="familyName" v-model="formFamily.name" required>
-                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('name')" v-text="formFamily.errors.get('name')"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="familySurname">Surname</label>
-                                                        <input type="text" class="form-control" id="familySurname" v-model="formFamily.surname" required>
-                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('surname')" v-text="formFamily.errors.get('surname')"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="family_list">Family</label>
-                                                        <select id="family_list" class="form-control" v-model="formFamily.parent" required>
-                                                            <option>Marido/ Dama</option>
-                                                            <option>Filho(a)</option>
-                                                            <option>Irmão(a)</option>
-                                                            <option>Outros</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                                                            <input type="checkbox" class="custom-control-input" id="familyGender" v-model="formFamily.gender">
-                                                            <label class="custom-control-label" for="familyGender">Male</label>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="diagnostic">Diagnostic</label>
+                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.name" required>
+                                                                <option v-for="diagnostic in diagnosticList" v-text='diagnostic.name' v-bind:key="diagnostic.id" :value="diagnostic.id"></option>
+                                                            </select>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('name')" v-text="formDiagnostic.errors.get('name')"></span>
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                            <label for="rank">Rank</label>
+                                                            <input type="number" class="form-control" id="rank" placeholder="92" min="1" v-model="formDiagnostic.rank" disabled>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('rank')" v-text="formDiagnostic.errors.get('rank')"></span>
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label for="dateDiagnostic">Date</label>
+                                                            <input type="date" class="form-control" id="dateDiagnostic" min="1" v-model="formDiagnostic.date">
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('date')" v-text="formDiagnostic.errors.get('date')"></span>
                                                         </div>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="familyPhonenumber">Phone Number</label>
-                                                        <input type="number" class="form-control" id="familyPhonenumber" v-model="formFamily.phonenumber" required>
-                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('phonenumber')" v-text="formFamily.errors.get('phonenumber')"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="familyEmail">Email</label>
-                                                        <input type="email" class="form-control" id="familyEmail" v-model="formFamily.email" required>
-                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('email')" v-text="formFamily.errors.get('email')"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <div class="form-group col-md-3">
-                                                            <div class="custom-control custom-switch">
-                                                                <input type="checkbox" class="custom-control-input" id="responsable" v-model="formFamily.responsable">
-                                                                <label class="custom-control-label" for="responsable">Responsable</label>
-                                                            </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="comment">Comments</label>
+                                                            <textarea class="form-control" id="comment" v-model="formDiagnostic.comment"></textarea>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('comment')" v-text="formDiagnostic.errors.get('comment')"></span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
@@ -378,24 +361,50 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                            <!-- [ALL FAMILY] -->
-                                            <div class="col-md-7 rounded-lg shadow-sm p-4">
-                                                <h3 class="font-weight-bolder text-center">Family List:</h3>
-                                                <hr/>
-                                                <div class="row">
-                                                    <div class="card col-lg-3 col-4" v-for="(family, index) in familyList" @click="editFamily(index)" v-bind:key="family.id" style="cursor:pointer;">
-                                                        <div class="ribbon-wrapper" v-if="family.responsable == true">
-                                                            <div class="ribbon bg-primary">responsable</div>
-                                                        </div>
-                                                        <img class="card-img-top" :src="'images/family/' + family.gender + '.png'" alt="Card image">
-                                                        <div>
-                                                            <p class="text-center mb-0"><b>{{ family.name }} {{ family.surname }}</b></p>
-                                                            <p class="text-center mb-0">{{ family.parent }}</p>
-                                                            <p class="text-center mb-0">{{ family.phonenumber }}</p>
-                                                            <p class="text-center mb-0">{{ family.email }}</p>
+                                            <!-- [ALL DIAGNOSTIC] -->
+                                            <div class="col-lg-7">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title font-weight-bold">List Diagnostic</h3>
+
+                                                        <div class="card-tools">
+                                                            <div class="input-group input-group-sm" style="width: 150px;">
+                                                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
+
+                                                                <div class="input-group-append">
+                                                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body table-responsive p-0">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Diagnostic</th>
+                                                                <th>Rank</th>
+                                                                <th>Date</th>
+                                                                <th>Comment</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(user, index) in filteredList" v-bind:key="user.id">
+                                                                    <td>{{user.id}}</td>
+                                                                    <td>{{user.name}}</td>
+                                                                    <td>{{user.email}}</td>
+                                                                    <td>
+                                                                        <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
+                                                                        <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!-- /.card-body -->
                                                 </div>
+                                                <!-- /.card -->
                                             </div>
                                         </div>
                                     </div>
@@ -481,13 +490,31 @@
                 }),
 
                 familyList: [],
+
+
+                // diagnostic
+                formDiagnostic: new Form({
+
+                    'id': '',
+                    'client_id': '',
+                    'diagnostic_id':'',
+                    'name':'',
+                    'rank':'',
+                    'date': '',
+                    'comment': '',
+                }),
+
+                diagnosticListClient: [],
+                diagnosticList      : [],
             }
 
         },
 
 
         created() {
-
+            // Fetch especific diagnostic
+            axios.get('/diagnostics')
+                .then(response => this.diagnosticList = response.data);
 
 
         },
