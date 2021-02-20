@@ -2338,12 +2338,97 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       information_save: true,
       address_save: true,
       family_save: true,
+      diagnostic_save: true,
       // Information
       formInformation: new Form({
         //client
@@ -2522,6 +2607,21 @@ __webpack_require__.r(__webpack_exports__);
         _this4.family_save = true;
 
         _this4.$toaster.success('Family edited');
+      });
+    },
+    deleteFamily: function deleteFamily() {
+      var _this5 = this;
+
+      this.formFamily["delete"]('/family/').then(function (response) {
+        var count = 0;
+
+        _this5.familyList.forEach(function (element) {
+          element.id == response.data.id ? _this5.users.splice(count, 1) : count += 1;
+        });
+
+        _this5.family_save = true;
+
+        _this5.$toaster.success('Successful Deleted');
       });
     }
   }
@@ -41977,88 +42077,751 @@ var render = function() {
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
                               _c(
-                                "button",
+                                "div",
                                 {
                                   directives: [
                                     {
                                       name: "show",
                                       rawName: "v-show",
-                                      value: _vm.family_save,
-                                      expression: "family_save"
+                                      value: !_vm.information_save,
+                                      expression: "!information_save"
                                     }
-                                  ],
-                                  staticClass: "btn btn-success",
-                                  attrs: { type: "save" }
+                                  ]
                                 },
                                 [
-                                  _c("i", { staticClass: "fa fa-plus" }),
-                                  _vm._v(" Add")
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  directives: [
+                                  _c(
+                                    "button",
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.family_save,
-                                      expression: "!family_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-primary",
-                                  attrs: { type: "edit" },
-                                  on: { click: _vm.modifyFamily }
-                                },
-                                [
-                                  _c("i", { staticClass: "fas fa-user-edit" }),
-                                  _vm._v(" Edit")
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  directives: [
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.information_save,
+                                          expression: "!information_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-success",
+                                      attrs: { type: "save" }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-plus" }),
+                                      _vm._v(" Add")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.family_save,
-                                      expression: "!family_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-danger text-white",
-                                  attrs: { type: "delete" }
-                                },
-                                [
-                                  _c("i", { staticClass: "far fa-trash-alt" }),
-                                  _vm._v(" Delete")
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  directives: [
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.family_save,
+                                          expression: "!family_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-primary",
+                                      attrs: { type: "edit" },
+                                      on: { click: _vm.modifyFamily }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-user-edit"
+                                      }),
+                                      _vm._v(" Edit")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.family_save,
-                                      expression: "!family_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-warning text-white",
-                                  attrs: { type: "cancel" },
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.family_save,
+                                          expression: "!family_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-danger text-white",
+                                      attrs: { type: "delete" },
+                                      on: { click: _vm.deleteFamily }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "far fa-trash-alt"
+                                      }),
+                                      _vm._v(" Delete")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.family_save,
+                                          expression: "!family_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-warning text-white",
+                                      attrs: { type: "cancel" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.family_save = true
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-times" }),
+                                      _vm._v(" Cancel")
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-7 rounded-lg shadow-sm p-4" },
+                        [
+                          _c(
+                            "h3",
+                            { staticClass: "font-weight-bolder text-center" },
+                            [_vm._v("Family List:")]
+                          ),
+                          _vm._v(" "),
+                          _c("hr"),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "row" },
+                            _vm._l(_vm.familyList, function(family, index) {
+                              return _c(
+                                "div",
+                                {
+                                  key: family.id,
+                                  staticClass: "card col-lg-3 col-4",
+                                  staticStyle: { cursor: "pointer" },
                                   on: {
                                     click: function($event) {
-                                      _vm.family_save = true
+                                      return _vm.editFamily(index)
                                     }
                                   }
                                 },
                                 [
-                                  _c("i", { staticClass: "fa fa-times" }),
-                                  _vm._v(" Cancel")
+                                  family.responsable == true
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "ribbon-wrapper" },
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass: "ribbon bg-primary"
+                                            },
+                                            [_vm._v("responsable")]
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("img", {
+                                    staticClass: "card-img-top",
+                                    attrs: {
+                                      src:
+                                        "images/family/" +
+                                        family.gender +
+                                        ".png",
+                                      alt: "Card image"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("div", [
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [
+                                        _c("b", [
+                                          _vm._v(
+                                            _vm._s(family.name) +
+                                              " " +
+                                              _vm._s(family.surname)
+                                          )
+                                        ])
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.parent))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.phonenumber))]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "p",
+                                      { staticClass: "text-center mb-0" },
+                                      [_vm._v(_vm._s(family.email))]
+                                    )
+                                  ])
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "diagnostic" } },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-5" }, [
+                        _c(
+                          "form",
+                          {
+                            attrs: { method: "post" },
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.onSubmit_Family($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familyName" } }, [
+                                _vm._v("Name")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.name,
+                                    expression: "formFamily.name"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  id: "familyName",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.name },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "name",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("name")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("name")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familySurname" } }, [
+                                _vm._v("Surname")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.surname,
+                                    expression: "formFamily.surname"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "text",
+                                  id: "familySurname",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.surname },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "surname",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("surname")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("surname")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "family_list" } }, [
+                                _vm._v("Family")
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "select",
+                                {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.formFamily.parent,
+                                      expression: "formFamily.parent"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: { id: "family_list", required: "" },
+                                  on: {
+                                    change: function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.formFamily,
+                                        "parent",
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("option", [_vm._v("Marido/ Dama")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Filho(a)")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Irmão(a)")]),
+                                  _vm._v(" "),
+                                  _c("option", [_vm._v("Outros")])
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "custom-control custom-switch custom-switch-off-danger custom-switch-on-success"
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.formFamily.gender,
+                                        expression: "formFamily.gender"
+                                      }
+                                    ],
+                                    staticClass: "custom-control-input",
+                                    attrs: {
+                                      type: "checkbox",
+                                      id: "familyGender"
+                                    },
+                                    domProps: {
+                                      checked: Array.isArray(
+                                        _vm.formFamily.gender
+                                      )
+                                        ? _vm._i(_vm.formFamily.gender, null) >
+                                          -1
+                                        : _vm.formFamily.gender
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        var $$a = _vm.formFamily.gender,
+                                          $$el = $event.target,
+                                          $$c = $$el.checked ? true : false
+                                        if (Array.isArray($$a)) {
+                                          var $$v = null,
+                                            $$i = _vm._i($$a, $$v)
+                                          if ($$el.checked) {
+                                            $$i < 0 &&
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "gender",
+                                                $$a.concat([$$v])
+                                              )
+                                          } else {
+                                            $$i > -1 &&
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "gender",
+                                                $$a
+                                                  .slice(0, $$i)
+                                                  .concat($$a.slice($$i + 1))
+                                              )
+                                          }
+                                        } else {
+                                          _vm.$set(
+                                            _vm.formFamily,
+                                            "gender",
+                                            $$c
+                                          )
+                                        }
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "label",
+                                    {
+                                      staticClass: "custom-control-label",
+                                      attrs: { for: "familyGender" }
+                                    },
+                                    [_vm._v("Male")]
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "familyPhonenumber" } },
+                                [_vm._v("Phone Number")]
+                              ),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.phonenumber,
+                                    expression: "formFamily.phonenumber"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "number",
+                                  id: "familyPhonenumber",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.phonenumber },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "phonenumber",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("phonenumber")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("phonenumber")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("label", { attrs: { for: "familyEmail" } }, [
+                                _vm._v("Email")
+                              ]),
+                              _vm._v(" "),
+                              _c("input", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formFamily.email,
+                                    expression: "formFamily.email"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: {
+                                  type: "email",
+                                  id: "familyEmail",
+                                  required: ""
+                                },
+                                domProps: { value: _vm.formFamily.email },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formFamily,
+                                      "email",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              }),
+                              _vm._v(" "),
+                              _vm.formFamily.errors.has("email")
+                                ? _c("span", {
+                                    staticClass: "invalid-feedback d-block",
+                                    attrs: { role: "alert" },
+                                    domProps: {
+                                      textContent: _vm._s(
+                                        _vm.formFamily.errors.get("email")
+                                      )
+                                    }
+                                  })
+                                : _vm._e()
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-3" },
+                                [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "custom-control custom-switch"
+                                    },
+                                    [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.formFamily.responsable,
+                                            expression: "formFamily.responsable"
+                                          }
+                                        ],
+                                        staticClass: "custom-control-input",
+                                        attrs: {
+                                          type: "checkbox",
+                                          id: "responsable"
+                                        },
+                                        domProps: {
+                                          checked: Array.isArray(
+                                            _vm.formFamily.responsable
+                                          )
+                                            ? _vm._i(
+                                                _vm.formFamily.responsable,
+                                                null
+                                              ) > -1
+                                            : _vm.formFamily.responsable
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            var $$a =
+                                                _vm.formFamily.responsable,
+                                              $$el = $event.target,
+                                              $$c = $$el.checked ? true : false
+                                            if (Array.isArray($$a)) {
+                                              var $$v = null,
+                                                $$i = _vm._i($$a, $$v)
+                                              if ($$el.checked) {
+                                                $$i < 0 &&
+                                                  _vm.$set(
+                                                    _vm.formFamily,
+                                                    "responsable",
+                                                    $$a.concat([$$v])
+                                                  )
+                                              } else {
+                                                $$i > -1 &&
+                                                  _vm.$set(
+                                                    _vm.formFamily,
+                                                    "responsable",
+                                                    $$a
+                                                      .slice(0, $$i)
+                                                      .concat(
+                                                        $$a.slice($$i + 1)
+                                                      )
+                                                  )
+                                              }
+                                            } else {
+                                              _vm.$set(
+                                                _vm.formFamily,
+                                                "responsable",
+                                                $$c
+                                              )
+                                            }
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "custom-control-label",
+                                          attrs: { for: "responsable" }
+                                        },
+                                        [_vm._v("Responsable")]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.information_save,
+                                      expression: "!information_save"
+                                    }
+                                  ]
+                                },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.information_save,
+                                          expression: "information_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-success",
+                                      attrs: { type: "save" }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-plus" }),
+                                      _vm._v(" Add")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.diagnostic_save,
+                                          expression: "!diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-primary",
+                                      attrs: { type: "edit" },
+                                      on: { click: _vm.modifyFamily }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-user-edit"
+                                      }),
+                                      _vm._v(" Edit")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.diagnostic_save,
+                                          expression: "!diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-danger text-white",
+                                      attrs: { type: "delete" },
+                                      on: { click: _vm.deleteFamily }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "far fa-trash-alt"
+                                      }),
+                                      _vm._v(" Delete")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.diagnostic_save,
+                                          expression: "!diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-warning text-white",
+                                      attrs: { type: "cancel" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.diagnostic_save = true
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-times" }),
+                                      _vm._v(" Cancel")
+                                    ]
+                                  )
                                 ]
                               )
                             ])
@@ -42242,6 +43005,17 @@ var staticRenderFns = [
               attrs: { href: "#family", "data-toggle": "tab" }
             },
             [_vm._v("Family")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link",
+              attrs: { href: "#diagnostic", "data-toggle": "tab" }
+            },
+            [_vm._v("Diagnostic")]
           )
         ])
       ])

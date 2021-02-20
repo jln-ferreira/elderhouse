@@ -18,6 +18,7 @@ class CreateDiagnosticClientsTable extends Migration
             $table->integer('diagnostic_id')->unsigned();
             $table->integer('client_id')->unsigned();
             $table->date('date');
+            $table->text('comments');
             $table->smallInteger('active')->default('1');
             $table->timestamps();
         });

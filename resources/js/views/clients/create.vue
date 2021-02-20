@@ -30,6 +30,7 @@
                                     <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Information</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab">Diagnostic</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -286,12 +287,12 @@
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <!-- <div v-show="!information_save"> -->
-                                                            <button type="save" v-show="family_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                        <div v-show="!information_save">
+                                                            <button type="save" v-show="!information_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
                                                             <a type="edit" v-show="!family_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
-                                                            <a type="delete" v-show="!family_save" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
+                                                            <a type="delete" v-show="!family_save" @click="deleteFamily" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
                                                             <a type="cancel" v-show="!family_save" @click="family_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
-                                                        <!-- </div> -->
+                                                        </div>
                                                     </div>
                                                 </form>
                                             </div>
@@ -317,6 +318,89 @@
                                         </div>
                                     </div>
                                     <!-- /.tab-pane -->
+
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="diagnostic">
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <!-- ----------[ADD FAMILY]------------ -->
+                                                <form method="post" @submit.prevent="onSubmit_Family">
+                                                    <div class="form-group">
+                                                        <label for="familyName">Name</label>
+                                                        <input type="text" class="form-control" id="familyName" v-model="formFamily.name" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('name')" v-text="formFamily.errors.get('name')"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familySurname">Surname</label>
+                                                        <input type="text" class="form-control" id="familySurname" v-model="formFamily.surname" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('surname')" v-text="formFamily.errors.get('surname')"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="family_list">Family</label>
+                                                        <select id="family_list" class="form-control" v-model="formFamily.parent" required>
+                                                            <option>Marido/ Dama</option>
+                                                            <option>Filho(a)</option>
+                                                            <option>Irmão(a)</option>
+                                                            <option>Outros</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
+                                                            <input type="checkbox" class="custom-control-input" id="familyGender" v-model="formFamily.gender">
+                                                            <label class="custom-control-label" for="familyGender">Male</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familyPhonenumber">Phone Number</label>
+                                                        <input type="number" class="form-control" id="familyPhonenumber" v-model="formFamily.phonenumber" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('phonenumber')" v-text="formFamily.errors.get('phonenumber')"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="familyEmail">Email</label>
+                                                        <input type="email" class="form-control" id="familyEmail" v-model="formFamily.email" required>
+                                                        <span class="invalid-feedback d-block" role="alert" v-if="formFamily.errors.has('email')" v-text="formFamily.errors.get('email')"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="form-group col-md-3">
+                                                            <div class="custom-control custom-switch">
+                                                                <input type="checkbox" class="custom-control-input" id="responsable" v-model="formFamily.responsable">
+                                                                <label class="custom-control-label" for="responsable">Responsable</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div v-show="!information_save">
+                                                            <button type="save" v-show="information_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                            <a type="edit" v-show="!diagnostic_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
+                                                            <a type="delete" v-show="!diagnostic_save" @click="deleteFamily" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
+                                                            <a type="cancel" v-show="!diagnostic_save" @click="diagnostic_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- [ALL FAMILY] -->
+                                            <div class="col-md-7 rounded-lg shadow-sm p-4">
+                                                <h3 class="font-weight-bolder text-center">Family List:</h3>
+                                                <hr/>
+                                                <div class="row">
+                                                    <div class="card col-lg-3 col-4" v-for="(family, index) in familyList" @click="editFamily(index)" v-bind:key="family.id" style="cursor:pointer;">
+                                                        <div class="ribbon-wrapper" v-if="family.responsable == true">
+                                                            <div class="ribbon bg-primary">responsable</div>
+                                                        </div>
+                                                        <img class="card-img-top" :src="'images/family/' + family.gender + '.png'" alt="Card image">
+                                                        <div>
+                                                            <p class="text-center mb-0"><b>{{ family.name }} {{ family.surname }}</b></p>
+                                                            <p class="text-center mb-0">{{ family.parent }}</p>
+                                                            <p class="text-center mb-0">{{ family.phonenumber }}</p>
+                                                            <p class="text-center mb-0">{{ family.email }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
@@ -341,6 +425,7 @@
                 information_save: true,
                 address_save:     true,
                 family_save:      true,
+                diagnostic_save:  true,
 
                 // Information
                 formInformation: new Form({
@@ -522,8 +607,6 @@
 
                         this.$toaster.success('Address added');
                     })
-
-
             },
 
 
@@ -543,39 +626,51 @@
 
                 //edit button
                 this.family_save = false;
-
-
-
             },
 
 
             // ----- MODIFY FAMILY -----
             modifyFamily(){
 
+                this.formFamily
+                    .patch('/family')
+                    .then(response => {
 
-                    this.formFamily
-                        .patch('/family')
-                        .then(response => {
+                        var index = this.familyList.findIndex(x => x.id === response.id);
 
-                            var index = this.familyList.findIndex(x => x.id === response.id);
+                        this.familyList[index].client_id = response.client_id;
+                        this.familyList[index].name = response.name;
+                        this.familyList[index].surname = response.surname;
+                        this.familyList[index].parent = response.parent;
+                        this.familyList[index].gender = response.gender;
+                        this.familyList[index].phonenumber = response.phonenumber;
+                        this.familyList[index].email = response.email;
+                        this.familyList[index].responsable = response.responsable;
 
-                            this.familyList[index].client_id = response.client_id;
-                            this.familyList[index].name = response.name;
-                            this.familyList[index].surname = response.surname;
-                            this.familyList[index].parent = response.parent;
-                            this.familyList[index].gender = response.gender;
-                            this.familyList[index].phonenumber = response.phonenumber;
-                            this.familyList[index].email = response.email;
-                            this.familyList[index].responsable = response.responsable;
+                        //edit button
+                        this.family_save = true;
 
-                            //edit button
-                            this.family_save = true;
+                        this.$toaster.success('Family edited');
+                    });
+            },
 
-                            this.$toaster.success('Family edited');
-                        });
 
+            deleteFamily()
+            {
+                this.formFamily
+                .delete('/family/')
+                .then(response => {
+                    var count = 0
+                    this.familyList.forEach(element => {
+                        element.id == (response.data.id) ? this.users.splice(count,1) : count +=1;
+                    });
+
+                    this.family_save = true;
+                    this.$toaster.success('Successful Deleted');
+                });
 
             }
+
 
         }
     }

@@ -63,7 +63,8 @@ route::post('/setting/user', 'SettingsController@updateInformation');
 // ---------------
 // FAMILY
 route::post('/family', 'FamilyController@create');
-Route::patch('/family', 'FamilyController@update');
+Route::patch('/family', 'FamilyController@updateClient');
+Route::delete('/family', 'FamilyController@deleteClient');
 // END FAMILY
 // ------------------
 

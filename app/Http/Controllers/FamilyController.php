@@ -54,42 +54,26 @@ class FamilyController extends Controller
         return $family;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Family  $family
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function show(Family $family)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Family  $family
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Family $family)
     {
         //
     }
 
 
-    // ---== MODIFY ==---
-    public function update(Request $request)
+    public function updateClient(Request $request)
     {
 
         Validator::make($request->all(), [
@@ -120,14 +104,15 @@ class FamilyController extends Controller
         return $family;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Family  $family
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Family $family)
+
+    public function deleteClient(Request $request)
     {
-        //
+        $family = Family::find($request['id']);
+        $family->active = 0;
+        $family->save();
+
+        return $family;
     }
+
+
 }
