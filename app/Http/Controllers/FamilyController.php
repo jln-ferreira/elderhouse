@@ -21,7 +21,7 @@ class FamilyController extends Controller
 
 
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         Validator::make($request->all(), [
 
@@ -53,12 +53,6 @@ class FamilyController extends Controller
 
         return $family;
     }
-
-    public function store(Request $request)
-    {
-        //
-    }
-
 
 
     public function show(Family $family)

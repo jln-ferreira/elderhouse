@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Diagnostic;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DiagnosticController extends Controller
 {
@@ -27,15 +28,9 @@ class DiagnosticController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

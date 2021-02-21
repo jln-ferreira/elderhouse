@@ -2005,6 +2005,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2491,7 +2493,7 @@ __webpack_require__.r(__webpack_exports__);
         'name': '',
         'rank': '',
         'date': '',
-        'comment': ''
+        'comments': ''
       }),
       diagnosticListClient: [],
       diagnosticList: []
@@ -2537,10 +2539,11 @@ __webpack_require__.r(__webpack_exports__);
         _this2.formInformation.color = response.specification.color;
         _this2.formInformation.religion = response.specification.religion;
         _this2.formInformation.available = response.specification.available;
-        _this2.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family
+        _this2.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
 
         _this2.formAddress.client_id = _this2.formInformation.id;
         _this2.formFamily.client_id = _this2.formInformation.id;
+        _this2.formDiagnostic.client_id = _this2.formInformation.id;
         _this2.information_save = false;
 
         _this2.$toaster.success(_this2.formInformation.name + ' successful added');
@@ -2650,6 +2653,29 @@ __webpack_require__.r(__webpack_exports__);
         _this6.family_save = true;
 
         _this6.$toaster.success('Successful Deleted');
+      });
+    },
+    // ------------------------- [ DIAGNOSTIC ] -------------------------
+    // ==================================================================
+    // ----- ADD DIAGNOSTIC -----
+    onSubmit_Diagnostic: function onSubmit_Diagnostic() {
+      var _this7 = this;
+
+      this.formDiagnostic.post('/diagnosticsClient').then(function (response) {
+        var newDiagnostic = new Object(_defineProperty({
+          'id': response.id,
+          'diagnostic_id': response.diagnostic_id,
+          'client_id': response.client_id,
+          'comments': response.comments,
+          'date': response.date
+        }, "date", response.date));
+
+        _this7.diagnosticList.push(newDiagnostic); // input information onto checkbox
+
+
+        _this7.formDiagnostic.client_id = response.client_id;
+
+        _this7.$toaster.success('Address added');
       });
     }
   }
@@ -42327,7 +42353,7 @@ var render = function() {
                             on: {
                               submit: function($event) {
                                 $event.preventDefault()
-                                return _vm.onSubmit_Family($event)
+                                return _vm.onSubmit_Diagnostic($event)
                               }
                             }
                           },
@@ -42350,8 +42376,10 @@ var render = function() {
                                         {
                                           name: "model",
                                           rawName: "v-model",
-                                          value: _vm.formDiagnostic.name,
-                                          expression: "formDiagnostic.name"
+                                          value:
+                                            _vm.formDiagnostic.diagnostic_id,
+                                          expression:
+                                            "formDiagnostic.diagnostic_id"
                                         }
                                       ],
                                       staticClass: "form-control",
@@ -42374,7 +42402,7 @@ var render = function() {
                                             })
                                           _vm.$set(
                                             _vm.formDiagnostic,
-                                            "name",
+                                            "diagnostic_id",
                                             $event.target.multiple
                                               ? $$selectedVal
                                               : $$selectedVal[0]
@@ -42452,21 +42480,7 @@ var render = function() {
                                         )
                                       }
                                     }
-                                  }),
-                                  _vm._v(" "),
-                                  _vm.formDiagnostic.errors.has("rank")
-                                    ? _c("span", {
-                                        staticClass: "invalid-feedback d-block",
-                                        attrs: { role: "alert" },
-                                        domProps: {
-                                          textContent: _vm._s(
-                                            _vm.formDiagnostic.errors.get(
-                                              "rank"
-                                            )
-                                          )
-                                        }
-                                      })
-                                    : _vm._e()
+                                  })
                                 ]
                               ),
                               _vm._v(" "),
@@ -42493,7 +42507,8 @@ var render = function() {
                                     attrs: {
                                       type: "date",
                                       id: "dateDiagnostic",
-                                      min: "1"
+                                      min: "1",
+                                      required: ""
                                     },
                                     domProps: {
                                       value: _vm.formDiagnostic.date
@@ -42534,7 +42549,7 @@ var render = function() {
                                 "div",
                                 { staticClass: "form-group col-md-12" },
                                 [
-                                  _c("label", { attrs: { for: "comment" } }, [
+                                  _c("label", { attrs: { for: "comments" } }, [
                                     _vm._v("Comments")
                                   ]),
                                   _vm._v(" "),
@@ -42543,14 +42558,14 @@ var render = function() {
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.formDiagnostic.comment,
-                                        expression: "formDiagnostic.comment"
+                                        value: _vm.formDiagnostic.comments,
+                                        expression: "formDiagnostic.comments"
                                       }
                                     ],
                                     staticClass: "form-control",
-                                    attrs: { id: "comment" },
+                                    attrs: { id: "comments" },
                                     domProps: {
-                                      value: _vm.formDiagnostic.comment
+                                      value: _vm.formDiagnostic.comments
                                     },
                                     on: {
                                       input: function($event) {
@@ -42559,21 +42574,21 @@ var render = function() {
                                         }
                                         _vm.$set(
                                           _vm.formDiagnostic,
-                                          "comment",
+                                          "comments",
                                           $event.target.value
                                         )
                                       }
                                     }
                                   }),
                                   _vm._v(" "),
-                                  _vm.formDiagnostic.errors.has("comment")
+                                  _vm.formDiagnostic.errors.has("comments")
                                     ? _c("span", {
                                         staticClass: "invalid-feedback d-block",
                                         attrs: { role: "alert" },
                                         domProps: {
                                           textContent: _vm._s(
                                             _vm.formDiagnostic.errors.get(
-                                              "comment"
+                                              "comments"
                                             )
                                           )
                                         }
@@ -42585,108 +42600,89 @@ var render = function() {
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
                               _c(
-                                "div",
+                                "button",
                                 {
                                   directives: [
                                     {
                                       name: "show",
                                       rawName: "v-show",
-                                      value: !_vm.information_save,
-                                      expression: "!information_save"
+                                      value: _vm.information_save,
+                                      expression: "information_save"
                                     }
-                                  ]
+                                  ],
+                                  staticClass: "btn btn-success",
+                                  attrs: { type: "save" }
                                 },
                                 [
-                                  _c(
-                                    "button",
+                                  _c("i", { staticClass: "fa fa-plus" }),
+                                  _vm._v(" Add")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
                                     {
-                                      directives: [
-                                        {
-                                          name: "show",
-                                          rawName: "v-show",
-                                          value: _vm.information_save,
-                                          expression: "information_save"
-                                        }
-                                      ],
-                                      staticClass: "btn btn-success",
-                                      attrs: { type: "save" }
-                                    },
-                                    [
-                                      _c("i", { staticClass: "fa fa-plus" }),
-                                      _vm._v(" Add")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.diagnostic_save,
+                                      expression: "!diagnostic_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-primary",
+                                  attrs: { type: "edit" },
+                                  on: { click: _vm.modifyFamily }
+                                },
+                                [
+                                  _c("i", { staticClass: "fas fa-user-edit" }),
+                                  _vm._v(" Edit")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
                                     {
-                                      directives: [
-                                        {
-                                          name: "show",
-                                          rawName: "v-show",
-                                          value: !_vm.diagnostic_save,
-                                          expression: "!diagnostic_save"
-                                        }
-                                      ],
-                                      staticClass: "btn btn-primary",
-                                      attrs: { type: "edit" },
-                                      on: { click: _vm.modifyFamily }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fas fa-user-edit"
-                                      }),
-                                      _vm._v(" Edit")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.diagnostic_save,
+                                      expression: "!diagnostic_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-danger text-white",
+                                  attrs: { type: "delete" },
+                                  on: { click: _vm.deleteFamily }
+                                },
+                                [
+                                  _c("i", { staticClass: "far fa-trash-alt" }),
+                                  _vm._v(" Delete")
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "a",
+                                {
+                                  directives: [
                                     {
-                                      directives: [
-                                        {
-                                          name: "show",
-                                          rawName: "v-show",
-                                          value: !_vm.diagnostic_save,
-                                          expression: "!diagnostic_save"
-                                        }
-                                      ],
-                                      staticClass: "btn btn-danger text-white",
-                                      attrs: { type: "delete" },
-                                      on: { click: _vm.deleteFamily }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "far fa-trash-alt"
-                                      }),
-                                      _vm._v(" Delete")
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      directives: [
-                                        {
-                                          name: "show",
-                                          rawName: "v-show",
-                                          value: !_vm.diagnostic_save,
-                                          expression: "!diagnostic_save"
-                                        }
-                                      ],
-                                      staticClass: "btn btn-warning text-white",
-                                      attrs: { type: "cancel" },
-                                      on: {
-                                        click: function($event) {
-                                          _vm.diagnostic_save = true
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", { staticClass: "fa fa-times" }),
-                                      _vm._v(" Cancel")
-                                    ]
-                                  )
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.diagnostic_save,
+                                      expression: "!diagnostic_save"
+                                    }
+                                  ],
+                                  staticClass: "btn btn-warning text-white",
+                                  attrs: { type: "cancel" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.diagnostic_save = true
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-times" }),
+                                  _vm._v(" Cancel")
                                 ]
                               )
                             ])
@@ -42755,16 +42751,26 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "tbody",
-                                    _vm._l(_vm.filteredList, function(
-                                      user,
+                                    _vm._l(_vm.diagnosticListClient, function(
+                                      diagnostic,
                                       index
                                     ) {
-                                      return _c("tr", { key: user.id }, [
-                                        _c("td", [_vm._v(_vm._s(user.id))]),
+                                      return _c("tr", { key: diagnostic.id }, [
+                                        _c("td", [
+                                          _vm._v(_vm._s(diagnostic.name))
+                                        ]),
                                         _vm._v(" "),
-                                        _c("td", [_vm._v(_vm._s(user.name))]),
+                                        _c("td", [
+                                          _vm._v(_vm._s(diagnostic.rank))
+                                        ]),
                                         _vm._v(" "),
-                                        _c("td", [_vm._v(_vm._s(user.email))]),
+                                        _c("td", [
+                                          _vm._v(_vm._s(diagnostic.date))
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _vm._v(_vm._s(diagnostic.Comments))
+                                        ]),
                                         _vm._v(" "),
                                         _c("td", [
                                           _c(
@@ -42793,7 +42799,9 @@ var render = function() {
                                               attrs: { type: "delete" },
                                               on: {
                                                 click: function($event) {
-                                                  return _vm.deleteUser(user.id)
+                                                  return _vm.deleteUser(
+                                                    _vm.user.id
+                                                  )
                                                 }
                                               }
                                             },
@@ -42934,7 +42942,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Date")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Comment")]),
+        _c("th", [_vm._v("Comments")]),
         _vm._v(" "),
         _c("th", [_vm._v("Actions")])
       ])

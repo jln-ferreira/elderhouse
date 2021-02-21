@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DiagnosticClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class DiagnosticClientController extends Controller
 {
@@ -27,15 +28,29 @@ class DiagnosticClientController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+
+            'diagnostic_id' => ['required'],
+            'date'          => ['required'],
+
+        ])->validate();
+
+        // DIAGNOSTIC
+        $diagnostic = DiagnosticClient::Create([
+
+            // 'client_id'     => $request['client_id'],
+            'client_id'     => 1,
+            'diagnostic_id' => $request['diagnostic_id'],
+            'date'          => $request['date'],
+            'comments'      => $request['comments'],
+
+        ]);
+        $diagnostic->save();
+
+
+        return $diagnostic;
     }
 
     /**

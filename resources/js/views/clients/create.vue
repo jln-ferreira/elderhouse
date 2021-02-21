@@ -324,11 +324,11 @@
                                         <div class="row">
                                             <div class="col-lg-5">
                                                 <!-- ----------[ADD DIAGNOSTIC]------------ -->
-                                                <form method="post" @submit.prevent="onSubmit_Family">
+                                                <form method="post" @submit.prevent="onSubmit_Diagnostic">
                                                     <div class="form-row">
                                                         <div class="form-group col-md-6">
                                                             <label for="diagnostic">Diagnostic</label>
-                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.name" required>
+                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.diagnostic_id" required>
                                                                 <option v-for="diagnostic in diagnosticList" v-text='diagnostic.name' v-bind:key="diagnostic.id" :value="diagnostic.id"></option>
                                                             </select>
                                                             <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('name')" v-text="formDiagnostic.errors.get('name')"></span>
@@ -336,28 +336,27 @@
                                                         <div class="form-group col-md-2">
                                                             <label for="rank">Rank</label>
                                                             <input type="number" class="form-control" id="rank" placeholder="92" min="1" v-model="formDiagnostic.rank" disabled>
-                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('rank')" v-text="formDiagnostic.errors.get('rank')"></span>
                                                         </div>
                                                         <div class="form-group col-md-4">
                                                             <label for="dateDiagnostic">Date</label>
-                                                            <input type="date" class="form-control" id="dateDiagnostic" min="1" v-model="formDiagnostic.date">
+                                                            <input type="date" class="form-control" id="dateDiagnostic" min="1" v-model="formDiagnostic.date" required>
                                                             <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('date')" v-text="formDiagnostic.errors.get('date')"></span>
                                                         </div>
                                                     </div>
                                                     <div class="form-row">
                                                         <div class="form-group col-md-12">
-                                                            <label for="comment">Comments</label>
-                                                            <textarea class="form-control" id="comment" v-model="formDiagnostic.comment"></textarea>
-                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('comment')" v-text="formDiagnostic.errors.get('comment')"></span>
+                                                            <label for="comments">Comments</label>
+                                                            <textarea class="form-control" id="comments" v-model="formDiagnostic.comments"></textarea>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('comments')" v-text="formDiagnostic.errors.get('comments')"></span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <div v-show="!information_save">
+                                                        <!-- <div v-show="!information_save"> -->
                                                             <button type="save" v-show="information_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
                                                             <a type="edit" v-show="!diagnostic_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
                                                             <a type="delete" v-show="!diagnostic_save" @click="deleteFamily" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
                                                             <a type="cancel" v-show="!diagnostic_save" @click="diagnostic_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
-                                                        </div>
+                                                        <!-- </div> -->
                                                     </div>
                                                 </form>
                                             </div>
@@ -385,15 +384,16 @@
                                                                 <th>Diagnostic</th>
                                                                 <th>Rank</th>
                                                                 <th>Date</th>
-                                                                <th>Comment</th>
+                                                                <th>Comments</th>
                                                                 <th>Actions</th>
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="(user, index) in filteredList" v-bind:key="user.id">
-                                                                    <td>{{user.id}}</td>
-                                                                    <td>{{user.name}}</td>
-                                                                    <td>{{user.email}}</td>
+                                                                <tr v-for="(diagnostic, index) in diagnosticListClient" v-bind:key="diagnostic.id">
+                                                                    <td>{{diagnostic.name}}</td>
+                                                                    <td>{{diagnostic.rank}}</td>
+                                                                    <td>{{diagnostic.date}}</td>
+                                                                    <td>{{diagnostic.Comments}}</td>
                                                                     <td>
                                                                         <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
                                                                         <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
@@ -501,7 +501,7 @@
                     'name':'',
                     'rank':'',
                     'date': '',
-                    'comment': '',
+                    'comments': '',
                 }),
 
                 diagnosticListClient: [],
@@ -561,9 +561,10 @@
                         this.formInformation.available = response.specification.available;
                         this.formInformation.ocupation = response.specification.ocupation;
 
-                        // use client_id into address | family
-                        this.formAddress.client_id = this.formInformation.id;
-                        this.formFamily.client_id = this.formInformation.id;
+                        // use client_id into address | family | Diagnostic
+                        this.formAddress.client_id    = this.formInformation.id;
+                        this.formFamily.client_id     = this.formInformation.id;
+                        this.formDiagnostic.client_id = this.formInformation.id;
 
                         this.information_save = false;
                         this.$toaster.success(this.formInformation.name + ' successful added');
@@ -696,6 +697,35 @@
                     this.$toaster.success('Successful Deleted');
                 });
 
+            },
+
+
+            // ------------------------- [ DIAGNOSTIC ] -------------------------
+            // ==================================================================
+
+            // ----- ADD DIAGNOSTIC -----
+            onSubmit_Diagnostic()
+            {
+                this.formDiagnostic
+                    .post('/diagnosticsClient')
+                    .then(response => {
+
+                        let newDiagnostic = new Object({
+                            'id':            response.id,
+                            'diagnostic_id': response.diagnostic_id,
+                            'client_id':     response.client_id,
+                            'comments':      response.comments,
+                            'date':          response.date,
+                            'date':          response.date,
+                        });
+
+                        this.diagnosticList.push(newDiagnostic);
+
+                        // input information onto checkbox
+                        this.formDiagnostic.client_id   = response.client_id;
+
+                        this.$toaster.success('Address added');
+                    })
             }
 
 
