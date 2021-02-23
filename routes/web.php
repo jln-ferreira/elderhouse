@@ -64,7 +64,7 @@ route::post('/setting/user', 'SettingsController@updateInformation');
 // FAMILY
 route::post('/family', 'FamilyController@store');
 Route::patch('/family', 'FamilyController@updateClient');
-Route::delete('/family', 'FamilyController@deleteClient');
+Route::post('/deleteFamily', 'FamilyController@deleteClient');
 // END FAMILY
 // ------------------
 
@@ -86,6 +86,7 @@ Route::get('/diagnostics', 'DiagnosticController@index');
 // ---------------
 // DIAGNOSTIC CLIENT
 route::post('/diagnosticsClient', 'DiagnosticClientController@store');
+Route::delete('/diagnosticsClient/{userId}', 'DiagnosticClientController@deleteClient');
 // END DIAGNOSTIC CLIENT
 // ------------------
 

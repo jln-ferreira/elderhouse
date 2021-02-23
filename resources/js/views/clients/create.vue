@@ -191,10 +191,11 @@
                                     <!-- END INFORMATION TAB -->
 
 
-
+                                    <!-- ---------------[ADD ADDRESS]------------------ -->
+                                    <!-- ============================================== -->
                                     <div class="tab-pane" id="address">
                                         <form class="form-horizontal" @submit.prevent="onSubmit_Address">
-                                            <!-- [ADD ADDRESS] -->
+
                                             <div class="form-row">
                                                 <div class="form-group col-md-4">
                                                     <label for="name">Street</label>
@@ -236,12 +237,13 @@
                                     </div>
 
 
-
+                                    <!-- ----------------[ADD FAMILY]------------------ -->
+                                    <!-- ============================================== -->
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="family">
                                         <div class="row">
                                             <div class="col-md-5">
-                                                <!-- ----------[ADD FAMILY]------------ -->
+
                                                 <form method="post" @submit.prevent="onSubmit_Family">
                                                     <div class="form-group">
                                                         <label for="familyName">Name</label>
@@ -288,7 +290,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <div v-show="!information_save">
-                                                            <button type="save" v-show="!information_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                            <button type="save" v-show="!information_save && family_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
                                                             <a type="edit" v-show="!family_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
                                                             <a type="delete" v-show="!family_save" @click="deleteFamily" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
                                                             <a type="cancel" v-show="!family_save" @click="family_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
@@ -319,23 +321,26 @@
                                     </div>
                                     <!-- /.tab-pane -->
 
+
+                                    <!-- -------------[ADD DIAGNOSTIC]----9------------ -->
+                                    <!-- ============================================== -->
                                     <!-- /.tab-pane -->
                                     <div class="tab-pane" id="diagnostic">
                                         <div class="row">
                                             <div class="col-lg-5">
-                                                <!-- ----------[ADD DIAGNOSTIC]------------ -->
+
                                                 <form method="post" @submit.prevent="onSubmit_Diagnostic">
                                                     <div class="form-row">
                                                         <div class="form-group col-md-6">
                                                             <label for="diagnostic">Diagnostic</label>
-                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.diagnostic_id" required>
-                                                                <option v-for="diagnostic in diagnosticList" v-text='diagnostic.name' v-bind:key="diagnostic.id" :value="diagnostic.id"></option>
+                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.diagnostic_id" @change="getRank($event)" required>
+                                                                <option v-for="diagnostic in diagnosticList" v-text='diagnostic.name' v-bind:key="diagnostic.id" :rank="diagnostic.rank" :value="diagnostic.id"></option>
                                                             </select>
                                                             <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('name')" v-text="formDiagnostic.errors.get('name')"></span>
                                                         </div>
                                                         <div class="form-group col-md-2">
                                                             <label for="rank">Rank</label>
-                                                            <input type="number" class="form-control" id="rank" placeholder="92" min="1" v-model="formDiagnostic.rank" disabled>
+                                                            <input type="number" class="form-control" id="rank" v-model="formDiagnostic.rank" disabled>
                                                         </div>
                                                         <div class="form-group col-md-4">
                                                             <label for="dateDiagnostic">Date</label>
@@ -352,9 +357,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <!-- <div v-show="!information_save"> -->
-                                                            <button type="save" v-show="information_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                            <button type="save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
                                                             <a type="edit" v-show="!diagnostic_save" @click="modifyFamily" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
-                                                            <a type="delete" v-show="!diagnostic_save" @click="deleteFamily" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
                                                             <a type="cancel" v-show="!diagnostic_save" @click="diagnostic_save = true" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                                                         <!-- </div> -->
                                                     </div>
@@ -389,14 +393,14 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="(diagnostic, index) in diagnosticListClient" v-bind:key="diagnostic.id">
+                                                                <tr v-for="(diagnostic, index) in filteredListDiagnostic" v-bind:key="diagnostic.id">
                                                                     <td>{{diagnostic.name}}</td>
                                                                     <td>{{diagnostic.rank}}</td>
                                                                     <td>{{diagnostic.date}}</td>
-                                                                    <td>{{diagnostic.Comments}}</td>
+                                                                    <td>{{diagnostic.comments}}</td>
                                                                     <td>
                                                                         <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
-                                                                        <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
+                                                                        <a type="delete" class="btn btn-danger text-white" @click="deleteDiagnostic(diagnostic.id)"><i class="far fa-trash-alt"></i></a>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -504,6 +508,7 @@
                     'comments': '',
                 }),
 
+                search              : '',
                 diagnosticListClient: [],
                 diagnosticList      : [],
             }
@@ -517,6 +522,16 @@
                 .then(response => this.diagnosticList = response.data);
 
 
+        },
+
+
+        computed: {
+            filteredListDiagnostic()
+            {
+                return this.diagnosticListClient.filter(post => {
+                    return post.name.toLowerCase().includes(this.search.toLowerCase());
+                });
+            }
         },
 
 
@@ -567,7 +582,7 @@
                         this.formDiagnostic.client_id = this.formInformation.id;
 
                         this.information_save = false;
-                        this.$toaster.success(this.formInformation.name + ' successful added');
+                        this.$toaster.success(this.formInformation.name + ' successful added.');
                     })
             },
 
@@ -591,7 +606,7 @@
                         this.formAddress.country   = response.country;
 
                         this.address_save = false;
-                        this.$toaster.success('Address added');
+                        this.$toaster.success('Address added.');
                     })
             },
             // END NEW ADDRESS
@@ -633,7 +648,7 @@
                         this.formFamily.gender      = false;
                         this.formFamily.responsable = false;
 
-                        this.$toaster.success('Address added');
+                        this.$toaster.success('Address added.');
                     })
             },
 
@@ -678,7 +693,7 @@
                         //edit button
                         this.family_save = true;
 
-                        this.$toaster.success('Family edited');
+                        this.$toaster.success('Family edited.');
                     });
             },
 
@@ -686,15 +701,16 @@
             deleteFamily()
             {
                 this.formFamily
-                .delete('/family/')
+                .post('/deleteFamily')
                 .then(response => {
+
                     var count = 0
                     this.familyList.forEach(element => {
-                        element.id == (response.data.id) ? this.users.splice(count,1) : count +=1;
+                        element.id == (response.id) ? this.familyList.splice(count,1) : count +=1;
                     });
 
                     this.family_save = true;
-                    this.$toaster.success('Successful Deleted');
+                    this.$toaster.success('Successful Deleted.');
                 });
 
             },
@@ -702,6 +718,15 @@
 
             // ------------------------- [ DIAGNOSTIC ] -------------------------
             // ==================================================================
+
+            getRank(e)
+            {
+                if (e.target.options.selectedIndex > -1) {
+                    const theTarget = e.target.options[e.target.options.selectedIndex];
+                    this.formDiagnostic.rank = theTarget.getAttribute('rank');
+                }
+
+            },
 
             // ----- ADD DIAGNOSTIC -----
             onSubmit_Diagnostic()
@@ -711,22 +736,43 @@
                     .then(response => {
 
                         let newDiagnostic = new Object({
-                            'id':            response.id,
-                            'diagnostic_id': response.diagnostic_id,
-                            'client_id':     response.client_id,
-                            'comments':      response.comments,
-                            'date':          response.date,
-                            'date':          response.date,
+
+                            'id':            response[0].id,
+                            'diagnostic_id': response[0].diagnostic_id,
+                            'client_id':     response[0].client_id,
+                            'name':          response[0].name,
+                            'rank':          response[0].rank,
+                            'date':          response[0].date,
+                            'comments':      response[0].comments,
+
                         });
 
-                        this.diagnosticList.push(newDiagnostic);
+                        this.diagnosticListClient.push(newDiagnostic);
 
-                        // input information onto checkbox
+                        // input information onto current form
                         this.formDiagnostic.client_id   = response.client_id;
 
-                        this.$toaster.success('Address added');
+                        this.$toaster.success('Diagnostic added.');
                     })
-            }
+            },
+
+
+            deleteDiagnostic(id)
+            {
+                axios.post('/diagnosticsClient/' + id, {
+                _method: 'DELETE'
+                })
+                .then(response => {
+
+                    var count = 0
+                    this.diagnosticListClient.forEach(element => {
+                        element.id == (response.data.id) ? this.diagnosticListClient.splice(count,1) : count +=1;
+                    });
+
+                    this.$toaster.success('Successful deleted');
+                });
+
+            },
 
 
         }

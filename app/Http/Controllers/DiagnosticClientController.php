@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\DiagnosticClient;
+use App\Diagnostic;
+use DB;
+
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,7 +54,10 @@ class DiagnosticClientController extends Controller
         $diagnostic->save();
 
 
-        return $diagnostic;
+        $diagnosticReturn = Diagnostic::getDiagnostics($diagnostic->id);
+
+        return $diagnosticReturn;
+
     }
 
     /**
@@ -87,12 +94,16 @@ class DiagnosticClientController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\DiagnosticClient  $diagnosticClient
-     * @return \Illuminate\Http\Response
-     */
+    public function deleteClient($userId)
+    {
+        $diagnostic = DiagnosticClient::find($userId);
+        $diagnostic->active = 0;
+        $diagnostic->save();
+
+        return $diagnostic;
+    }
+
+
     public function destroy(DiagnosticClient $diagnosticClient)
     {
         //

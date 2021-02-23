@@ -2005,8 +2005,10 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+//
+//
+//
+//
 //
 //
 //
@@ -2495,6 +2497,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         'date': '',
         'comments': ''
       }),
+      search: '',
       diagnosticListClient: [],
       diagnosticList: []
     };
@@ -2507,6 +2510,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return _this.diagnosticList = response.data;
     });
   },
+  computed: {
+    filteredListDiagnostic: function filteredListDiagnostic() {
+      var _this2 = this;
+
+      return this.diagnosticListClient.filter(function (post) {
+        return post.name.toLowerCase().includes(_this2.search.toLowerCase());
+      });
+    }
+  },
   methods: {
     // --------------------------- [ INFORMATION ] ---------------------------
     // =======================================================================
@@ -2517,55 +2529,55 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     // ----- ADD NEW CLIENT -----
     onSubmit_Information: function onSubmit_Information() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.formInformation.post('/clients').then(function (response) {
         // //client
-        _this2.formInformation.id = response.client.id;
-        _this2.formInformation.name = response.client.name;
-        _this2.formInformation.surname = response.client.surname;
-        _this2.formInformation.datastart = response.client.datastart;
-        _this2.formInformation.photo = response.client.photo;
-        _this2.formInformation.photoName = response.client.photoName;
-        _this2.formInformation.databirth = response.client.databirth;
-        _this2.formInformation.phonenumber = response.client.phonenumber;
-        _this2.formInformation.appartament = response.client.appartament; //information
+        _this3.formInformation.id = response.client.id;
+        _this3.formInformation.name = response.client.name;
+        _this3.formInformation.surname = response.client.surname;
+        _this3.formInformation.datastart = response.client.datastart;
+        _this3.formInformation.photo = response.client.photo;
+        _this3.formInformation.photoName = response.client.photoName;
+        _this3.formInformation.databirth = response.client.databirth;
+        _this3.formInformation.phonenumber = response.client.phonenumber;
+        _this3.formInformation.appartament = response.client.appartament; //information
 
-        _this2.formInformation.CPF = response.specification.CPF;
-        _this2.formInformation.RG = response.specification.RG;
-        _this2.formInformation.otherdoc = response.specification.otherdoc;
-        _this2.formInformation.gender = response.specification.gender;
-        _this2.formInformation.height = response.specification.height;
-        _this2.formInformation.color = response.specification.color;
-        _this2.formInformation.religion = response.specification.religion;
-        _this2.formInformation.available = response.specification.available;
-        _this2.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
+        _this3.formInformation.CPF = response.specification.CPF;
+        _this3.formInformation.RG = response.specification.RG;
+        _this3.formInformation.otherdoc = response.specification.otherdoc;
+        _this3.formInformation.gender = response.specification.gender;
+        _this3.formInformation.height = response.specification.height;
+        _this3.formInformation.color = response.specification.color;
+        _this3.formInformation.religion = response.specification.religion;
+        _this3.formInformation.available = response.specification.available;
+        _this3.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
 
-        _this2.formAddress.client_id = _this2.formInformation.id;
-        _this2.formFamily.client_id = _this2.formInformation.id;
-        _this2.formDiagnostic.client_id = _this2.formInformation.id;
-        _this2.information_save = false;
+        _this3.formAddress.client_id = _this3.formInformation.id;
+        _this3.formFamily.client_id = _this3.formInformation.id;
+        _this3.formDiagnostic.client_id = _this3.formInformation.id;
+        _this3.information_save = false;
 
-        _this2.$toaster.success(_this2.formInformation.name + ' successful added');
+        _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
       });
     },
     // --------------------------- [ ADDRESS ] ---------------------------
     // ===================================================================
     // ----- ADD ADDRESS -----
     onSubmit_Address: function onSubmit_Address() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.formAddress.post('/clientAddress').then(function (response) {
         // //address
-        _this3.formAddress.client_id = response.client_id;
-        _this3.formAddress.street = response.street;
-        _this3.formAddress.number = response.number;
-        _this3.formAddress.city = response.city;
-        _this3.formAddress.state = response.state;
-        _this3.formAddress.country = response.country;
-        _this3.address_save = false;
+        _this4.formAddress.client_id = response.client_id;
+        _this4.formAddress.street = response.street;
+        _this4.formAddress.number = response.number;
+        _this4.formAddress.city = response.city;
+        _this4.formAddress.state = response.state;
+        _this4.formAddress.country = response.country;
+        _this4.address_save = false;
 
-        _this3.$toaster.success('Address added');
+        _this4.$toaster.success('Address added.');
       });
     },
     // END NEW ADDRESS
@@ -2577,7 +2589,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     // ==================================================================
     // ----- ADD FAMILY -----
     onSubmit_Family: function onSubmit_Family() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.formFamily.post('/family').then(function (response) {
         var newFamily = new Object({
@@ -2592,14 +2604,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           'responsable': response.responsable
         });
 
-        _this4.familyList.push(newFamily); // input information onto checkbox
+        _this5.familyList.push(newFamily); // input information onto checkbox
 
 
-        _this4.formFamily.client_id = response.client_id;
-        _this4.formFamily.gender = false;
-        _this4.formFamily.responsable = false;
+        _this5.formFamily.client_id = response.client_id;
+        _this5.formFamily.gender = false;
+        _this5.formFamily.responsable = false;
 
-        _this4.$toaster.success('Address added');
+        _this5.$toaster.success('Address added.');
       });
     },
     // ----- EDIT FAMILY -----
@@ -2619,63 +2631,86 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     },
     // ----- MODIFY FAMILY -----
     modifyFamily: function modifyFamily() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.formFamily.patch('/family').then(function (response) {
-        var index = _this5.familyList.findIndex(function (x) {
+        var index = _this6.familyList.findIndex(function (x) {
           return x.id === response.id;
         });
 
-        _this5.familyList[index].client_id = response.client_id;
-        _this5.familyList[index].name = response.name;
-        _this5.familyList[index].surname = response.surname;
-        _this5.familyList[index].parent = response.parent;
-        _this5.familyList[index].gender = response.gender;
-        _this5.familyList[index].phonenumber = response.phonenumber;
-        _this5.familyList[index].email = response.email;
-        _this5.familyList[index].responsable = response.responsable; //edit button
-
-        _this5.family_save = true;
-
-        _this5.$toaster.success('Family edited');
-      });
-    },
-    deleteFamily: function deleteFamily() {
-      var _this6 = this;
-
-      this.formFamily["delete"]('/family/').then(function (response) {
-        var count = 0;
-
-        _this6.familyList.forEach(function (element) {
-          element.id == response.data.id ? _this6.users.splice(count, 1) : count += 1;
-        });
+        _this6.familyList[index].client_id = response.client_id;
+        _this6.familyList[index].name = response.name;
+        _this6.familyList[index].surname = response.surname;
+        _this6.familyList[index].parent = response.parent;
+        _this6.familyList[index].gender = response.gender;
+        _this6.familyList[index].phonenumber = response.phonenumber;
+        _this6.familyList[index].email = response.email;
+        _this6.familyList[index].responsable = response.responsable; //edit button
 
         _this6.family_save = true;
 
-        _this6.$toaster.success('Successful Deleted');
+        _this6.$toaster.success('Family edited.');
+      });
+    },
+    deleteFamily: function deleteFamily() {
+      var _this7 = this;
+
+      this.formFamily.post('/deleteFamily').then(function (response) {
+        var count = 0;
+
+        _this7.familyList.forEach(function (element) {
+          element.id == response.id ? _this7.familyList.splice(count, 1) : count += 1;
+        });
+
+        _this7.family_save = true;
+
+        _this7.$toaster.success('Successful Deleted.');
       });
     },
     // ------------------------- [ DIAGNOSTIC ] -------------------------
     // ==================================================================
+    getRank: function getRank(e) {
+      if (e.target.options.selectedIndex > -1) {
+        var theTarget = e.target.options[e.target.options.selectedIndex];
+        this.formDiagnostic.rank = theTarget.getAttribute('rank');
+      }
+    },
     // ----- ADD DIAGNOSTIC -----
     onSubmit_Diagnostic: function onSubmit_Diagnostic() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.formDiagnostic.post('/diagnosticsClient').then(function (response) {
-        var newDiagnostic = new Object(_defineProperty({
-          'id': response.id,
-          'diagnostic_id': response.diagnostic_id,
-          'client_id': response.client_id,
-          'comments': response.comments,
-          'date': response.date
-        }, "date", response.date));
+        var newDiagnostic = new Object({
+          'id': response[0].id,
+          'diagnostic_id': response[0].diagnostic_id,
+          'client_id': response[0].client_id,
+          'name': response[0].name,
+          'rank': response[0].rank,
+          'date': response[0].date,
+          'comments': response[0].comments
+        });
 
-        _this7.diagnosticList.push(newDiagnostic); // input information onto checkbox
+        _this8.diagnosticListClient.push(newDiagnostic); // input information onto current form
 
 
-        _this7.formDiagnostic.client_id = response.client_id;
+        _this8.formDiagnostic.client_id = response.client_id;
 
-        _this7.$toaster.success('Address added');
+        _this8.$toaster.success('Diagnostic added.');
+      });
+    },
+    deleteDiagnostic: function deleteDiagnostic(id) {
+      var _this9 = this;
+
+      axios.post('/diagnosticsClient/' + id, {
+        _method: 'DELETE'
+      }).then(function (response) {
+        var count = 0;
+
+        _this9.diagnosticListClient.forEach(function (element) {
+          element.id == response.data.id ? _this9.diagnosticListClient.splice(count, 1) : count += 1;
+        });
+
+        _this9.$toaster.success('Successful deleted');
       });
     }
   }
@@ -42150,8 +42185,11 @@ var render = function() {
                                         {
                                           name: "show",
                                           rawName: "v-show",
-                                          value: !_vm.information_save,
-                                          expression: "!information_save"
+                                          value:
+                                            !_vm.information_save &&
+                                            _vm.family_save,
+                                          expression:
+                                            "!information_save && family_save"
                                         }
                                       ],
                                       staticClass: "btn btn-success",
@@ -42385,29 +42423,34 @@ var render = function() {
                                       staticClass: "form-control",
                                       attrs: { id: "diagnostic", required: "" },
                                       on: {
-                                        change: function($event) {
-                                          var $$selectedVal = Array.prototype.filter
-                                            .call(
-                                              $event.target.options,
-                                              function(o) {
-                                                return o.selected
-                                              }
+                                        change: [
+                                          function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.$set(
+                                              _vm.formDiagnostic,
+                                              "diagnostic_id",
+                                              $event.target.multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
                                             )
-                                            .map(function(o) {
-                                              var val =
-                                                "_value" in o
-                                                  ? o._value
-                                                  : o.value
-                                              return val
-                                            })
-                                          _vm.$set(
-                                            _vm.formDiagnostic,
-                                            "diagnostic_id",
-                                            $event.target.multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          )
-                                        }
+                                          },
+                                          function($event) {
+                                            return _vm.getRank($event)
+                                          }
+                                        ]
                                       }
                                     },
                                     _vm._l(_vm.diagnosticList, function(
@@ -42415,6 +42458,7 @@ var render = function() {
                                     ) {
                                       return _c("option", {
                                         key: diagnostic.id,
+                                        attrs: { rank: diagnostic.rank },
                                         domProps: {
                                           value: diagnostic.id,
                                           textContent: _vm._s(diagnostic.name)
@@ -42461,8 +42505,6 @@ var render = function() {
                                     attrs: {
                                       type: "number",
                                       id: "rank",
-                                      placeholder: "92",
-                                      min: "1",
                                       disabled: ""
                                     },
                                     domProps: {
@@ -42599,25 +42641,7 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _c(
-                                "button",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.information_save,
-                                      expression: "information_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-success",
-                                  attrs: { type: "save" }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-plus" }),
-                                  _vm._v(" Add")
-                                ]
-                              ),
+                              _vm._m(2),
                               _vm._v(" "),
                               _c(
                                 "a",
@@ -42637,27 +42661,6 @@ var render = function() {
                                 [
                                   _c("i", { staticClass: "fas fa-user-edit" }),
                                   _vm._v(" Edit")
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.diagnostic_save,
-                                      expression: "!diagnostic_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-danger text-white",
-                                  attrs: { type: "delete" },
-                                  on: { click: _vm.deleteFamily }
-                                },
-                                [
-                                  _c("i", { staticClass: "far fa-trash-alt" }),
-                                  _vm._v(" Delete")
                                 ]
                               ),
                               _vm._v(" "),
@@ -42733,7 +42736,7 @@ var render = function() {
                                     }
                                   }),
                                   _vm._v(" "),
-                                  _vm._m(2)
+                                  _vm._m(3)
                                 ]
                               )
                             ])
@@ -42747,11 +42750,11 @@ var render = function() {
                                 "table",
                                 { staticClass: "table table-hover" },
                                 [
-                                  _vm._m(3),
+                                  _vm._m(4),
                                   _vm._v(" "),
                                   _c(
                                     "tbody",
-                                    _vm._l(_vm.diagnosticListClient, function(
+                                    _vm._l(_vm.filteredListDiagnostic, function(
                                       diagnostic,
                                       index
                                     ) {
@@ -42769,7 +42772,7 @@ var render = function() {
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
-                                          _vm._v(_vm._s(diagnostic.Comments))
+                                          _vm._v(_vm._s(diagnostic.comments))
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
@@ -42799,8 +42802,8 @@ var render = function() {
                                               attrs: { type: "delete" },
                                               on: {
                                                 click: function($event) {
-                                                  return _vm.deleteUser(
-                                                    _vm.user.id
+                                                  return _vm.deleteDiagnostic(
+                                                    diagnostic.id
                                                   )
                                                 }
                                               }
@@ -42917,6 +42920,16 @@ var staticRenderFns = [
         ])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "btn btn-success", attrs: { type: "save" } },
+      [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add")]
+    )
   },
   function() {
     var _vm = this
