@@ -2511,7 +2511,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   computed: {
-    filteredListDiagnostic: function filteredListDiagnostic() {
+    filtredListDiagnostic: function filtredListDiagnostic() {
       var _this2 = this;
 
       return this.diagnosticListClient.filter(function (post) {
@@ -2652,6 +2652,18 @@ __webpack_require__.r(__webpack_exports__);
         _this6.$toaster.success('Family edited.');
       });
     },
+    // ----- CANCEL FAMILY -----
+    cancelFamily: function cancelFamily() {
+      // Populate Inputs
+      this.formFamily.id = "";
+      this.formFamily.name = "";
+      this.formFamily.surname = "";
+      this.formFamily.phonenumber = "";
+      this.formFamily.email = ""; //edit button
+
+      this.family_save = true;
+      this.$toaster.warning('Canceled.');
+    },
     deleteFamily: function deleteFamily() {
       var _this7 = this;
 
@@ -2698,20 +2710,64 @@ __webpack_require__.r(__webpack_exports__);
         _this8.$toaster.success('Diagnostic added.');
       });
     },
-    deleteDiagnostic: function deleteDiagnostic(id) {
+    // EDIT DIAGNOSTIC
+    editDiagnostic: function editDiagnostic(index) {
+      this.formDiagnostic.id = this.diagnosticListClient[index].id;
+      this.formDiagnostic.client_id = this.diagnosticListClient[index].client_id;
+      this.formDiagnostic.diagnostic_id = this.diagnosticListClient[index].diagnostic_id;
+      this.formDiagnostic.name = this.diagnosticListClient[index].name;
+      this.formDiagnostic.rank = this.diagnosticListClient[index].rank;
+      this.formDiagnostic.date = this.diagnosticListClient[index].date;
+      this.formDiagnostic.comments = this.diagnosticListClient[index].comments; //edit button
+
+      this.diagnostic_save = false;
+    },
+    // MODIFY DIAGNOSTIC
+    modifyDiagnostic: function modifyDiagnostic() {
       var _this9 = this;
+
+      this.formDiagnostic.patch('/diagnosticsClient').then(function (response) {
+        var index = _this9.diagnosticListClient.findIndex(function (x) {
+          return x.id === response[0].id;
+        });
+
+        _this9.diagnosticListClient[index].diagnostic_id = response[0].diagnostic_id;
+        _this9.diagnosticListClient[index].name = response[0].name;
+        _this9.diagnosticListClient[index].rank = response[0].rank;
+        _this9.diagnosticListClient[index].date = response[0].date;
+        _this9.diagnosticListClient[index].comments = response[0].comments; //edit button
+
+        _this9.diagnostic_save = true;
+
+        _this9.$toaster.success('Diagnostic edited.');
+      });
+    },
+    // EDIT DIAGNOSTIC
+    deleteDiagnostic: function deleteDiagnostic(id) {
+      var _this10 = this;
 
       axios.post('/diagnosticsClient/' + id, {
         _method: 'DELETE'
       }).then(function (response) {
         var count = 0;
 
-        _this9.diagnosticListClient.forEach(function (element) {
-          element.id == response.data.id ? _this9.diagnosticListClient.splice(count, 1) : count += 1;
+        _this10.diagnosticListClient.forEach(function (element) {
+          element.id == response.data.id ? _this10.diagnosticListClient.splice(count, 1) : count += 1;
         });
 
-        _this9.$toaster.success('Successful deleted');
+        _this10.$toaster.success('Successful deleted');
       });
+    },
+    // CANCEL DIAGNOSTIC
+    cancelDiagnostic: function cancelDiagnostic() {
+      this.formDiagnostic.id = "";
+      this.formDiagnostic.diagnostic_id = "";
+      this.formDiagnostic.name = "";
+      this.formDiagnostic.rank = "";
+      this.formDiagnostic.date = "";
+      this.formDiagnostic.comments = "";
+      this.diagnostic_save = true;
+      this.$toaster.warning('Canceled');
     }
   }
 });
@@ -2835,6 +2891,37 @@ __webpack_require__.r(__webpack_exports__);
     gotoCreate: function gotoCreate() {
       this.$router.push('/newclient/');
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/show.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/clients/show.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      clientId: this.$route.params.id
+    };
+  },
+  created: function created() {
+    // Fetch especific CLIENT
+    axios.get('/clients/' + this.clientId).then(function (response) {
+      return console.log(response);
+    });
   }
 });
 
@@ -42260,11 +42347,7 @@ var render = function() {
                                       ],
                                       staticClass: "btn btn-warning text-white",
                                       attrs: { type: "cancel" },
-                                      on: {
-                                        click: function($event) {
-                                          _vm.family_save = true
-                                        }
-                                      }
+                                      on: { click: _vm.cancelFamily }
                                     },
                                     [
                                       _c("i", { staticClass: "fa fa-times" }),
@@ -42383,7 +42466,7 @@ var render = function() {
                   { staticClass: "tab-pane", attrs: { id: "diagnostic" } },
                   [
                     _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-lg-5" }, [
+                      _c("div", { staticClass: "col-xl-5" }, [
                         _c(
                           "form",
                           {
@@ -42641,51 +42724,82 @@ var render = function() {
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "form-group" }, [
-                              _vm._m(2),
-                              _vm._v(" "),
                               _c(
-                                "a",
+                                "div",
                                 {
                                   directives: [
                                     {
                                       name: "show",
                                       rawName: "v-show",
-                                      value: !_vm.diagnostic_save,
-                                      expression: "!diagnostic_save"
+                                      value: !_vm.information_save,
+                                      expression: "!information_save"
                                     }
-                                  ],
-                                  staticClass: "btn btn-primary",
-                                  attrs: { type: "edit" },
-                                  on: { click: _vm.modifyFamily }
+                                  ]
                                 },
                                 [
-                                  _c("i", { staticClass: "fas fa-user-edit" }),
-                                  _vm._v(" Edit")
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  directives: [
+                                  _c(
+                                    "button",
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: !_vm.diagnostic_save,
-                                      expression: "!diagnostic_save"
-                                    }
-                                  ],
-                                  staticClass: "btn btn-warning text-white",
-                                  attrs: { type: "cancel" },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.diagnostic_save = true
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("i", { staticClass: "fa fa-times" }),
-                                  _vm._v(" Cancel")
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: _vm.diagnostic_save,
+                                          expression: "diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-success",
+                                      attrs: { type: "save" }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-plus" }),
+                                      _vm._v(" Add")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.diagnostic_save,
+                                          expression: "!diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-primary",
+                                      attrs: { type: "edit" },
+                                      on: { click: _vm.modifyDiagnostic }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fas fa-user-edit"
+                                      }),
+                                      _vm._v(" Edit")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "show",
+                                          rawName: "v-show",
+                                          value: !_vm.diagnostic_save,
+                                          expression: "!diagnostic_save"
+                                        }
+                                      ],
+                                      staticClass: "btn btn-warning text-white",
+                                      attrs: { type: "cancel" },
+                                      on: { click: _vm.cancelDiagnostic }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fa fa-times" }),
+                                      _vm._v(" Cancel")
+                                    ]
+                                  )
                                 ]
                               )
                             ])
@@ -42693,137 +42807,154 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-lg-7" }, [
-                        _c("div", { staticClass: "card" }, [
-                          _c("div", { staticClass: "card-header" }, [
-                            _c(
-                              "h3",
-                              { staticClass: "card-title font-weight-bold" },
-                              [_vm._v("List Diagnostic")]
-                            ),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "card-tools" }, [
+                      _c("div", { staticClass: "col-xl-7" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "card",
+                            staticStyle: { "min-height": "235px" }
+                          },
+                          [
+                            _c("div", { staticClass: "card-header" }, [
                               _c(
-                                "div",
-                                {
-                                  staticClass: "input-group input-group-sm",
-                                  staticStyle: { width: "150px" }
-                                },
-                                [
-                                  _c("input", {
-                                    directives: [
-                                      {
-                                        name: "model",
-                                        rawName: "v-model",
-                                        value: _vm.search,
-                                        expression: "search"
-                                      }
-                                    ],
-                                    staticClass: "form-control float-right",
-                                    attrs: {
-                                      type: "text",
-                                      name: "table_search",
-                                      placeholder: "Search"
-                                    },
-                                    domProps: { value: _vm.search },
-                                    on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
+                                "h3",
+                                { staticClass: "card-title font-weight-bold" },
+                                [_vm._v("List Diagnostic")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "card-tools" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "input-group input-group-sm",
+                                    staticStyle: { width: "150px" }
+                                  },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.search,
+                                          expression: "search"
                                         }
-                                        _vm.search = $event.target.value
+                                      ],
+                                      staticClass: "form-control float-right",
+                                      attrs: {
+                                        type: "text",
+                                        name: "table_search",
+                                        placeholder: "Search"
+                                      },
+                                      domProps: { value: _vm.search },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.search = $event.target.value
+                                        }
                                       }
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _vm._m(3)
-                                ]
-                              )
-                            ])
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "card-body table-responsive p-0" },
-                            [
-                              _c(
-                                "table",
-                                { staticClass: "table table-hover" },
-                                [
-                                  _vm._m(4),
-                                  _vm._v(" "),
-                                  _c(
-                                    "tbody",
-                                    _vm._l(_vm.filteredListDiagnostic, function(
-                                      diagnostic,
-                                      index
-                                    ) {
-                                      return _c("tr", { key: diagnostic.id }, [
-                                        _c("td", [
-                                          _vm._v(_vm._s(diagnostic.name))
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(_vm._s(diagnostic.rank))
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(_vm._s(diagnostic.date))
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _vm._v(_vm._s(diagnostic.comments))
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("td", [
-                                          _c(
-                                            "button",
-                                            {
-                                              staticClass: "btn btn-primary",
-                                              attrs: { type: "edit" },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.editUser(index)
-                                                }
-                                              }
-                                            },
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._m(2)
+                                  ]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "card-body table-responsive p-0" },
+                              [
+                                _c(
+                                  "table",
+                                  { staticClass: "table table-hover" },
+                                  [
+                                    _vm._m(3),
+                                    _vm._v(" "),
+                                    _c(
+                                      "tbody",
+                                      _vm._l(
+                                        _vm.filtredListDiagnostic,
+                                        function(diagnostic, index) {
+                                          return _c(
+                                            "tr",
+                                            { key: diagnostic.id },
                                             [
-                                              _c("i", {
-                                                staticClass: "far fa-edit"
-                                              })
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "a",
-                                            {
-                                              staticClass:
-                                                "btn btn-danger text-white",
-                                              attrs: { type: "delete" },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.deleteDiagnostic(
-                                                    diagnostic.id
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass: "far fa-trash-alt"
-                                              })
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.name))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.rank))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.date))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(
+                                                  _vm._s(diagnostic.comments)
+                                                )
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-primary",
+                                                    attrs: { type: "edit" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.editDiagnostic(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "far fa-edit"
+                                                    })
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger text-white",
+                                                    attrs: { type: "delete" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.deleteDiagnostic(
+                                                          diagnostic.id
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "far fa-trash-alt"
+                                                    })
+                                                  ]
+                                                )
+                                              ])
                                             ]
                                           )
-                                        ])
-                                      ])
-                                    }),
-                                    0
-                                  )
-                                ]
-                              )
-                            ]
-                          )
-                        ])
+                                        }
+                                      ),
+                                      0
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
                       ])
                     ])
                   ]
@@ -42920,16 +43051,6 @@ var staticRenderFns = [
         ])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      { staticClass: "btn btn-success", attrs: { type: "save" } },
-      [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add")]
-    )
   },
   function() {
     var _vm = this
@@ -43101,18 +43222,15 @@ var render = function() {
                         _c(
                           "a",
                           {
-                            staticClass: "btn btn-sm btn-primary",
-                            attrs: { href: "#" }
+                            staticClass: "btn btn-sm btn-primary text-white",
+                            on: {
+                              click: function($event) {
+                                return _vm.gotoProfile(client.id)
+                              }
+                            }
                           },
                           [
-                            _c("i", {
-                              staticClass: "fas fa-user",
-                              on: {
-                                click: function($event) {
-                                  return _vm.gotoProfile(client.id)
-                                }
-                              }
-                            }),
+                            _c("i", { staticClass: "fas fa-user" }),
                             _vm._v(" View Profile\n                  ")
                           ]
                         )
@@ -43202,16 +43320,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [_c("h1", [_vm._v(_vm._s(_vm.clientId))])])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [_c("h1", [_vm._v("tet")])])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -61318,21 +61429,24 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/views/clients/show.vue ***!
   \*********************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _show_vue_vue_type_template_id_72b245ba___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./show.vue?vue&type=template&id=72b245ba& */ "./resources/js/views/clients/show.vue?vue&type=template&id=72b245ba&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./show.vue?vue&type=script&lang=js& */ "./resources/js/views/clients/show.vue?vue&type=script&lang=js&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _show_vue_vue_type_template_id_72b245ba___WEBPACK_IMPORTED_MODULE_0__["render"],
   _show_vue_vue_type_template_id_72b245ba___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -61346,6 +61460,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/views/clients/show.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/clients/show.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/views/clients/show.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./show.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/show.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_show_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

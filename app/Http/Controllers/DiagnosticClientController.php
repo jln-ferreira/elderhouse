@@ -44,8 +44,8 @@ class DiagnosticClientController extends Controller
         // DIAGNOSTIC
         $diagnostic = DiagnosticClient::Create([
 
-            // 'client_id'     => $request['client_id'],
-            'client_id'     => 1,
+            'client_id'     => $request['client_id'],
+            // 'client_id'     => 1,
             'diagnostic_id' => $request['diagnostic_id'],
             'date'          => $request['date'],
             'comments'      => $request['comments'],
@@ -82,17 +82,36 @@ class DiagnosticClientController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\DiagnosticClient  $diagnosticClient
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, DiagnosticClient $diagnosticClient)
     {
         //
     }
+
+
+
+    public function updateClient(Request $request)
+    {
+
+        Validator::make($request->all(), [
+
+            'diagnostic_id' => ['required'],
+            'date'          => ['required'],
+
+        ])->validate();
+
+        // modify Diagnostic
+        $diagnostic = DiagnosticClient::find($request['id']);
+        $diagnostic->diagnostic_id = $request['diagnostic_id'];
+        $diagnostic->date          = $request['date'];
+        $diagnostic->comments      = $request['comments'];
+
+        $diagnostic->save();
+
+        return Diagnostic::getDiagnostics($request['id']);
+    }
+
+
 
     public function deleteClient($userId)
     {

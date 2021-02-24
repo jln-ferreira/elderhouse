@@ -20,6 +20,12 @@ class ClientController extends Controller
     }
 
 
+    public function show($clientId)
+    {
+        return Client::activeclient($clientId);
+    }
+
+
     public function create(Request $request)
     {
         Validator::make($request->all(), [
@@ -95,17 +101,6 @@ class ClientController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Client $client)
     {
         //
     }

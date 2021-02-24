@@ -46,6 +46,7 @@ Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole'
 // ---------------
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
+Route::get('/clients/{clientId}', 'ClientController@show');
 Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
 // END CLIENTS
@@ -86,6 +87,7 @@ Route::get('/diagnostics', 'DiagnosticController@index');
 // ---------------
 // DIAGNOSTIC CLIENT
 route::post('/diagnosticsClient', 'DiagnosticClientController@store');
+Route::patch('/diagnosticsClient', 'DiagnosticClientController@updateClient');
 Route::delete('/diagnosticsClient/{userId}', 'DiagnosticClientController@deleteClient');
 // END DIAGNOSTIC CLIENT
 // ------------------

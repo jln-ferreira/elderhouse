@@ -18,6 +18,14 @@ class Client extends Model
     }
 
 
+    public static function activeclient($clientId)
+    {
+        return DB::table('clients')
+        ->leftJoin('specifications', 'clients.id', '=', 'specifications.client_id')
+        ->where([['clients.id', $clientId], ['clients.active', 1], ['specifications.active', 1]])->get();
+    }
+
+
     // ------- RELATIONSHIP -------
     public function specification()
     {
