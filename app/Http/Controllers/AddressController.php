@@ -10,16 +10,20 @@ use Illuminate\Support\Facades\Validator;
 class AddressController extends Controller
 {
 
+    public function showClient($clientId)
+    {
+        return Address::activeClient($clientId);
+    }
 
     public function createClient(Request $request)
     {
         Validator::make($request->all(), [
 
-            'street'    => ['required', 'string', 'max:100'],
-            'number'    => ['required', 'numeric', 'max:100'],
-            'city'      => ['required', 'string', 'max:100'],
-            'state'     => ['required', 'string', 'max:100'],
-            'country'   => ['required', 'string', 'max:100'],
+            'street'    => ['required', 'string'],
+            'number'    => ['required', 'numeric', 'min:1'],
+            'city'      => ['required', 'string'],
+            'state'     => ['required', 'string'],
+            'country'   => ['required', 'string'],
 
         ])->validate();
 
@@ -27,14 +31,16 @@ class AddressController extends Controller
         // ADDRESS
         $address = Address::updateOrCreate(
             [
-                'client_id'   => $request['client_id'],
+                'id'        => $request['id'],
+                'client_id' => $request['client_id'],
             ],
             [
-                'street'  => $request['street'],
-                'number'  => $request['number'],
-                'city'    => $request['city'],
-                'state'   => $request['state'],
-                'country' => $request['country'],
+                'client_id' => $request['client_id'],
+                'street'    => $request['street'],
+                'number'    => $request['number'],
+                'city'      => $request['city'],
+                'state'     => $request['state'],
+                'country'   => $request['country'],
 
             ]
         );

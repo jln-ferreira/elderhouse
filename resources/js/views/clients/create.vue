@@ -444,24 +444,24 @@
                 formInformation: new Form({
 
                     //client
-                    'id':'',
-                    'name': '',
-                    'surname': '',
-                    'datastart': '',
-                    'photo': '',
-                    'photoName': '',
-                    'databirth': '',
+                    'id'         : '',
+                    'name'       : '',
+                    'surname'    : '',
+                    'datastart'  : '',
+                    'photo'      : '',
+                    'photoName'  : '',
+                    'databirth'  : '',
                     'phonenumber': '',
                     'appartament': '',
 
                     //information
-                    'CPF': '',
-                    'RG': '',
-                    'otherdoc': '',
-                    'gender': '',
-                    'height': '',
-                    'color': '',
-                    'religion': '',
+                    'CPF'      : '',
+                    'RG'       : '',
+                    'otherdoc' : '',
+                    'gender'   : '',
+                    'height'   : '',
+                    'color'    : '',
+                    'religion' : '',
                     'available': false,
                     'ocupation': '',
                 }),
@@ -471,25 +471,25 @@
                 formAddress: new Form({
 
                     'client_id':'',
-                    'street':'',
-                    'number': '',
-                    'city': '',
-                    'state': '',
-                    'country': '',
+                    'street'   :'',
+                    'number'   : '',
+                    'city'     : '',
+                    'state'    : '',
+                    'country'  : '',
                 }),
 
 
                 // family
                 formFamily: new Form({
 
-                    'id': '',
-                    'client_id': '',
-                    'name':'',
-                    'surname':'',
-                    'parent': '',
-                    'gender': false,
+                    'id'         : '',
+                    'client_id'  : '',
+                    'name'       : '',
+                    'surname'    : '',
+                    'parent'     : '',
+                    'gender'     : false,
                     'phonenumber': '',
-                    'email': '',
+                    'email'      : '',
                     'responsable': false,
                 }),
 
@@ -499,13 +499,13 @@
                 // diagnostic
                 formDiagnostic: new Form({
 
-                    'id': '',
-                    'client_id': '',
-                    'diagnostic_id':'',
-                    'name':'',
-                    'rank':'',
-                    'date': '',
-                    'comments': '',
+                    'id'           : '',
+                    'client_id'    : '',
+                    'diagnostic_id': '',
+                    'name'         : '',
+                    'rank'         : '',
+                    'date'         : '',
+                    'comments'     : '',
                 }),
 
                 search              : '',

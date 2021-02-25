@@ -94,48 +94,74 @@ class ClientController extends Controller
         ], 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(Client $client)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Client $client)
+
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+
+            'name'       => ['required', 'string', 'max:100'],
+            'surname'    => ['required', 'string', 'max:100'],
+            'datastart'  => ['required', 'date'],
+            'photo'      => ['nullable'],
+            'databirth'  => ['required', 'date'],
+            'phonenumber'=> ['required', 'numeric', 'max:999999999'],
+            'appartament'=> ['nullable', 'numeric', 'max:40', 'min:0'],
+            'gender'     => ['required', 'nullable'],
+            'height'     => ['nullable', 'numeric'],
+            'color'      => ['required'],
+            'religion'   => ['required'],
+            'ocupation'  => ['max:500'],
+
+        ])->validate();
+
+        // // modify CLIENT
+        $client = Client::find($request['clientId']);
+
+        $client->name        = $request['name'];
+        $client->surname     = $request['surname'];
+        $client->datastart   = $request['datastart'];
+        $client->url         = $request['url'];
+        $client->databirth   = $request['databirth'];
+        $client->phonenumber = $request['phonenumber'];
+        $client->appartament = $request['appartament'];
+
+        $client->save();
+
+        // // modify SPECIFICATION
+        $specification = Specification::find($request['infoId']);
+
+        $specification->CPF       = $request['CPF'];
+        $specification->RG        = $request['RG'];
+        $specification->otherdoc  = $request['otherdoc'];
+        $specification->gender    = $request['gender'];
+        $specification->height    = $request['height'];
+        $specification->color     = $request['color'];
+        $specification->religion  = $request['religion'];
+        $specification->available = $request['available'];
+        $specification->ocupation = $request['ocupation'];
+
+        $specification->save();
+
+
+
+        return ['client' => $client, 'specification' => $specification];
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Client  $client
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Client $client)
     {
         //
     }
+
 }

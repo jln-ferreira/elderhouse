@@ -16,4 +16,9 @@ class Address extends Model
     {
         return Address::where([['active', 1],['user_id', $user_id]])->get()->first();
     }
+
+    public static function activeClient($clientId)
+    {
+        return Address::where([['active', 1],['client_id', $clientId]])->get()->first();
+    }
 }

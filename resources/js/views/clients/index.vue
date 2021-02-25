@@ -56,7 +56,7 @@
                     <a href="#" class="btn btn-sm bg-teal">
                       <i class="fas fa-comments"></i>
                     </a>
-                    <a @click="gotoProfile(client.id)" class="btn btn-sm btn-primary text-white" >
+                    <a @click="gotoProfile(client.client_id)" class="btn btn-sm btn-primary text-white" >
                       <i class="fas fa-user"></i> View Profile
                     </a>
                   </div>

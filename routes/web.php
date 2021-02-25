@@ -47,10 +47,20 @@ Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole'
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
 Route::get('/clients/{clientId}', 'ClientController@show');
+Route::get('/address/{clientId}', 'AddressController@showClient');
 Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
+Route::patch('/clients', 'ClientController@update');
 // END CLIENTS
 // ------------------
+
+
+// ---------------
+// ADDRESS
+Route::patch('/clientAddress', 'AddressController@createClient');
+// END ADDRESS
+// ------------------
+
 
 
 // ---------------
