@@ -47,7 +47,8 @@
                                                     <!-- PHOTO -->
                                                     <div class="col-md-4 text-center">
                                                         <div class="col-12">
-                                                            <img :src="'images/shadow.png'" class="img-thumbnail" alt="">
+                                                            <img v-if="formInformation.url == '' || formInformation.url == null" src="images/shadow.png" class="img-thumbnail">
+                                                            <img v-else :src="'/storage/storage/uploads/images_clients/' + formInformation.url" class="img-thumbnail">
                                                         </div>
                                                         <div class="col-12 mt-1">
                                                             <div class="input-group">
@@ -453,6 +454,7 @@
                     'databirth'  : '',
                     'phonenumber': '',
                     'appartament': '',
+                    'url'        : '',
 
                     //information
                     'CPF'      : '',
@@ -548,20 +550,33 @@
             // ----- ADD NEW CLIENT -----
             onSubmit_Information()
             {
-                this.formInformation
+                console.log(this.formInformation);
+                 // PHOTO
+                const data = new FormData();
+                data.append('photo', this.formInformation.photo);
+                data.append('description', this.formInformation.photoName);
+
+                axios.post("/photoClient", data)
+                .then(response =>{
+                    this.formInformation.url = response.data
+
+                    // ADD / EDIT USER
+                    this.formInformation
                     .post('/clients')
                     .then(response => {
 
-                        // //client
+                        console.log(response);
+
+                        //client
                         this.formInformation.id          = response.client.id;
                         this.formInformation.name        = response.client.name;
                         this.formInformation.surname     = response.client.surname;
                         this.formInformation.datastart   = response.client.datastart;
-                        this.formInformation.photo       = response.client.photo;
-                        this.formInformation.photoName   = response.client.photoName;
+                        // this.formInformation.photoName   = response.client.photoName;
                         this.formInformation.databirth   = response.client.databirth;
                         this.formInformation.phonenumber = response.client.phonenumber;
                         this.formInformation.appartament = response.client.appartament;
+                        this.formInformation.url         = response.client.url;
 
                         //information
                         this.formInformation.CPF       = response.specification.CPF;
@@ -582,6 +597,8 @@
                         this.information_save = false;
                         this.$toaster.success(this.formInformation.name + ' successful added.');
                     })
+
+                });
             },
 
 

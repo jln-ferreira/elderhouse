@@ -54,8 +54,8 @@
                                                             <div class="input-group">
                                                                 <div class="custom-file">
                                                                     <input type="file" class="custom-file-input" id="image-client" @change="onFileChange">
-                                                                    <label v-if="formInformation.url == null" class="custom-file-label" for="image-client">Choose file</label>
-                                                                    <label v-else  class="custom-file-label" for="image-client">{{ formInformation.url }}</label>
+                                                                    <label v-if="formInformation.photoName == ''" class="custom-file-label" for="image-client">Choose file</label>
+                                                                    <label v-else  class="custom-file-label" for="image-client">{{ formInformation.photoName }}</label>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -355,13 +355,15 @@
             {
                 this.formInformation.photo = event.target.files[0];
                 this.formInformation.photoName = event.target.files[0].name;
+
             },
 
             // ----- EDIT CLIENT -----
             onSubmit_Information()
             {
+
                 // PHOTO
-                let data = new FormData();
+                const data = new FormData();
                 data.append('photo', this.formInformation.photo);
                 data.append('description', this.formInformation.photoName);
 
@@ -379,7 +381,6 @@
                         this.formInformation.name        = response.client.name;
                         this.formInformation.surname     = response.client.surname;
                         this.formInformation.datastart   = response.client.datastart;
-                        this.formInformation.photo       = response.client.photo;
                         this.formInformation.photoName   = response.client.photoName;
                         this.formInformation.databirth   = response.client.databirth;
                         this.formInformation.phonenumber = response.client.phonenumber;

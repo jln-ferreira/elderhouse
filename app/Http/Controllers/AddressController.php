@@ -27,7 +27,6 @@ class AddressController extends Controller
 
         ])->validate();
 
-
         // ADDRESS
         $address = Address::updateOrCreate(
             [

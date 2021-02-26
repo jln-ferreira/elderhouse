@@ -2435,6 +2435,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2454,6 +2455,7 @@ __webpack_require__.r(__webpack_exports__);
         'databirth': '',
         'phonenumber': '',
         'appartament': '',
+        'url': '',
         //information
         'CPF': '',
         'RG': '',
@@ -2531,34 +2533,44 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit_Information: function onSubmit_Information() {
       var _this3 = this;
 
-      this.formInformation.post('/clients').then(function (response) {
-        // //client
-        _this3.formInformation.id = response.client.id;
-        _this3.formInformation.name = response.client.name;
-        _this3.formInformation.surname = response.client.surname;
-        _this3.formInformation.datastart = response.client.datastart;
-        _this3.formInformation.photo = response.client.photo;
-        _this3.formInformation.photoName = response.client.photoName;
-        _this3.formInformation.databirth = response.client.databirth;
-        _this3.formInformation.phonenumber = response.client.phonenumber;
-        _this3.formInformation.appartament = response.client.appartament; //information
+      console.log(this.formInformation); // PHOTO
 
-        _this3.formInformation.CPF = response.specification.CPF;
-        _this3.formInformation.RG = response.specification.RG;
-        _this3.formInformation.otherdoc = response.specification.otherdoc;
-        _this3.formInformation.gender = response.specification.gender;
-        _this3.formInformation.height = response.specification.height;
-        _this3.formInformation.color = response.specification.color;
-        _this3.formInformation.religion = response.specification.religion;
-        _this3.formInformation.available = response.specification.available;
-        _this3.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
+      var data = new FormData();
+      data.append('photo', this.formInformation.photo);
+      data.append('description', this.formInformation.photoName);
+      axios.post("/photoClient", data).then(function (response) {
+        _this3.formInformation.url = response.data; // ADD / EDIT USER
 
-        _this3.formAddress.client_id = _this3.formInformation.id;
-        _this3.formFamily.client_id = _this3.formInformation.id;
-        _this3.formDiagnostic.client_id = _this3.formInformation.id;
-        _this3.information_save = false;
+        _this3.formInformation.post('/clients').then(function (response) {
+          console.log(response); //client
 
-        _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
+          _this3.formInformation.id = response.client.id;
+          _this3.formInformation.name = response.client.name;
+          _this3.formInformation.surname = response.client.surname;
+          _this3.formInformation.datastart = response.client.datastart; // this.formInformation.photoName   = response.client.photoName;
+
+          _this3.formInformation.databirth = response.client.databirth;
+          _this3.formInformation.phonenumber = response.client.phonenumber;
+          _this3.formInformation.appartament = response.client.appartament;
+          _this3.formInformation.url = response.client.url; //information
+
+          _this3.formInformation.CPF = response.specification.CPF;
+          _this3.formInformation.RG = response.specification.RG;
+          _this3.formInformation.otherdoc = response.specification.otherdoc;
+          _this3.formInformation.gender = response.specification.gender;
+          _this3.formInformation.height = response.specification.height;
+          _this3.formInformation.color = response.specification.color;
+          _this3.formInformation.religion = response.specification.religion;
+          _this3.formInformation.available = response.specification.available;
+          _this3.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
+
+          _this3.formAddress.client_id = _this3.formInformation.id;
+          _this3.formFamily.client_id = _this3.formInformation.id;
+          _this3.formDiagnostic.client_id = _this3.formInformation.id;
+          _this3.information_save = false;
+
+          _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
+        });
       });
     },
     // --------------------------- [ ADDRESS ] ---------------------------
@@ -3256,7 +3268,6 @@ __webpack_require__.r(__webpack_exports__);
           _this2.formInformation.name = response.client.name;
           _this2.formInformation.surname = response.client.surname;
           _this2.formInformation.datastart = response.client.datastart;
-          _this2.formInformation.photo = response.client.photo;
           _this2.formInformation.photoName = response.client.photoName;
           _this2.formInformation.databirth = response.client.databirth;
           _this2.formInformation.phonenumber = response.client.phonenumber;
@@ -40738,10 +40749,20 @@ var render = function() {
                           _c("div", { staticClass: "row" }, [
                             _c("div", { staticClass: "col-md-4 text-center" }, [
                               _c("div", { staticClass: "col-12" }, [
-                                _c("img", {
-                                  staticClass: "img-thumbnail",
-                                  attrs: { src: "images/shadow.png", alt: "" }
-                                })
+                                _vm.formInformation.url == "" ||
+                                _vm.formInformation.url == null
+                                  ? _c("img", {
+                                      staticClass: "img-thumbnail",
+                                      attrs: { src: "images/shadow.png" }
+                                    })
+                                  : _c("img", {
+                                      staticClass: "img-thumbnail",
+                                      attrs: {
+                                        src:
+                                          "/storage/storage/uploads/images_clients/" +
+                                          _vm.formInformation.url
+                                      }
+                                    })
                               ]),
                               _vm._v(" "),
                               _c("div", { staticClass: "col-12 mt-1" }, [
@@ -43761,7 +43782,7 @@ var render = function() {
                                       on: { change: _vm.onFileChange }
                                     }),
                                     _vm._v(" "),
-                                    _vm.formInformation.url == null
+                                    _vm.formInformation.photoName == ""
                                       ? _c(
                                           "label",
                                           {
@@ -43778,7 +43799,9 @@ var render = function() {
                                           },
                                           [
                                             _vm._v(
-                                              _vm._s(_vm.formInformation.url)
+                                              _vm._s(
+                                                _vm.formInformation.photoName
+                                              )
                                             )
                                           ]
                                         )
