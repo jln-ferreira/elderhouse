@@ -3204,8 +3204,6 @@ __webpack_require__.r(__webpack_exports__);
       _this.formInformation.name = response.data[0].name;
       _this.formInformation.surname = response.data[0].surname;
       _this.formInformation.datastart = response.data[0].datastart;
-      _this.formInformation.photo = response.data[0].photo;
-      _this.formInformation.photoName = response.data[0].photoName;
       _this.formInformation.databirth = response.data[0].databirth;
       _this.formInformation.phonenumber = response.data[0].phonenumber;
       _this.formInformation.appartament = response.data[0].appartament;
@@ -3245,31 +3243,41 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit_Information: function onSubmit_Information() {
       var _this2 = this;
 
-      this.formInformation.patch('/clients').then(function (response) {
-        // //client
-        _this2.formInformation.clientId = response.client.id;
-        _this2.formInformation.name = response.client.name;
-        _this2.formInformation.surname = response.client.surname;
-        _this2.formInformation.datastart = response.client.datastart;
-        _this2.formInformation.photo = response.client.photo;
-        _this2.formInformation.photoName = response.client.photoName;
-        _this2.formInformation.databirth = response.client.databirth;
-        _this2.formInformation.phonenumber = response.client.phonenumber;
-        _this2.formInformation.appartament = response.client.appartament;
-        _this2.formInformation.url = response.client.url; //information
+      // PHOTO
+      var data = new FormData();
+      data.append('photo', this.formInformation.photo);
+      data.append('description', this.formInformation.photoName);
+      axios.post("/photoClient", data).then(function (response) {
+        _this2.formInformation.url = response.data; // EDIT USER
 
-        _this2.formInformation.infoId = response.specification.id;
-        _this2.formInformation.CPF = response.specification.CPF;
-        _this2.formInformation.RG = response.specification.RG;
-        _this2.formInformation.otherdoc = response.specification.otherdoc;
-        _this2.formInformation.gender = response.specification.gender;
-        _this2.formInformation.height = response.specification.height;
-        _this2.formInformation.color = response.specification.color;
-        _this2.formInformation.religion = response.specification.religion;
-        _this2.formInformation.available = response.specification.available;
-        _this2.formInformation.ocupation = response.specification.ocupation;
+        _this2.formInformation.patch('/clients').then(function (response) {
+          //client
+          _this2.formInformation.clientId = response.client.id;
+          _this2.formInformation.name = response.client.name;
+          _this2.formInformation.surname = response.client.surname;
+          _this2.formInformation.datastart = response.client.datastart;
+          _this2.formInformation.photo = response.client.photo;
+          _this2.formInformation.photoName = response.client.photoName;
+          _this2.formInformation.databirth = response.client.databirth;
+          _this2.formInformation.phonenumber = response.client.phonenumber;
+          _this2.formInformation.appartament = response.client.appartament;
+          _this2.formInformation.url = response.client.url; //information
 
-        _this2.$toaster.success(_this2.formInformation.name + ' successful edited.');
+          _this2.formInformation.infoId = response.specification.id;
+          _this2.formInformation.CPF = response.specification.CPF;
+          _this2.formInformation.RG = response.specification.RG;
+          _this2.formInformation.otherdoc = response.specification.otherdoc;
+          _this2.formInformation.gender = response.specification.gender;
+          _this2.formInformation.height = response.specification.height;
+          _this2.formInformation.color = response.specification.color;
+          _this2.formInformation.religion = response.specification.religion;
+          _this2.formInformation.available = response.specification.available;
+          _this2.formInformation.ocupation = response.specification.ocupation;
+
+          _this2.$toaster.success(_this2.formInformation.name + ' successful edited.');
+        });
+      })["catch"](function (error) {
+        return console.log(error);
       });
     },
     // --------------------------- [ ADDRESS ] ---------------------------
@@ -43570,7 +43578,9 @@ var render = function() {
                             ? _c("img", {
                                 staticClass: "img-circle img-fluid",
                                 attrs: {
-                                  src: "images/images_clients/" + client.url,
+                                  src:
+                                    "/storage/storage/uploads/images_clients/" +
+                                    client.url,
                                   alt: ""
                                 }
                               })
@@ -43733,7 +43743,7 @@ var render = function() {
                                       staticClass: "img-thumbnail",
                                       attrs: {
                                         src:
-                                          "images/images_clients/" +
+                                          "/storage/storage/uploads/images_clients/" +
                                           _vm.formInformation.url
                                       }
                                     })

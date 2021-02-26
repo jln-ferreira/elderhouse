@@ -48,7 +48,7 @@
                                                     <div class="col-md-4 text-center">
                                                         <div class="col-12">
                                                             <img v-if="formInformation.url == null" src="images/shadow.png" class="img-thumbnail">
-                                                            <img v-else :src="'images/images_clients/' + formInformation.url" class="img-thumbnail">
+                                                            <img v-else :src="'/storage/storage/uploads/images_clients/' + formInformation.url" class="img-thumbnail">
                                                         </div>
                                                         <div class="col-12 mt-1">
                                                             <div class="input-group">
@@ -304,12 +304,10 @@
                 .then(response => {
 
                     // //client
-                    this.formInformation.clientId   = response.data[0].client_id;
+                    this.formInformation.clientId    = response.data[0].client_id;
                     this.formInformation.name        = response.data[0].name;
                     this.formInformation.surname     = response.data[0].surname;
                     this.formInformation.datastart   = response.data[0].datastart;
-                    this.formInformation.photo       = response.data[0].photo;
-                    this.formInformation.photoName   = response.data[0].photoName;
                     this.formInformation.databirth   = response.data[0].databirth;
                     this.formInformation.phonenumber = response.data[0].phonenumber;
                     this.formInformation.appartament = response.data[0].appartament;
@@ -362,12 +360,21 @@
             // ----- EDIT CLIENT -----
             onSubmit_Information()
             {
+                // PHOTO
+                let data = new FormData();
+                data.append('photo', this.formInformation.photo);
+                data.append('description', this.formInformation.photoName);
 
-                this.formInformation
+                axios.post("/photoClient", data)
+                .then(response =>{
+                    this.formInformation.url = response.data
+
+                    // EDIT USER
+                    this.formInformation
                     .patch('/clients')
                     .then(response => {
 
-                        // //client
+                        //client
                         this.formInformation.clientId    = response.client.id;
                         this.formInformation.name        = response.client.name;
                         this.formInformation.surname     = response.client.surname;
@@ -393,6 +400,10 @@
 
                         this.$toaster.success(this.formInformation.name + ' successful edited.');
                     });
+
+                })
+                .catch(error => console.log(error));
+
             },
 
 

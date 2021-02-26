@@ -46,7 +46,7 @@
 
                     </div>
                     <div class="col-5 text-center">
-                      <img v-if="client.url" :src="'images/images_clients/' + client.url" alt="" class="img-circle img-fluid">
+                      <img v-if="client.url" :src="'/storage/storage/uploads/images_clients/' + client.url" alt="" class="img-circle img-fluid">
                       <img v-else :src="'images/AdminLTELogo.png'" alt="" class="img-circle img-fluid">
                     </div>
                   </div>

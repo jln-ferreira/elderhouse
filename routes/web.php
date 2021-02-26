@@ -50,6 +50,7 @@ Route::get('/clients/{clientId}', 'ClientController@show');
 Route::get('/address/{clientId}', 'AddressController@showClient');
 Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
+Route::post('/photoClient', 'ClientController@photoClient');
 Route::patch('/clients', 'ClientController@update');
 // END CLIENTS
 // ------------------

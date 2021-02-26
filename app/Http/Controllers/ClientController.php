@@ -9,6 +9,9 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+//photo
+use Illuminate\Http\UploadedFile;
+
 
 class ClientController extends Controller
 {
@@ -45,7 +48,6 @@ class ClientController extends Controller
 
         ])->validate();
 
-
         // CLIENT
         $client = Client::updateOrCreate(
             [
@@ -55,7 +57,7 @@ class ClientController extends Controller
                 'name'        => $request['name'],
                 'surname'     => $request['surname'],
                 'datastart'   => $request['datastart'],
-                'url'         => $request['photoName'],
+                'url'         => $request['url'],
                 'databirth'   => $request['databirth'],
                 'phonenumber' => $request['phonenumber'],
                 'appartament' => $request['appartament'],
@@ -107,6 +109,25 @@ class ClientController extends Controller
     }
 
 
+    // SAVE PHOTO
+    public function photoClient(Request $request)
+    {
+
+        if(isset($request->photo)){
+            // Validate (size is in KB)
+            $request->validate([
+                'photo' => 'nullable|file|image',
+            ]);
+
+            $contents = file_get_contents($request->photo->path());
+            $newPath = $request->photo->store('public/storage/uploads/images_clients');
+
+            $name = explode('/', $newPath);
+            return $name[4];
+        } else return '';
+
+    }
+
     public function update(Request $request)
     {
         Validator::make($request->all(), [
@@ -114,7 +135,6 @@ class ClientController extends Controller
             'name'       => ['required', 'string', 'max:100'],
             'surname'    => ['required', 'string', 'max:100'],
             'datastart'  => ['required', 'date'],
-            'photo'      => ['nullable'],
             'databirth'  => ['required', 'date'],
             'phonenumber'=> ['required', 'numeric', 'max:999999999'],
             'appartament'=> ['nullable', 'numeric', 'max:40', 'min:0'],
@@ -132,7 +152,7 @@ class ClientController extends Controller
         $client->name        = $request['name'];
         $client->surname     = $request['surname'];
         $client->datastart   = $request['datastart'];
-        $client->url         = $request['url'];
+        if(!is_null($request['url'])) $client->url = $request['url'];
         $client->databirth   = $request['databirth'];
         $client->phonenumber = $request['phonenumber'];
         $client->appartament = $request['appartament'];
