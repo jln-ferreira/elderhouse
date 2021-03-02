@@ -268,7 +268,8 @@
                                                     <div class="form-group">
                                                         <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
                                                             <input type="checkbox" class="custom-control-input" id="familyGender" v-model="formFamily.gender">
-                                                            <label class="custom-control-label" for="familyGender">Male</label>
+                                                            <label v-if="formFamily.gender == 0" class="custom-control-label" for="familyGender">Male</label>
+                                                            <label v-else class="custom-control-label" for="familyGender">Female</label>
                                                         </div>
                                                     </div>
                                                     <div class="form-group">

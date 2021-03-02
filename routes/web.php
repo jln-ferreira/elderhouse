@@ -47,7 +47,8 @@ Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole'
 // CLIENTS
 Route::get('/clients', 'ClientController@index');
 Route::get('/clients/{clientId}', 'ClientController@show');
-Route::get('/address/{clientId}', 'AddressController@showClient');
+Route::get('/addressClient/{clientId}', 'AddressController@showClient');
+Route::get('/familyClient/{clientId}', 'FamilyController@showClient');
 Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
 Route::post('/photoClient', 'ClientController@photoClient');

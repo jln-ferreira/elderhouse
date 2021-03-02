@@ -20,6 +20,11 @@ class FamilyController extends Controller
     }
 
 
+    public function showClient($clientId)
+    {
+        return Family::activeClient($clientId);
+    }
+
 
     public function store(Request $request)
     {
