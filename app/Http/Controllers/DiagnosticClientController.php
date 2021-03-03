@@ -113,9 +113,9 @@ class DiagnosticClientController extends Controller
 
 
 
-    public function deleteClient($userId)
+    public function deleteClient($id)
     {
-        $diagnostic = DiagnosticClient::find($userId);
+        $diagnostic = DiagnosticClient::find($id);
         $diagnostic->active = 0;
         $diagnostic->save();
 

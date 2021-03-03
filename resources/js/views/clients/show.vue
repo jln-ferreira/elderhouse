@@ -31,6 +31,7 @@
                                     <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab">Diagnostic</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#creditcard" data-toggle="tab">Credit Card</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -301,10 +302,11 @@
                                                 <hr/>
                                                 <div class="row">
                                                     <div class="card col-lg-3 col-4" v-for="(family, index) in familyList" @click="editFamily(index)" v-bind:key="family.id" style="cursor:pointer;">
-                                                        <div class="ribbon-wrapper" v-if="family.responsable == true">
+                                                        <div class="ribbon-wrapper" v-if="family.responsable == 1">
                                                             <div class="ribbon bg-primary">responsable</div>
                                                         </div>
-                                                        <img class="card-img-top" :src="'images/family/' + family.gender + '.png'" alt="Card image">
+                                                        <img class="card-img-top" v-if="family.gender == 1" src="images/family/true.png" alt="Card image">
+                                                        <img class="card-img-top" v-else src="images/family/false.png" alt="Card image">
                                                         <div>
                                                             <p class="text-center mb-0"><b>{{ family.name }} {{ family.surname }}</b></p>
                                                             <p class="text-center mb-0">{{ family.parent }}</p>
@@ -317,6 +319,113 @@
                                         </div>
                                     </div>
                                     <!-- /.tab-pane -->
+
+
+                                     <!-- -------------[ADD DIAGNOSTIC]----------------- -->
+                                    <!-- ============================================== -->
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="diagnostic">
+                                        <div class="row">
+                                            <div class="col-xl-5">
+
+                                                <form method="post" @submit.prevent="onSubmit_Diagnostic">
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="diagnostic">Diagnostic</label>
+                                                            <select id="diagnostic" class="form-control" v-model="formDiagnostic.diagnostic_id" @change="getRank($event)" required>
+                                                                <option v-for="diagnostic in diagnosticList" v-text='diagnostic.name' v-bind:key="diagnostic.id" :rank="diagnostic.rank" :value="diagnostic.id"></option>
+                                                            </select>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('name')" v-text="formDiagnostic.errors.get('name')"></span>
+                                                        </div>
+                                                        <div class="form-group col-md-2">
+                                                            <label for="rank">Rank</label>
+                                                            <input type="number" class="form-control" id="rank" v-model="formDiagnostic.rank" disabled>
+                                                        </div>
+                                                        <div class="form-group col-md-4">
+                                                            <label for="dateDiagnostic">Date</label>
+                                                            <input type="date" class="form-control" id="dateDiagnostic" min="1" v-model="formDiagnostic.date" required>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('date')" v-text="formDiagnostic.errors.get('date')"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-md-12">
+                                                            <label for="comments">Comments</label>
+                                                            <textarea class="form-control" id="comments" v-model="formDiagnostic.comments"></textarea>
+                                                            <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('comments')" v-text="formDiagnostic.errors.get('comments')"></span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div>
+                                                            <button type="save" v-show="diagnostic_save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
+                                                            <a type="edit" v-show="!diagnostic_save" @click="modifyDiagnostic" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
+                                                            <a type="cancel" v-show="!diagnostic_save" @click="cancelDiagnostic" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- [ALL DIAGNOSTIC] -->
+                                            <div class="col-xl-7">
+                                                <div class="card" style="min-height: 235px;">
+                                                    <div class="card-header">
+                                                        <h3 class="card-title font-weight-bold">List Diagnostic</h3>
+
+                                                        <div class="card-tools">
+                                                            <div class="input-group input-group-sm" style="width: 150px;">
+                                                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
+
+                                                                <div class="input-group-append">
+                                                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body table-responsive p-0">
+                                                        <table class="table table-hover">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Diagnostic</th>
+                                                                <th>Rank</th>
+                                                                <th>Date</th>
+                                                                <th>Comments</th>
+                                                                <th>Actions</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(diagnostic, index) in filtredListDiagnostic" v-bind:key="diagnostic.id">
+                                                                    <td>{{diagnostic.name}}</td>
+                                                                    <td>{{diagnostic.rank}}</td>
+                                                                    <td>{{diagnostic.date}}</td>
+                                                                    <td>{{diagnostic.comments}}</td>
+                                                                    <td>
+                                                                        <button type="edit" class="btn btn-primary" @click="editDiagnostic(index)"><i class="far fa-edit"></i></button>
+                                                                        <a type="delete" class="btn btn-danger text-white" @click="deleteDiagnostic(diagnostic.id)"><i class="far fa-trash-alt"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!-- /.card-body -->
+                                                </div>
+                                                <!-- /.card -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                                 </div>
                                 <!-- /.tab-content -->
@@ -398,6 +507,33 @@
                 family_save: true,
                 familyList: [],
 
+
+                // diagnostic
+                formDiagnostic: new Form({
+
+                    'id'           : '',
+                    'client_id'    : this.$route.params.id,
+                    'diagnostic_id': '',
+                    'name'         : '',
+                    'rank'         : '',
+                    'date'         : '',
+                    'comments'     : '',
+                }),
+
+                diagnostic_save     : true,
+                search              : '',
+                diagnosticListClient: [],
+                diagnosticList      : [],
+
+            }
+        },
+
+        computed: {
+            filtredListDiagnostic()
+            {
+                return this.diagnosticListClient.filter(post => {
+                    return post.name.toLowerCase().includes(this.search.toLowerCase());
+                });
             }
         },
 
@@ -447,9 +583,15 @@
                 });
 
 
-        // Fetch especific FAMILY
+            // Fetch especific FAMILY
             axios.get('/familyClient/' + this.clientId)
                 .then(response => this.familyList = response.data);
+
+
+
+            // Fetch especific diagnostic
+            axios.get('/diagnostics')
+                .then(response => this.diagnosticList = response.data);
         },
 
 
@@ -512,7 +654,6 @@
                     });
 
                 })
-                .catch(error => console.log(error));
 
             },
 
@@ -653,6 +794,124 @@
                     this.family_save = true;
                     this.$toaster.success('Successful Deleted.');
                 });
+            },
+
+
+            // ------------------------- [ DIAGNOSTIC ] -------------------------
+            // ==================================================================
+
+            getRank(e)
+            {
+                if (e.target.options.selectedIndex > -1) {
+                    const theTarget = e.target.options[e.target.options.selectedIndex];
+                    this.formDiagnostic.rank = theTarget.getAttribute('rank');
+                }
+
+            },
+
+            // ----- ADD DIAGNOSTIC -----
+            onSubmit_Diagnostic()
+            {
+                this.formDiagnostic
+                    .post('/diagnosticsClient')
+                    .then(response => {
+
+                        let newDiagnostic = new Object({
+
+                            'id':            response[0].id,
+                            'diagnostic_id': response[0].diagnostic_id,
+                            'client_id':     response[0].client_id,
+                            'name':          response[0].name,
+                            'rank':          response[0].rank,
+                            'date':          response[0].date,
+                            'comments':      response[0].comments,
+
+                        });
+
+                        this.diagnosticListClient.push(newDiagnostic);
+
+                        // input information onto current form\
+                        this.formDiagnostic.client_id = this.clientId;
+
+                        this.$toaster.success('Diagnostic added.');
+                    })
+            },
+
+
+            // EDIT DIAGNOSTIC
+            editDiagnostic(index)
+            {
+                this.formDiagnostic.id            = this.diagnosticListClient[index].id;
+                this.formDiagnostic.client_id     = this.diagnosticListClient[index].client_id;
+                this.formDiagnostic.diagnostic_id = this.diagnosticListClient[index].diagnostic_id;
+                this.formDiagnostic.name          = this.diagnosticListClient[index].name;
+                this.formDiagnostic.rank          = this.diagnosticListClient[index].rank;
+                this.formDiagnostic.date          = this.diagnosticListClient[index].date;
+                this.formDiagnostic.comments      = this.diagnosticListClient[index].comments;
+
+                //edit button
+                this.diagnostic_save = false;
+            },
+
+
+            // MODIFY DIAGNOSTIC
+            modifyDiagnostic()
+            {
+                this.formDiagnostic
+                    .patch('/diagnosticsClient')
+                    .then(response => {
+
+                        var index = this.diagnosticListClient.findIndex(x => x.id === response[0].id);
+
+                        this.diagnosticListClient[index].diagnostic_id = response[0].diagnostic_id
+                        this.diagnosticListClient[index].name          = response[0].name
+                        this.diagnosticListClient[index].rank          = response[0].rank
+                        this.diagnosticListClient[index].date          = response[0].date
+                        this.diagnosticListClient[index].comments      = response[0].comments
+
+                        this.formDiagnostic.client_id = this.clientId;
+
+                        //edit button
+                        this.diagnostic_save = true;
+
+                        this.$toaster.success('Diagnostic edited.');
+                    });
+            },
+
+
+            // EDIT DIAGNOSTIC
+            deleteDiagnostic(id)
+            {
+                axios.post('/diagnosticsClient/' + id, {
+                _method: 'DELETE'
+                })
+                .then(response => {
+
+                    var count = 0
+                    this.diagnosticListClient.forEach(element => {
+                        element.id == (response.data.id) ? this.diagnosticListClient.splice(count,1) : count +=1;
+                    });
+
+                    this.formDiagnostic.client_id = this.clientId;
+
+                    this.$toaster.success('Successful deleted');
+                });
+
+            },
+
+            // CANCEL DIAGNOSTIC
+            cancelDiagnostic()
+            {
+                this.formDiagnostic.id             = "";
+                this.formDiagnostic.diagnostic_id  = "";
+                this.formDiagnostic.name           = "";
+                this.formDiagnostic.rank           = "";
+                this.formDiagnostic.date           = "";
+                this.formDiagnostic.comments       = "";
+
+                this.diagnostic_save = true;
+
+                this.$toaster.warning('Canceled');
 
             },
 

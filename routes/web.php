@@ -100,7 +100,7 @@ Route::get('/diagnostics', 'DiagnosticController@index');
 // DIAGNOSTIC CLIENT
 route::post('/diagnosticsClient', 'DiagnosticClientController@store');
 Route::patch('/diagnosticsClient', 'DiagnosticClientController@updateClient');
-Route::delete('/diagnosticsClient/{userId}', 'DiagnosticClientController@deleteClient');
+Route::delete('/diagnosticsClient/{id}', 'DiagnosticClientController@deleteClient');
 // END DIAGNOSTIC CLIENT
 // ------------------
 

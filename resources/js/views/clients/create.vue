@@ -551,7 +551,6 @@
             // ----- ADD NEW CLIENT -----
             onSubmit_Information()
             {
-                console.log(this.formInformation);
                  // PHOTO
                 const data = new FormData();
                 data.append('photo', this.formInformation.photo);
@@ -565,8 +564,6 @@
                     this.formInformation
                     .post('/clients')
                     .then(response => {
-
-                        console.log(response);
 
                         //client
                         this.formInformation.id          = response.client.id;
@@ -783,7 +780,7 @@
                         this.diagnosticListClient.push(newDiagnostic);
 
                         // input information onto current form
-                        this.formDiagnostic.client_id   = response.client_id;
+                        this.formDiagnostic.client_id   = response[0].client_id;
 
                         this.$toaster.success('Diagnostic added.');
                     })
@@ -815,11 +812,13 @@
 
                         var index = this.diagnosticListClient.findIndex(x => x.id === response[0].id);
 
-                        this.diagnosticListClient[index].diagnostic_id = response[0].diagnostic_id
-                        this.diagnosticListClient[index].name          = response[0].name
-                        this.diagnosticListClient[index].rank          = response[0].rank
-                        this.diagnosticListClient[index].date          = response[0].date
-                        this.diagnosticListClient[index].comments      = response[0].comments
+                        this.diagnosticListClient[index].diagnostic_id = response[0].diagnostic_id;
+                        this.diagnosticListClient[index].name          = response[0].name;
+                        this.diagnosticListClient[index].rank          = response[0].rank;
+                        this.diagnosticListClient[index].date          = response[0].date;
+                        this.diagnosticListClient[index].comments      = response[0].comments;
+
+                        this.formDiagnostic.client_id = response[0].client_id;
 
                         //edit button
                         this.diagnostic_save = true;
@@ -842,6 +841,8 @@
                     this.diagnosticListClient.forEach(element => {
                         element.id == (response.data.id) ? this.diagnosticListClient.splice(count,1) : count +=1;
                     });
+
+                    this.formDiagnostic.client_id = response.data.client_id;
 
                     this.$toaster.success('Successful deleted');
                 });

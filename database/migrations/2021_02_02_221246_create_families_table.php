@@ -21,8 +21,8 @@ class CreateFamiliesTable extends Migration
             $table->text('parent');
             $table->text('phonenumber');
             $table->text('email');
-            $table->text('responsable');
-            $table->text('gender');
+            $table->smallInteger('responsable');
+            $table->smallInteger('gender');
             $table->smallInteger('active')->default('1');
             $table->timestamps();
         });

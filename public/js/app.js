@@ -2534,8 +2534,7 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit_Information: function onSubmit_Information() {
       var _this3 = this;
 
-      console.log(this.formInformation); // PHOTO
-
+      // PHOTO
       var data = new FormData();
       data.append('photo', this.formInformation.photo);
       data.append('description', this.formInformation.photoName);
@@ -2543,8 +2542,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.formInformation.url = response.data; // ADD / EDIT USER
 
         _this3.formInformation.post('/clients').then(function (response) {
-          console.log(response); //client
-
+          //client
           _this3.formInformation.id = response.client.id;
           _this3.formInformation.name = response.client.name;
           _this3.formInformation.surname = response.client.surname;
@@ -2718,7 +2716,7 @@ __webpack_require__.r(__webpack_exports__);
         _this8.diagnosticListClient.push(newDiagnostic); // input information onto current form
 
 
-        _this8.formDiagnostic.client_id = response.client_id;
+        _this8.formDiagnostic.client_id = response[0].client_id;
 
         _this8.$toaster.success('Diagnostic added.');
       });
@@ -2748,7 +2746,8 @@ __webpack_require__.r(__webpack_exports__);
         _this9.diagnosticListClient[index].name = response[0].name;
         _this9.diagnosticListClient[index].rank = response[0].rank;
         _this9.diagnosticListClient[index].date = response[0].date;
-        _this9.diagnosticListClient[index].comments = response[0].comments; //edit button
+        _this9.diagnosticListClient[index].comments = response[0].comments;
+        _this9.formDiagnostic.client_id = response[0].client_id; //edit button
 
         _this9.diagnostic_save = true;
 
@@ -2767,6 +2766,8 @@ __webpack_require__.r(__webpack_exports__);
         _this10.diagnosticListClient.forEach(function (element) {
           element.id == response.data.id ? _this10.diagnosticListClient.splice(count, 1) : count += 1;
         });
+
+        _this10.formDiagnostic.client_id = response.data.client_id;
 
         _this10.$toaster.success('Successful deleted');
       });
@@ -3252,6 +3253,115 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3304,48 +3414,75 @@ __webpack_require__.r(__webpack_exports__);
         'responsable': false
       }),
       family_save: true,
-      familyList: []
+      familyList: [],
+      // diagnostic
+      formDiagnostic: new Form({
+        'id': '',
+        'client_id': this.$route.params.id,
+        'diagnostic_id': '',
+        'name': '',
+        'rank': '',
+        'date': '',
+        'comments': ''
+      }),
+      diagnostic_save: true,
+      search: '',
+      diagnosticListClient: [],
+      diagnosticList: []
     };
   },
+  computed: {
+    filtredListDiagnostic: function filtredListDiagnostic() {
+      var _this = this;
+
+      return this.diagnosticListClient.filter(function (post) {
+        return post.name.toLowerCase().includes(_this.search.toLowerCase());
+      });
+    }
+  },
   created: function created() {
-    var _this = this;
+    var _this2 = this;
 
     // Fetch especific CLIENT
     axios.get('/clients/' + this.clientId).then(function (response) {
       // //client
-      _this.formInformation.clientId = response.data[0].client_id;
-      _this.formInformation.name = response.data[0].name;
-      _this.formInformation.surname = response.data[0].surname;
-      _this.formInformation.datastart = response.data[0].datastart;
-      _this.formInformation.databirth = response.data[0].databirth;
-      _this.formInformation.phonenumber = response.data[0].phonenumber;
-      _this.formInformation.appartament = response.data[0].appartament;
-      _this.formInformation.url = response.data[0].url; //information
+      _this2.formInformation.clientId = response.data[0].client_id;
+      _this2.formInformation.name = response.data[0].name;
+      _this2.formInformation.surname = response.data[0].surname;
+      _this2.formInformation.datastart = response.data[0].datastart;
+      _this2.formInformation.databirth = response.data[0].databirth;
+      _this2.formInformation.phonenumber = response.data[0].phonenumber;
+      _this2.formInformation.appartament = response.data[0].appartament;
+      _this2.formInformation.url = response.data[0].url; //information
 
-      _this.formInformation.infoId = response.data[0].id;
-      _this.formInformation.CPF = response.data[0].CPF;
-      _this.formInformation.RG = response.data[0].RG;
-      _this.formInformation.otherdoc = response.data[0].otherdoc;
-      _this.formInformation.gender = response.data[0].gender;
-      _this.formInformation.height = response.data[0].height;
-      _this.formInformation.color = response.data[0].color;
-      _this.formInformation.religion = response.data[0].religion;
-      _this.formInformation.available = response.data[0].available;
-      _this.formInformation.ocupation = response.data[0].ocupation;
+      _this2.formInformation.infoId = response.data[0].id;
+      _this2.formInformation.CPF = response.data[0].CPF;
+      _this2.formInformation.RG = response.data[0].RG;
+      _this2.formInformation.otherdoc = response.data[0].otherdoc;
+      _this2.formInformation.gender = response.data[0].gender;
+      _this2.formInformation.height = response.data[0].height;
+      _this2.formInformation.color = response.data[0].color;
+      _this2.formInformation.religion = response.data[0].religion;
+      _this2.formInformation.available = response.data[0].available;
+      _this2.formInformation.ocupation = response.data[0].ocupation;
     }); // Fetch especific ADDRESS
 
     axios.get('/addressClient/' + this.clientId).then(function (response) {
       // //address
-      _this.formAddress.id = response.data.id;
-      _this.formAddress.street = response.data.street;
-      _this.formAddress.number = response.data.number;
-      _this.formAddress.city = response.data.city;
-      _this.formAddress.state = response.data.state;
-      _this.formAddress.country = response.data.country;
+      _this2.formAddress.id = response.data.id;
+      _this2.formAddress.street = response.data.street;
+      _this2.formAddress.number = response.data.number;
+      _this2.formAddress.city = response.data.city;
+      _this2.formAddress.state = response.data.state;
+      _this2.formAddress.country = response.data.country;
     }); // Fetch especific FAMILY
 
     axios.get('/familyClient/' + this.clientId).then(function (response) {
-      return _this.familyList = response.data;
+      return _this2.familyList = response.data;
+    }); // Fetch especific diagnostic
+
+    axios.get('/diagnostics').then(function (response) {
+      return _this2.diagnosticList = response.data;
     });
   },
   methods: {
@@ -3358,61 +3495,59 @@ __webpack_require__.r(__webpack_exports__);
     },
     // ----- EDIT CLIENT -----
     onSubmit_Information: function onSubmit_Information() {
-      var _this2 = this;
+      var _this3 = this;
 
       // PHOTO
       var data = new FormData();
       data.append('photo', this.formInformation.photo);
       data.append('description', this.formInformation.photoName);
       axios.post("/photoClient", data).then(function (response) {
-        _this2.formInformation.url = response.data; // EDIT USER
+        _this3.formInformation.url = response.data; // EDIT USER
 
-        _this2.formInformation.patch('/clients').then(function (response) {
+        _this3.formInformation.patch('/clients').then(function (response) {
           //client
-          _this2.formInformation.clientId = response.client.id;
-          _this2.formInformation.name = response.client.name;
-          _this2.formInformation.surname = response.client.surname;
-          _this2.formInformation.datastart = response.client.datastart;
-          _this2.formInformation.photoName = response.client.photoName;
-          _this2.formInformation.databirth = response.client.databirth;
-          _this2.formInformation.phonenumber = response.client.phonenumber;
-          _this2.formInformation.appartament = response.client.appartament;
-          _this2.formInformation.url = response.client.url; //information
+          _this3.formInformation.clientId = response.client.id;
+          _this3.formInformation.name = response.client.name;
+          _this3.formInformation.surname = response.client.surname;
+          _this3.formInformation.datastart = response.client.datastart;
+          _this3.formInformation.photoName = response.client.photoName;
+          _this3.formInformation.databirth = response.client.databirth;
+          _this3.formInformation.phonenumber = response.client.phonenumber;
+          _this3.formInformation.appartament = response.client.appartament;
+          _this3.formInformation.url = response.client.url; //information
 
-          _this2.formInformation.infoId = response.specification.id;
-          _this2.formInformation.CPF = response.specification.CPF;
-          _this2.formInformation.RG = response.specification.RG;
-          _this2.formInformation.otherdoc = response.specification.otherdoc;
-          _this2.formInformation.gender = response.specification.gender;
-          _this2.formInformation.height = response.specification.height;
-          _this2.formInformation.color = response.specification.color;
-          _this2.formInformation.religion = response.specification.religion;
-          _this2.formInformation.available = response.specification.available;
-          _this2.formInformation.ocupation = response.specification.ocupation;
+          _this3.formInformation.infoId = response.specification.id;
+          _this3.formInformation.CPF = response.specification.CPF;
+          _this3.formInformation.RG = response.specification.RG;
+          _this3.formInformation.otherdoc = response.specification.otherdoc;
+          _this3.formInformation.gender = response.specification.gender;
+          _this3.formInformation.height = response.specification.height;
+          _this3.formInformation.color = response.specification.color;
+          _this3.formInformation.religion = response.specification.religion;
+          _this3.formInformation.available = response.specification.available;
+          _this3.formInformation.ocupation = response.specification.ocupation;
 
-          _this2.$toaster.success(_this2.formInformation.name + ' successful edited.');
+          _this3.$toaster.success(_this3.formInformation.name + ' successful edited.');
         });
-      })["catch"](function (error) {
-        return console.log(error);
       });
     },
     // --------------------------- [ ADDRESS ] ---------------------------
     // ===================================================================
     // ----- ADD ADDRESS -----
     onSubmit_Address: function onSubmit_Address() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.formAddress.patch('/clientAddress').then(function (response) {
         //address
-        _this3.formAddress.id = response.id;
-        _this3.formAddress.client_id = response.client_id;
-        _this3.formAddress.street = response.street;
-        _this3.formAddress.number = response.number;
-        _this3.formAddress.city = response.city;
-        _this3.formAddress.state = response.state;
-        _this3.formAddress.country = response.country;
+        _this4.formAddress.id = response.id;
+        _this4.formAddress.client_id = response.client_id;
+        _this4.formAddress.street = response.street;
+        _this4.formAddress.number = response.number;
+        _this4.formAddress.city = response.city;
+        _this4.formAddress.state = response.state;
+        _this4.formAddress.country = response.country;
 
-        _this3.$toaster.success('Address added.');
+        _this4.$toaster.success('Address added.');
       });
     },
     // END NEW ADDRESS
@@ -3420,7 +3555,7 @@ __webpack_require__.r(__webpack_exports__);
     // ==================================================================
     // ----- ADD FAMILY -----
     onSubmit_Family: function onSubmit_Family() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.formFamily.post('/family').then(function (response) {
         var newFamily = new Object({
@@ -3435,14 +3570,14 @@ __webpack_require__.r(__webpack_exports__);
           'responsable': response.responsable
         });
 
-        _this4.familyList.push(newFamily); // input information onto checkbox
+        _this5.familyList.push(newFamily); // input information onto checkbox
 
 
-        _this4.formFamily.client_id = response.client_id;
-        _this4.formFamily.gender = false;
-        _this4.formFamily.responsable = false;
+        _this5.formFamily.client_id = response.client_id;
+        _this5.formFamily.gender = false;
+        _this5.formFamily.responsable = false;
 
-        _this4.$toaster.success('Address added.');
+        _this5.$toaster.success('Address added.');
       });
     },
     // ----- EDIT FAMILY -----
@@ -3462,25 +3597,25 @@ __webpack_require__.r(__webpack_exports__);
     },
     // ----- MODIFY FAMILY -----
     modifyFamily: function modifyFamily() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.formFamily.patch('/family').then(function (response) {
-        var index = _this5.familyList.findIndex(function (x) {
+        var index = _this6.familyList.findIndex(function (x) {
           return x.id === response.id;
         });
 
-        _this5.familyList[index].client_id = response.client_id;
-        _this5.familyList[index].name = response.name;
-        _this5.familyList[index].surname = response.surname;
-        _this5.familyList[index].parent = response.parent;
-        _this5.familyList[index].gender = response.gender;
-        _this5.familyList[index].phonenumber = response.phonenumber;
-        _this5.familyList[index].email = response.email;
-        _this5.familyList[index].responsable = response.responsable; //edit button
+        _this6.familyList[index].client_id = response.client_id;
+        _this6.familyList[index].name = response.name;
+        _this6.familyList[index].surname = response.surname;
+        _this6.familyList[index].parent = response.parent;
+        _this6.familyList[index].gender = response.gender;
+        _this6.familyList[index].phonenumber = response.phonenumber;
+        _this6.familyList[index].email = response.email;
+        _this6.familyList[index].responsable = response.responsable; //edit button
 
-        _this5.family_save = true;
+        _this6.family_save = true;
 
-        _this5.$toaster.success('Family edited.');
+        _this6.$toaster.success('Family edited.');
       });
     },
     // ----- CANCEL FAMILY -----
@@ -3496,19 +3631,112 @@ __webpack_require__.r(__webpack_exports__);
       this.$toaster.warning('Canceled.');
     },
     deleteFamily: function deleteFamily() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.formFamily.post('/deleteFamily').then(function (response) {
         var count = 0;
 
-        _this6.familyList.forEach(function (element) {
-          element.id == response.id ? _this6.familyList.splice(count, 1) : count += 1;
+        _this7.familyList.forEach(function (element) {
+          element.id == response.id ? _this7.familyList.splice(count, 1) : count += 1;
         });
 
-        _this6.family_save = true;
+        _this7.family_save = true;
 
-        _this6.$toaster.success('Successful Deleted.');
+        _this7.$toaster.success('Successful Deleted.');
       });
+    },
+    // ------------------------- [ DIAGNOSTIC ] -------------------------
+    // ==================================================================
+    getRank: function getRank(e) {
+      if (e.target.options.selectedIndex > -1) {
+        var theTarget = e.target.options[e.target.options.selectedIndex];
+        this.formDiagnostic.rank = theTarget.getAttribute('rank');
+      }
+    },
+    // ----- ADD DIAGNOSTIC -----
+    onSubmit_Diagnostic: function onSubmit_Diagnostic() {
+      var _this8 = this;
+
+      this.formDiagnostic.post('/diagnosticsClient').then(function (response) {
+        var newDiagnostic = new Object({
+          'id': response[0].id,
+          'diagnostic_id': response[0].diagnostic_id,
+          'client_id': response[0].client_id,
+          'name': response[0].name,
+          'rank': response[0].rank,
+          'date': response[0].date,
+          'comments': response[0].comments
+        });
+
+        _this8.diagnosticListClient.push(newDiagnostic); // input information onto current form\
+
+
+        _this8.formDiagnostic.client_id = _this8.clientId;
+
+        _this8.$toaster.success('Diagnostic added.');
+      });
+    },
+    // EDIT DIAGNOSTIC
+    editDiagnostic: function editDiagnostic(index) {
+      this.formDiagnostic.id = this.diagnosticListClient[index].id;
+      this.formDiagnostic.client_id = this.diagnosticListClient[index].client_id;
+      this.formDiagnostic.diagnostic_id = this.diagnosticListClient[index].diagnostic_id;
+      this.formDiagnostic.name = this.diagnosticListClient[index].name;
+      this.formDiagnostic.rank = this.diagnosticListClient[index].rank;
+      this.formDiagnostic.date = this.diagnosticListClient[index].date;
+      this.formDiagnostic.comments = this.diagnosticListClient[index].comments; //edit button
+
+      this.diagnostic_save = false;
+    },
+    // MODIFY DIAGNOSTIC
+    modifyDiagnostic: function modifyDiagnostic() {
+      var _this9 = this;
+
+      this.formDiagnostic.patch('/diagnosticsClient').then(function (response) {
+        var index = _this9.diagnosticListClient.findIndex(function (x) {
+          return x.id === response[0].id;
+        });
+
+        _this9.diagnosticListClient[index].diagnostic_id = response[0].diagnostic_id;
+        _this9.diagnosticListClient[index].name = response[0].name;
+        _this9.diagnosticListClient[index].rank = response[0].rank;
+        _this9.diagnosticListClient[index].date = response[0].date;
+        _this9.diagnosticListClient[index].comments = response[0].comments;
+        _this9.formDiagnostic.client_id = _this9.clientId; //edit button
+
+        _this9.diagnostic_save = true;
+
+        _this9.$toaster.success('Diagnostic edited.');
+      });
+    },
+    // EDIT DIAGNOSTIC
+    deleteDiagnostic: function deleteDiagnostic(id) {
+      var _this10 = this;
+
+      axios.post('/diagnosticsClient/' + id, {
+        _method: 'DELETE'
+      }).then(function (response) {
+        var count = 0;
+
+        _this10.diagnosticListClient.forEach(function (element) {
+          element.id == response.data.id ? _this10.diagnosticListClient.splice(count, 1) : count += 1;
+        });
+
+        _this10.formDiagnostic.client_id = _this10.clientId;
+
+        _this10.$toaster.success('Successful deleted');
+      });
+    },
+    // CANCEL DIAGNOSTIC
+    cancelDiagnostic: function cancelDiagnostic() {
+      this.formDiagnostic.id = "";
+      this.formDiagnostic.diagnostic_id = "";
+      this.formDiagnostic.name = "";
+      this.formDiagnostic.rank = "";
+      this.formDiagnostic.date = "";
+      this.formDiagnostic.comments = "";
+      this.diagnostic_save = true;
+      this.$toaster.warning('Canceled');
     }
   }
 });
@@ -45998,7 +46226,7 @@ var render = function() {
                                   }
                                 },
                                 [
-                                  family.responsable == true
+                                  family.responsable == 1
                                     ? _c(
                                         "div",
                                         { staticClass: "ribbon-wrapper" },
@@ -46014,16 +46242,21 @@ var render = function() {
                                       )
                                     : _vm._e(),
                                   _vm._v(" "),
-                                  _c("img", {
-                                    staticClass: "card-img-top",
-                                    attrs: {
-                                      src:
-                                        "images/family/" +
-                                        family.gender +
-                                        ".png",
-                                      alt: "Card image"
-                                    }
-                                  }),
+                                  family.gender == 1
+                                    ? _c("img", {
+                                        staticClass: "card-img-top",
+                                        attrs: {
+                                          src: "images/family/true.png",
+                                          alt: "Card image"
+                                        }
+                                      })
+                                    : _c("img", {
+                                        staticClass: "card-img-top",
+                                        attrs: {
+                                          src: "images/family/false.png",
+                                          alt: "Card image"
+                                        }
+                                      }),
                                   _vm._v(" "),
                                   _c("div", [
                                     _c(
@@ -46065,6 +46298,492 @@ var render = function() {
                           )
                         ]
                       )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "diagnostic" } },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-xl-5" }, [
+                        _c(
+                          "form",
+                          {
+                            attrs: { method: "post" },
+                            on: {
+                              submit: function($event) {
+                                $event.preventDefault()
+                                return _vm.onSubmit_Diagnostic($event)
+                              }
+                            }
+                          },
+                          [
+                            _c("div", { staticClass: "form-row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-6" },
+                                [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "diagnostic" } },
+                                    [_vm._v("Diagnostic")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "select",
+                                    {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value:
+                                            _vm.formDiagnostic.diagnostic_id,
+                                          expression:
+                                            "formDiagnostic.diagnostic_id"
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: { id: "diagnostic", required: "" },
+                                      on: {
+                                        change: [
+                                          function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.$set(
+                                              _vm.formDiagnostic,
+                                              "diagnostic_id",
+                                              $event.target.multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            )
+                                          },
+                                          function($event) {
+                                            return _vm.getRank($event)
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    _vm._l(_vm.diagnosticList, function(
+                                      diagnostic
+                                    ) {
+                                      return _c("option", {
+                                        key: diagnostic.id,
+                                        attrs: { rank: diagnostic.rank },
+                                        domProps: {
+                                          value: diagnostic.id,
+                                          textContent: _vm._s(diagnostic.name)
+                                        }
+                                      })
+                                    }),
+                                    0
+                                  ),
+                                  _vm._v(" "),
+                                  _vm.formDiagnostic.errors.has("name")
+                                    ? _c("span", {
+                                        staticClass: "invalid-feedback d-block",
+                                        attrs: { role: "alert" },
+                                        domProps: {
+                                          textContent: _vm._s(
+                                            _vm.formDiagnostic.errors.get(
+                                              "name"
+                                            )
+                                          )
+                                        }
+                                      })
+                                    : _vm._e()
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-2" },
+                                [
+                                  _c("label", { attrs: { for: "rank" } }, [
+                                    _vm._v("Rank")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.formDiagnostic.rank,
+                                        expression: "formDiagnostic.rank"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "number",
+                                      id: "rank",
+                                      disabled: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.formDiagnostic.rank
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.formDiagnostic,
+                                          "rank",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  })
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-4" },
+                                [
+                                  _c(
+                                    "label",
+                                    { attrs: { for: "dateDiagnostic" } },
+                                    [_vm._v("Date")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.formDiagnostic.date,
+                                        expression: "formDiagnostic.date"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "date",
+                                      id: "dateDiagnostic",
+                                      min: "1",
+                                      required: ""
+                                    },
+                                    domProps: {
+                                      value: _vm.formDiagnostic.date
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.formDiagnostic,
+                                          "date",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.formDiagnostic.errors.has("date")
+                                    ? _c("span", {
+                                        staticClass: "invalid-feedback d-block",
+                                        attrs: { role: "alert" },
+                                        domProps: {
+                                          textContent: _vm._s(
+                                            _vm.formDiagnostic.errors.get(
+                                              "date"
+                                            )
+                                          )
+                                        }
+                                      })
+                                    : _vm._e()
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-row" }, [
+                              _c(
+                                "div",
+                                { staticClass: "form-group col-md-12" },
+                                [
+                                  _c("label", { attrs: { for: "comments" } }, [
+                                    _vm._v("Comments")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("textarea", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.formDiagnostic.comments,
+                                        expression: "formDiagnostic.comments"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: { id: "comments" },
+                                    domProps: {
+                                      value: _vm.formDiagnostic.comments
+                                    },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.formDiagnostic,
+                                          "comments",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.formDiagnostic.errors.has("comments")
+                                    ? _c("span", {
+                                        staticClass: "invalid-feedback d-block",
+                                        attrs: { role: "alert" },
+                                        domProps: {
+                                          textContent: _vm._s(
+                                            _vm.formDiagnostic.errors.get(
+                                              "comments"
+                                            )
+                                          )
+                                        }
+                                      })
+                                    : _vm._e()
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c("div", [
+                                _c(
+                                  "button",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: _vm.diagnostic_save,
+                                        expression: "diagnostic_save"
+                                      }
+                                    ],
+                                    staticClass: "btn btn-success",
+                                    attrs: { type: "save" }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fa fa-plus" }),
+                                    _vm._v(" Add")
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: !_vm.diagnostic_save,
+                                        expression: "!diagnostic_save"
+                                      }
+                                    ],
+                                    staticClass: "btn btn-primary",
+                                    attrs: { type: "edit" },
+                                    on: { click: _vm.modifyDiagnostic }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fas fa-user-edit"
+                                    }),
+                                    _vm._v(" Edit")
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "show",
+                                        rawName: "v-show",
+                                        value: !_vm.diagnostic_save,
+                                        expression: "!diagnostic_save"
+                                      }
+                                    ],
+                                    staticClass: "btn btn-warning text-white",
+                                    attrs: { type: "cancel" },
+                                    on: { click: _vm.cancelDiagnostic }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fa fa-times" }),
+                                    _vm._v(" Cancel")
+                                  ]
+                                )
+                              ])
+                            ])
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-xl-7" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "card",
+                            staticStyle: { "min-height": "235px" }
+                          },
+                          [
+                            _c("div", { staticClass: "card-header" }, [
+                              _c(
+                                "h3",
+                                { staticClass: "card-title font-weight-bold" },
+                                [_vm._v("List Diagnostic")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "card-tools" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "input-group input-group-sm",
+                                    staticStyle: { width: "150px" }
+                                  },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.search,
+                                          expression: "search"
+                                        }
+                                      ],
+                                      staticClass: "form-control float-right",
+                                      attrs: {
+                                        type: "text",
+                                        name: "table_search",
+                                        placeholder: "Search"
+                                      },
+                                      domProps: { value: _vm.search },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.search = $event.target.value
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._m(4)
+                                  ]
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "card-body table-responsive p-0" },
+                              [
+                                _c(
+                                  "table",
+                                  { staticClass: "table table-hover" },
+                                  [
+                                    _vm._m(5),
+                                    _vm._v(" "),
+                                    _c(
+                                      "tbody",
+                                      _vm._l(
+                                        _vm.filtredListDiagnostic,
+                                        function(diagnostic, index) {
+                                          return _c(
+                                            "tr",
+                                            { key: diagnostic.id },
+                                            [
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.name))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.rank))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(_vm._s(diagnostic.date))
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _vm._v(
+                                                  _vm._s(diagnostic.comments)
+                                                )
+                                              ]),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-primary",
+                                                    attrs: { type: "edit" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.editDiagnostic(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass: "far fa-edit"
+                                                    })
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger text-white",
+                                                    attrs: { type: "delete" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.deleteDiagnostic(
+                                                          diagnostic.id
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("i", {
+                                                      staticClass:
+                                                        "far fa-trash-alt"
+                                                    })
+                                                  ]
+                                                )
+                                              ])
+                                            ]
+                                          )
+                                        }
+                                      ),
+                                      0
+                                    )
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        )
+                      ])
                     ])
                   ]
                 )
@@ -46157,6 +46876,17 @@ var staticRenderFns = [
             },
             [_vm._v("Diagnostic")]
           )
+        ]),
+        _vm._v(" "),
+        _c("li", { staticClass: "nav-item" }, [
+          _c(
+            "a",
+            {
+              staticClass: "nav-link",
+              attrs: { href: "#creditcard", "data-toggle": "tab" }
+            },
+            [_vm._v("Credit Card")]
+          )
         ])
       ])
     ])
@@ -46183,6 +46913,36 @@ var staticRenderFns = [
         { staticClass: "btn btn-success", attrs: { type: "save" } },
         [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Save")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-default", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fas fa-search" })]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Diagnostic")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Rank")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Comments")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Actions")])
+      ])
     ])
   }
 ]
