@@ -34,8 +34,8 @@ Route::get('/home/', function () {
 // USERS
 Route::get('/users', 'UsersController@index');
 Route::post('/users', 'UsersController@create');
-Route::delete('/users/{id}', 'UsersController@destroy');
 Route::patch('/users', 'UsersController@update');
+Route::delete('/users/{id}', 'UsersController@destroy');
 
 
 Route::get('/getUserAddressRole/{user_id}', 'UsersController@getUserAddressRole');
@@ -55,6 +55,7 @@ Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
 Route::post('/photoClient', 'ClientController@photoClient');
 Route::patch('/clients', 'ClientController@update');
+Route::delete('/clients/{id}', 'ClientController@destroy');
 // END CLIENTS
 // ------------------
 

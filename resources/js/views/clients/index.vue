@@ -53,11 +53,11 @@
                 </div>
                 <div class="card-footer">
                   <div class="text-right">
-                    <a href="#" class="btn btn-sm bg-teal">
-                      <i class="fas fa-comments"></i>
-                    </a>
                     <a @click="gotoProfile(client.client_id)" class="btn btn-sm btn-primary text-white" >
                       <i class="fas fa-user"></i> View Profile
+                    </a>
+                    <a @click="DeleteClient(client.client_id)" class="btn btn-sm bg-danger">
+                      <i class="fas fa-times"></i>
                     </a>
                   </div>
                 </div>
@@ -112,6 +112,24 @@
             {
                 this.$router.push('/clients/' + id);
             },
+
+            DeleteClient(id)
+            {
+              if(confirm("Do you really want to delete?"))
+              {
+                axios.post('/clients/' + id, {
+                _method: 'DELETE'
+                })
+                .then(response => {
+                    var count = 0
+                    this.clients.forEach(element => {
+                        element.id == (response.data.id) ? this.clients.splice(count,1) : count +=1;
+                    });
+                    this.$toaster.success('Successful deleted ' + response.data.name);
+                });
+              }
+            },
+
             gotoCreate()
             {
                 this.$router.push('/newclient/');

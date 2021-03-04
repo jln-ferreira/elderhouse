@@ -188,9 +188,15 @@ class ClientController extends Controller
         return ['client' => $client, 'specification' => $specification];
     }
 
-    public function destroy(Client $client)
+
+    public function destroy($id)
     {
-        //
+        $client = Client::find($id);
+        $client->active = 0;
+        $client->save();
+
+        return $client;
     }
+
 
 }

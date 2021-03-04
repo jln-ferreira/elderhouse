@@ -2902,6 +2902,23 @@ __webpack_require__.r(__webpack_exports__);
     gotoProfile: function gotoProfile(id) {
       this.$router.push('/clients/' + id);
     },
+    DeleteClient: function DeleteClient(id) {
+      var _this2 = this;
+
+      if (confirm("Do you really want to delete?")) {
+        axios.post('/clients/' + id, {
+          _method: 'DELETE'
+        }).then(function (response) {
+          var count = 0;
+
+          _this2.clients.forEach(function (element) {
+            element.id == response.data.id ? _this2.clients.splice(count, 1) : count += 1;
+          });
+
+          _this2.$toaster.success('Successful deleted ' + response.data.name);
+        });
+      }
+    },
     gotoCreate: function gotoCreate() {
       this.$router.push('/newclient/');
     }
@@ -41243,7 +41260,14 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-12" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(1),
+            _c("div", { staticClass: "card-header d-flex p-0" }, [
+              _c("h3", {
+                staticClass: "card-title p-3",
+                domProps: { textContent: _vm._s(_vm.formInformation.name) }
+              }),
+              _vm._v(" "),
+              _vm._m(1)
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _c("div", { staticClass: "tab-content" }, [
@@ -43931,53 +43955,49 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header d-flex p-0" }, [
-      _c("h3", { staticClass: "card-title p-3" }, [_vm._v("Tabs")]),
+    return _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link active",
+            attrs: { href: "#information", "data-toggle": "tab" }
+          },
+          [_vm._v("Information")]
+        )
+      ]),
       _vm._v(" "),
-      _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link active",
-              attrs: { href: "#information", "data-toggle": "tab" }
-            },
-            [_vm._v("Information")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#address", "data-toggle": "tab" }
-            },
-            [_vm._v("Address")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#family", "data-toggle": "tab" }
-            },
-            [_vm._v("Family")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#diagnostic", "data-toggle": "tab" }
-            },
-            [_vm._v("Diagnostic")]
-          )
-        ])
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#address", "data-toggle": "tab" }
+          },
+          [_vm._v("Address")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#family", "data-toggle": "tab" }
+          },
+          [_vm._v("Family")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#diagnostic", "data-toggle": "tab" }
+          },
+          [_vm._v("Diagnostic")]
+        )
       ])
     ])
   },
@@ -44148,8 +44168,6 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "card-footer" }, [
                       _c("div", { staticClass: "text-right" }, [
-                        _vm._m(1, true),
-                        _vm._v(" "),
                         _c(
                           "a",
                           {
@@ -44164,6 +44182,19 @@ var render = function() {
                             _c("i", { staticClass: "fas fa-user" }),
                             _vm._v(" View Profile\n                  ")
                           ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-sm bg-danger",
+                            on: {
+                              click: function($event) {
+                                return _vm.DeleteClient(client.client_id)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "fas fa-times" })]
                         )
                       ])
                     ])
@@ -44218,16 +44249,6 @@ var staticRenderFns = [
         ])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      { staticClass: "btn btn-sm bg-teal", attrs: { href: "#" } },
-      [_c("i", { staticClass: "fas fa-comments" })]
-    )
   }
 ]
 render._withStripped = true
@@ -44258,7 +44279,14 @@ var render = function() {
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-12" }, [
           _c("div", { staticClass: "card" }, [
-            _vm._m(1),
+            _c("div", { staticClass: "card-header d-flex p-0" }, [
+              _c("h3", {
+                staticClass: "card-title p-3",
+                domProps: { textContent: _vm._s(_vm.formInformation.name) }
+              }),
+              _vm._v(" "),
+              _vm._m(1)
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "card-body" }, [
               _c("div", { staticClass: "tab-content" }, [
@@ -47224,7 +47252,7 @@ var staticRenderFns = [
       _c("div", { staticClass: "container-fluid" }, [
         _c("div", { staticClass: "row mb-2" }, [
           _c("div", { staticClass: "col-sm-6" }, [
-            _c("h1", [_vm._v("New Client")])
+            _c("h1", [_vm._v("Client")])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "col-sm-6" }, [
@@ -47250,64 +47278,60 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header d-flex p-0" }, [
-      _c("h3", { staticClass: "card-title p-3" }, [_vm._v("Tabs")]),
+    return _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link active",
+            attrs: { href: "#information", "data-toggle": "tab" }
+          },
+          [_vm._v("Information")]
+        )
+      ]),
       _vm._v(" "),
-      _c("ul", { staticClass: "nav nav-pills ml-auto p-2" }, [
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link active",
-              attrs: { href: "#information", "data-toggle": "tab" }
-            },
-            [_vm._v("Information")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#address", "data-toggle": "tab" }
-            },
-            [_vm._v("Address")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#family", "data-toggle": "tab" }
-            },
-            [_vm._v("Family")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#diagnostic", "data-toggle": "tab" }
-            },
-            [_vm._v("Diagnostic")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "nav-item" }, [
-          _c(
-            "a",
-            {
-              staticClass: "nav-link",
-              attrs: { href: "#creditcard", "data-toggle": "tab" }
-            },
-            [_vm._v("Credit Card")]
-          )
-        ])
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#address", "data-toggle": "tab" }
+          },
+          [_vm._v("Address")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#family", "data-toggle": "tab" }
+          },
+          [_vm._v("Family")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#diagnostic", "data-toggle": "tab" }
+          },
+          [_vm._v("Diagnostic")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#creditcard", "data-toggle": "tab" }
+          },
+          [_vm._v("Credit Card")]
+        )
       ])
     ])
   },

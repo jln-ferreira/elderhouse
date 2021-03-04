@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>New Client</h1>
+                <h1>Client</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -25,7 +25,7 @@
                         <!-- Custom Tabs -->
                         <div class="card">
                             <div class="card-header d-flex p-0">
-                                <h3 class="card-title p-3">Tabs</h3>
+                                <h3 class="card-title p-3" v-text="formInformation.name"></h3>
                                 <ul class="nav nav-pills ml-auto p-2">
                                     <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Information</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
