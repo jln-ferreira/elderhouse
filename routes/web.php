@@ -49,6 +49,8 @@ Route::get('/clients', 'ClientController@index');
 Route::get('/clients/{clientId}', 'ClientController@show');
 Route::get('/addressClient/{clientId}', 'AddressController@showClient');
 Route::get('/familyClient/{clientId}', 'FamilyController@showClient');
+Route::get('/diagnosticsClient/{clientId}', 'DiagnosticClientController@showClient');
+Route::get('/bankAccountClient/{clientId}', 'BankaccountController@showClient');
 Route::post('/clients', 'ClientController@create');
 Route::post('/clientAddress', 'AddressController@createClient');
 Route::post('/photoClient', 'ClientController@photoClient');
@@ -102,6 +104,13 @@ route::post('/diagnosticsClient', 'DiagnosticClientController@store');
 Route::patch('/diagnosticsClient', 'DiagnosticClientController@updateClient');
 Route::delete('/diagnosticsClient/{id}', 'DiagnosticClientController@deleteClient');
 // END DIAGNOSTIC CLIENT
+// ------------------
+
+
+// ---------------
+// BANK ACCOUNT
+Route::patch('/clientCreditCard', 'BankaccountController@createClient');
+// END BANK ACCOUNT
 // ------------------
 
 

@@ -22,6 +22,13 @@ class DiagnosticClientController extends Controller
         //
     }
 
+
+    public function showClient($clientId)
+    {
+        return DiagnosticClient::activeClient($clientId);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      *

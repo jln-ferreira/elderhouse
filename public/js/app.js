@@ -3362,6 +3362,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3428,7 +3477,17 @@ __webpack_require__.r(__webpack_exports__);
       diagnostic_save: true,
       search: '',
       diagnosticListClient: [],
-      diagnosticList: []
+      diagnosticList: [],
+      //Credit  Card
+      formCreditCard: new Form({
+        'id': '',
+        'clientId': this.$route.params.id,
+        'numberCard': '',
+        'nameCard': '',
+        'expirationMonth': '',
+        'expirationYear': '',
+        'expirationCVV': ''
+      })
     };
   },
   computed: {
@@ -3483,6 +3542,21 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/diagnostics').then(function (response) {
       return _this2.diagnosticList = response.data;
+    }); // Fetch especific diagnostic_client
+
+    axios.get('/diagnosticsClient/' + this.clientId).then(function (response) {
+      return _this2.diagnosticListClient = response.data;
+    }); // Fetch especific CREDIT CARD
+
+    axios.get('/bankAccountClient/' + this.clientId).then(function (response) {
+      var expDate = response.data.expiration_date.split('/'); //Credit Card
+
+      _this2.formCreditCard.id = response.data.id;
+      _this2.formCreditCard.numberCard = response.data.card_number;
+      _this2.formCreditCard.nameCard = response.data.name_card;
+      _this2.formCreditCard.expirationMonth = expDate[0];
+      _this2.formCreditCard.expirationYear = expDate[1];
+      _this2.formCreditCard.expirationCVV = response.data.cvv;
     });
   },
   methods: {
@@ -3737,6 +3811,26 @@ __webpack_require__.r(__webpack_exports__);
       this.formDiagnostic.comments = "";
       this.diagnostic_save = true;
       this.$toaster.warning('Canceled');
+    },
+    // ------------------------- [ CREDIT CARD ] -------------------------
+    // ===================================================================
+    // ----- ADD BANK ACCOUNT -----
+    onSubmit_CreditCard: function onSubmit_CreditCard() {
+      var _this11 = this;
+
+      this.formCreditCard.patch('/clientCreditCard').then(function (response) {
+        var expDate = response.expiration_date.split('/'); //Bank account
+
+        _this11.formCreditCard.id = response.id;
+        _this11.formCreditCard.clientId = response.client_id;
+        _this11.formCreditCard.numberCard = response.card_number;
+        _this11.formCreditCard.nameCard = response.name_card;
+        _this11.formCreditCard.expirationMonth = expDate[0];
+        _this11.formCreditCard.expirationYear = expDate[1];
+        _this11.formCreditCard.expirationCVV = response.cvv;
+
+        _this11.$toaster.success('Credit Card saved.');
+      });
     }
   }
 });
@@ -46786,6 +46880,332 @@ var render = function() {
                       ])
                     ])
                   ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "creditcard" } },
+                  [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-lg-7 mx-auto" }, [
+                        _c(
+                          "div",
+                          { staticClass: "bg-white rounded-lg shadow p-5" },
+                          [
+                            _c("div", { staticClass: "tab-content" }, [
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "tab-pane fade show active",
+                                  attrs: { id: "nav-tab-card" }
+                                },
+                                [
+                                  _c(
+                                    "form",
+                                    {
+                                      attrs: { method: "post" },
+                                      on: {
+                                        submit: function($event) {
+                                          $event.preventDefault()
+                                          return _vm.onSubmit_CreditCard($event)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "nameCard" } },
+                                          [_vm._v("Full name (on the card)")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value:
+                                                _vm.formCreditCard.nameCard,
+                                              expression:
+                                                "formCreditCard.nameCard"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: {
+                                            type: "text",
+                                            name: "nameCard",
+                                            placeholder: "Jason Doe",
+                                            required: ""
+                                          },
+                                          domProps: {
+                                            value: _vm.formCreditCard.nameCard
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.formCreditCard,
+                                                "nameCard",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _vm.formCreditCard.errors.has(
+                                          "nameCard"
+                                        )
+                                          ? _c("span", {
+                                              staticClass:
+                                                "invalid-feedback d-block",
+                                              attrs: { role: "alert" },
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  _vm.formCreditCard.errors.get(
+                                                    "nameCard"
+                                                  )
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "numberCard" } },
+                                          [_vm._v("Card number")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          { staticClass: "input-group" },
+                                          [
+                                            _c("input", {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value:
+                                                    _vm.formCreditCard
+                                                      .numberCard,
+                                                  expression:
+                                                    "formCreditCard.numberCard"
+                                                }
+                                              ],
+                                              staticClass: "form-control",
+                                              attrs: {
+                                                type: "text",
+                                                name: "numberCard",
+                                                placeholder: "Your card number",
+                                                required: ""
+                                              },
+                                              domProps: {
+                                                value:
+                                                  _vm.formCreditCard.numberCard
+                                              },
+                                              on: {
+                                                input: function($event) {
+                                                  if ($event.target.composing) {
+                                                    return
+                                                  }
+                                                  _vm.$set(
+                                                    _vm.formCreditCard,
+                                                    "numberCard",
+                                                    $event.target.value
+                                                  )
+                                                }
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _vm._m(6),
+                                            _vm._v(" "),
+                                            _vm.formCreditCard.errors.has(
+                                              "numberCard"
+                                            )
+                                              ? _c("span", {
+                                                  staticClass:
+                                                    "invalid-feedback d-block",
+                                                  attrs: { role: "alert" },
+                                                  domProps: {
+                                                    textContent: _vm._s(
+                                                      _vm.formCreditCard.errors.get(
+                                                        "numberCard"
+                                                      )
+                                                    )
+                                                  }
+                                                })
+                                              : _vm._e()
+                                          ]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "row" }, [
+                                        _c("div", { staticClass: "col-sm-8" }, [
+                                          _c(
+                                            "div",
+                                            { staticClass: "form-group" },
+                                            [
+                                              _vm._m(7),
+                                              _vm._v(" "),
+                                              _c(
+                                                "div",
+                                                { staticClass: "input-group" },
+                                                [
+                                                  _c("input", {
+                                                    directives: [
+                                                      {
+                                                        name: "model",
+                                                        rawName: "v-model",
+                                                        value:
+                                                          _vm.formCreditCard
+                                                            .expirationMonth,
+                                                        expression:
+                                                          "formCreditCard.expirationMonth"
+                                                      }
+                                                    ],
+                                                    staticClass: "form-control",
+                                                    attrs: {
+                                                      type: "number",
+                                                      placeholder: "MM",
+                                                      min: "1",
+                                                      max: "12",
+                                                      id: "expirationMonth",
+                                                      required: ""
+                                                    },
+                                                    domProps: {
+                                                      value:
+                                                        _vm.formCreditCard
+                                                          .expirationMonth
+                                                    },
+                                                    on: {
+                                                      input: function($event) {
+                                                        if (
+                                                          $event.target
+                                                            .composing
+                                                        ) {
+                                                          return
+                                                        }
+                                                        _vm.$set(
+                                                          _vm.formCreditCard,
+                                                          "expirationMonth",
+                                                          $event.target.value
+                                                        )
+                                                      }
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("input", {
+                                                    directives: [
+                                                      {
+                                                        name: "model",
+                                                        rawName: "v-model",
+                                                        value:
+                                                          _vm.formCreditCard
+                                                            .expirationYear,
+                                                        expression:
+                                                          "formCreditCard.expirationYear"
+                                                      }
+                                                    ],
+                                                    staticClass: "form-control",
+                                                    attrs: {
+                                                      type: "number",
+                                                      placeholder: "YY",
+                                                      min: "22",
+                                                      max: "27",
+                                                      id: "expirationYear",
+                                                      required: ""
+                                                    },
+                                                    domProps: {
+                                                      value:
+                                                        _vm.formCreditCard
+                                                          .expirationYear
+                                                    },
+                                                    on: {
+                                                      input: function($event) {
+                                                        if (
+                                                          $event.target
+                                                            .composing
+                                                        ) {
+                                                          return
+                                                        }
+                                                        _vm.$set(
+                                                          _vm.formCreditCard,
+                                                          "expirationYear",
+                                                          $event.target.value
+                                                        )
+                                                      }
+                                                    }
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "col-sm-4" }, [
+                                          _c(
+                                            "div",
+                                            { staticClass: "form-group mb-4" },
+                                            [
+                                              _vm._m(8),
+                                              _vm._v(" "),
+                                              _c("input", {
+                                                directives: [
+                                                  {
+                                                    name: "model",
+                                                    rawName: "v-model",
+                                                    value:
+                                                      _vm.formCreditCard
+                                                        .expirationCVV,
+                                                    expression:
+                                                      "formCreditCard.expirationCVV"
+                                                  }
+                                                ],
+                                                staticClass: "form-control",
+                                                attrs: {
+                                                  type: "number",
+                                                  required: "",
+                                                  max: "999"
+                                                },
+                                                domProps: {
+                                                  value:
+                                                    _vm.formCreditCard
+                                                      .expirationCVV
+                                                },
+                                                on: {
+                                                  input: function($event) {
+                                                    if (
+                                                      $event.target.composing
+                                                    ) {
+                                                      return
+                                                    }
+                                                    _vm.$set(
+                                                      _vm.formCreditCard,
+                                                      "expirationCVV",
+                                                      $event.target.value
+                                                    )
+                                                  }
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _vm._m(9)
+                                    ]
+                                  )
+                                ]
+                              )
+                            ])
+                          ]
+                        )
+                      ])
+                    ])
+                  ]
                 )
               ])
             ])
@@ -46944,6 +47364,58 @@ var staticRenderFns = [
         _c("th", [_vm._v("Actions")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c("span", { staticClass: "input-group-text text-muted" }, [
+        _c("i", { staticClass: "fas fa-credit-card" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", [
+      _c("span", { staticClass: "hidden-xs" }, [_vm._v("Expiration")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      {
+        attrs: {
+          "data-toggle": "tooltip",
+          title: "Three-digits code on the back of your card"
+        }
+      },
+      [
+        _vm._v(
+          "CVV\n                                                                            "
+        ),
+        _c("i", { staticClass: "fa fa-question-circle" })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass:
+          "subscribe btn btn-primary btn-block rounded-pill shadow-sm",
+        attrs: { type: "submit" }
+      },
+      [_c("b", [_vm._v("Confirm ")])]
+    )
   }
 ]
 render._withStripped = true

@@ -414,17 +414,66 @@
                                     <!-- /.tab-pane -->
 
 
+                                    <!-- ---------------[ADD CREDIT CARD]------------------ -->
+                                    <!-- ============================================== -->
+                                    <div class="tab-pane" id="creditcard">
 
+                                        <div class="row">
+                                            <div class="col-lg-7 mx-auto">
+                                                <div class="bg-white rounded-lg shadow p-5">
 
+                                                    <!-- Credit card form content -->
+                                                    <div class="tab-content">
+                                                        <!-- credit card info-->
+                                                        <div id="nav-tab-card" class="tab-pane fade show active">
+                                                            <form method="post" @submit.prevent="onSubmit_CreditCard">
+                                                                <div class="form-group">
+                                                                    <label for="nameCard">Full name (on the card)</label>
+                                                                    <input type="text" name="nameCard" placeholder="Jason Doe" v-model="formCreditCard.nameCard" required class="form-control">
+                                                                    <span class="invalid-feedback d-block" role="alert" v-if="formCreditCard.errors.has('nameCard')" v-text="formCreditCard.errors.get('nameCard')"></span>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="numberCard">Card number</label>
+                                                                    <div class="input-group">
+                                                                        <input type="text" name="numberCard" placeholder="Your card number"  v-model="formCreditCard.numberCard" class="form-control" required>
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text text-muted">
+                                                                                <i class="fas fa-credit-card"></i>
+                                                                            </span>
+                                                                        </div>
+                                                                        <span class="invalid-feedback d-block" role="alert" v-if="formCreditCard.errors.has('numberCard')" v-text="formCreditCard.errors.get('numberCard')"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-8">
+                                                                        <div class="form-group">
+                                                                            <label><span class="hidden-xs">Expiration</span></label>
+                                                                            <div class="input-group">
+                                                                                <input type="number" placeholder="MM" min="1" max="12" id="expirationMonth" v-model="formCreditCard.expirationMonth" class="form-control" required>
+                                                                                <input type="number" placeholder="YY" min="22" max="27" id="expirationYear" v-model="formCreditCard.expirationYear" class="form-control" required>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="form-group mb-4">
+                                                                            <label data-toggle="tooltip" title="Three-digits code on the back of your card">CVV
+                                                                                <i class="fa fa-question-circle"></i>
+                                                                            </label>
+                                                                            <input type="number" required class="form-control" max="999" v-model="formCreditCard.expirationCVV">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <button type="submit" class="subscribe btn btn-primary btn-block rounded-pill shadow-sm"> <b>Confirm </b> </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <!-- End -->
 
+                                                </div>
+                                            </div>
+                                        </div>
 
-
-
-
-
-
-
-
+                                    </div>
 
 
                                 </div>
@@ -525,6 +574,19 @@
                 diagnosticListClient: [],
                 diagnosticList      : [],
 
+
+                //Credit  Card
+                formCreditCard: new Form({
+
+                    'id'              : '',
+                    'clientId'        : this.$route.params.id,
+                    'numberCard'      : '',
+                    'nameCard'        : '',
+                    'expirationMonth' : '',
+                    'expirationYear'  : '',
+                    'expirationCVV'   : '',
+                }),
+
             }
         },
 
@@ -534,7 +596,7 @@
                 return this.diagnosticListClient.filter(post => {
                     return post.name.toLowerCase().includes(this.search.toLowerCase());
                 });
-            }
+            },
         },
 
 
@@ -592,6 +654,27 @@
             // Fetch especific diagnostic
             axios.get('/diagnostics')
                 .then(response => this.diagnosticList = response.data);
+
+             // Fetch especific diagnostic_client
+            axios.get('/diagnosticsClient/' + this.clientId)
+                .then(response => this.diagnosticListClient = response.data);
+
+
+            // Fetch especific CREDIT CARD
+            axios.get('/bankAccountClient/' + this.clientId)
+                .then(response => {
+
+                    let expDate = response.data.expiration_date.split('/');
+
+                    //Credit Card
+                    this.formCreditCard.id              = response.data.id;
+                    this.formCreditCard.numberCard      = response.data.card_number;
+                    this.formCreditCard.nameCard        = response.data.name_card;
+                    this.formCreditCard.expirationMonth = expDate[0];
+                    this.formCreditCard.expirationYear  = expDate[1];
+                    this.formCreditCard.expirationCVV   = response.data.cvv;
+
+                });
         },
 
 
@@ -913,6 +996,31 @@
 
                 this.$toaster.warning('Canceled');
 
+            },
+
+
+            // ------------------------- [ CREDIT CARD ] -------------------------
+            // ===================================================================
+
+            // ----- ADD BANK ACCOUNT -----
+            onSubmit_CreditCard()
+            {
+                this.formCreditCard
+                    .patch('/clientCreditCard')
+                    .then(response => {
+
+                        let expDate = response.expiration_date.split('/');
+                        //Bank account
+                        this.formCreditCard.id              = response.id;
+                        this.formCreditCard.clientId        = response.client_id;
+                        this.formCreditCard.numberCard      = response.card_number;
+                        this.formCreditCard.nameCard        = response.name_card;
+                        this.formCreditCard.expirationMonth = expDate[0];
+                        this.formCreditCard.expirationYear  = expDate[1];
+                        this.formCreditCard.expirationCVV   = response.cvv;
+
+                        this.$toaster.success('Credit Card saved.');
+                    })
             },
 
 
