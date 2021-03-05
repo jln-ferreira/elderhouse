@@ -24,11 +24,11 @@ let routes = [
     },
     {
         path: '/profile',
-        component: require('./views/profile').default
+        component: require('./views/profile/profile').default
     },
     {
         path: '/settings',
-        component: require('./views/settings').default
+        component: require('./views/settings/settings').default
     },
 
 ];

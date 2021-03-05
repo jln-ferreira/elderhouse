@@ -14,7 +14,7 @@ class MenuController extends Controller
      */
     public function index()
     {
-        //
+        return Menu::where('active', 1)->get();
     }
 
     /**

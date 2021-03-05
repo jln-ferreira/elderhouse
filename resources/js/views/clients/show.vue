@@ -865,18 +865,21 @@
 
             deleteFamily()
             {
-                this.formFamily
-                .post('/deleteFamily')
-                .then(response => {
+                if(confirm("Do you really want to delete?"))
+                {
+                    this.formFamily
+                    .post('/deleteFamily')
+                    .then(response => {
 
-                    var count = 0
-                    this.familyList.forEach(element => {
-                        element.id == (response.id) ? this.familyList.splice(count,1) : count +=1;
+                        var count = 0
+                        this.familyList.forEach(element => {
+                            element.id == (response.id) ? this.familyList.splice(count,1) : count +=1;
+                        });
+
+                        this.family_save = true;
+                        this.$toaster.success('Successful Deleted.');
                     });
-
-                    this.family_save = true;
-                    this.$toaster.success('Successful Deleted.');
-                });
+                }
             },
 
 
@@ -965,21 +968,23 @@
             // EDIT DIAGNOSTIC
             deleteDiagnostic(id)
             {
-                axios.post('/diagnosticsClient/' + id, {
-                _method: 'DELETE'
-                })
-                .then(response => {
+                if(confirm("Do you really want to delete?"))
+                {
+                    axios.post('/diagnosticsClient/' + id, {
+                    _method: 'DELETE'
+                    })
+                    .then(response => {
 
-                    var count = 0
-                    this.diagnosticListClient.forEach(element => {
-                        element.id == (response.data.id) ? this.diagnosticListClient.splice(count,1) : count +=1;
+                        var count = 0
+                        this.diagnosticListClient.forEach(element => {
+                            element.id == (response.data.id) ? this.diagnosticListClient.splice(count,1) : count +=1;
+                        });
+
+                        this.formDiagnostic.client_id = this.clientId;
+
+                        this.$toaster.success('Successful deleted');
                     });
-
-                    this.formDiagnostic.client_id = this.clientId;
-
-                    this.$toaster.success('Successful deleted');
-                });
-
+                }
             },
 
             // CANCEL DIAGNOSTIC

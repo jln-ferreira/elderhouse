@@ -20,7 +20,7 @@ class RoleUser extends Model
                     ["menus.active", "=", 1],
                     ["role_users.active", "=", 1],
                     ["menu_roles.active", "=", 1]
-        ]);
+                ]);
     }
 
 

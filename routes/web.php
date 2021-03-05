@@ -70,8 +70,8 @@ Route::patch('/clientAddress', 'AddressController@createClient');
 
 // ---------------
 // PROFILE
-Route::get('/settings/user', 'SettingsController@settingsUser');
-route::post('/setting/user', 'SettingsController@updateInformation');
+Route::get('/profile/user', 'ProfileController@profileUser');
+route::post('/profile/user', 'ProfileController@updateInformation');
 // END PROFILE
 // ------------------
 
@@ -89,6 +89,13 @@ Route::post('/deleteFamily', 'FamilyController@deleteClient');
 // ROLES
 Route::get('/roles', 'RoleController@index');
 // END ROLES
+// ------------------
+
+
+// ---------------
+// MENUS
+Route::get('/menus', 'MenuController@index');
+// END MENUS
 // ------------------
 
 
@@ -112,6 +119,13 @@ Route::delete('/diagnosticsClient/{id}', 'DiagnosticClientController@deleteClien
 // BANK ACCOUNT
 Route::patch('/clientCreditCard', 'BankaccountController@createClient');
 // END BANK ACCOUNT
+// ------------------
+
+
+// ---------------
+// SETTINGS
+Route::get('/menuRoleSettings', 'SettingsController@menuRole');
+// END SETTINGS
 // ------------------
 
 
