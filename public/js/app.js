@@ -4755,15 +4755,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4772,10 +4763,11 @@ __webpack_require__.r(__webpack_exports__);
       formMenuRoles: new Form({
         'id': '',
         'roleName': '',
-        'Responsable': []
+        'menu': []
       })
     };
   },
+  computed: {},
   created: function created() {
     var _this = this;
 
@@ -4790,7 +4782,20 @@ __webpack_require__.r(__webpack_exports__);
       _this.menuRoles = response.data;
     });
   },
-  methods: {}
+  methods: {
+    // ---=== NEW ROLE_MENU ===---
+    onSubmit_Role: function onSubmit_Role() {
+      var _this2 = this;
+
+      this.formMenuRoles.post('/menuroles').then(function (response) {
+        console.log(response);
+
+        _this2.menuRoles.push(response[0]);
+
+        _this2.$toaster.success('Role added.');
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -49112,88 +49117,157 @@ var render = function() {
   return _c("div", [
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xl-5" }, [
-        _c("form", { attrs: { method: "post" } }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-row" }, [
-            _c("div", { staticClass: "form-group" }, [
-              _c(
-                "div",
-                { staticClass: "form-group col-md-3" },
-                _vm._l(_vm.menus, function(menu) {
-                  return _c(
-                    "div",
+        _c(
+          "form",
+          {
+            attrs: { method: "post" },
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.onSubmit_Role($event)
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "form-row" }, [
+              _c("div", { staticClass: "form-group col-md-12" }, [
+                _c("label", { attrs: { for: "nameRole" } }, [
+                  _vm._v("Role Name")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
                     {
-                      key: menu.id,
-                      staticClass: "custom-control custom-switch"
-                    },
-                    [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.formMenuRoles.Responsable,
-                            expression: "formMenuRoles.Responsable"
-                          }
-                        ],
-                        staticClass: "custom-control-input",
-                        attrs: { type: "checkbox", id: menu.name },
-                        domProps: {
-                          value: menu.id,
-                          checked: Array.isArray(_vm.formMenuRoles.Responsable)
-                            ? _vm._i(_vm.formMenuRoles.Responsable, menu.id) >
-                              -1
-                            : _vm.formMenuRoles.Responsable
-                        },
-                        on: {
-                          change: function($event) {
-                            var $$a = _vm.formMenuRoles.Responsable,
-                              $$el = $event.target,
-                              $$c = $$el.checked ? true : false
-                            if (Array.isArray($$a)) {
-                              var $$v = menu.id,
-                                $$i = _vm._i($$a, $$v)
-                              if ($$el.checked) {
-                                $$i < 0 &&
-                                  _vm.$set(
-                                    _vm.formMenuRoles,
-                                    "Responsable",
-                                    $$a.concat([$$v])
-                                  )
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.formMenuRoles.roleName,
+                      expression: "formMenuRoles.roleName"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", id: "nameRole" },
+                  domProps: { value: _vm.formMenuRoles.roleName },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.formMenuRoles,
+                        "roleName",
+                        $event.target.value
+                      )
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.formMenuRoles.errors.has("roleName")
+                  ? _c("span", {
+                      staticClass: "invalid-feedback d-block",
+                      attrs: { role: "alert" },
+                      domProps: {
+                        textContent: _vm._s(
+                          _vm.formMenuRoles.errors.get("roleName")
+                        )
+                      }
+                    })
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "form-row" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group col-md-3" },
+                  _vm._l(_vm.menus, function(menu) {
+                    return _c(
+                      "div",
+                      {
+                        key: menu.id,
+                        staticClass: "custom-control custom-switch"
+                      },
+                      [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.formMenuRoles.menu,
+                              expression: "formMenuRoles.menu"
+                            }
+                          ],
+                          staticClass: "custom-control-input",
+                          attrs: { type: "checkbox", id: menu.name },
+                          domProps: {
+                            value: menu.id,
+                            checked: Array.isArray(_vm.formMenuRoles.menu)
+                              ? _vm._i(_vm.formMenuRoles.menu, menu.id) > -1
+                              : _vm.formMenuRoles.menu
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.formMenuRoles.menu,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = menu.id,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.formMenuRoles,
+                                      "menu",
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.formMenuRoles,
+                                      "menu",
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
                               } else {
-                                $$i > -1 &&
-                                  _vm.$set(
-                                    _vm.formMenuRoles,
-                                    "Responsable",
-                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                  )
+                                _vm.$set(_vm.formMenuRoles, "menu", $$c)
                               }
-                            } else {
-                              _vm.$set(_vm.formMenuRoles, "Responsable", $$c)
                             }
                           }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c(
-                        "label",
-                        {
-                          staticClass: "custom-control-label",
-                          attrs: { for: menu.name }
-                        },
-                        [_vm._v(_vm._s(menu.name))]
-                      )
-                    ]
-                  )
-                }),
-                0
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(1)
-        ])
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          {
+                            staticClass: "custom-control-label",
+                            attrs: { for: menu.name }
+                          },
+                          [_vm._v(_vm._s(menu.name))]
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _vm.formMenuRoles.errors.has("menu")
+                  ? _c("span", {
+                      staticClass: "invalid-feedback d-block",
+                      attrs: { role: "alert" },
+                      domProps: {
+                        textContent: _vm._s(
+                          _vm.formMenuRoles.errors.get("menu")
+                        )
+                      }
+                    })
+                  : _vm._e()
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(0)
+          ]
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-xl-7" }, [
@@ -49201,62 +49275,19 @@ var render = function() {
           "div",
           { staticClass: "card", staticStyle: { "min-height": "235px" } },
           [
-            _c("div", { staticClass: "card-header" }, [
-              _c("h3", { staticClass: "card-title font-weight-bold" }, [
-                _vm._v("List Roles")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-tools" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "input-group input-group-sm",
-                    staticStyle: { width: "150px" }
-                  },
-                  [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.search,
-                          expression: "search"
-                        }
-                      ],
-                      staticClass: "form-control float-right",
-                      attrs: {
-                        type: "text",
-                        name: "table_search",
-                        placeholder: "Search"
-                      },
-                      domProps: { value: _vm.search },
-                      on: {
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.search = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(2)
-                  ]
-                )
-              ])
-            ]),
+            _vm._m(1),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "card-body table-responsive text-center p-0" },
               [
                 _c("table", { staticClass: "table table-hover" }, [
-                  _vm._m(3),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c(
                     "tbody",
-                    _vm._l(_vm.menuRoles, function(menuRole) {
-                      return _c("tr", { key: menuRole.id }, [
+                    _vm._l(_vm.menuRoles, function(menuRole, index) {
+                      return _c("tr", { key: index }, [
                         _c("td", [_vm._v(_vm._s(menuRole.role_id))]),
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(menuRole.role_name))]),
@@ -49264,14 +49295,14 @@ var render = function() {
                         _c(
                           "td",
                           _vm._l(menuRole.menus, function(menuName) {
-                            return _c("span", { key: menuName }, [
+                            return _c("span", { key: menuName.id }, [
                               _vm._v(_vm._s(menuName.menu_name) + ", ")
                             ])
                           }),
                           0
                         ),
                         _vm._v(" "),
-                        _vm._m(4, true)
+                        _vm._m(3, true)
                       ])
                     }),
                     0
@@ -49286,21 +49317,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group col-md-12" }, [
-        _c("label", { attrs: { for: "nameRole" } }, [_vm._v("Role Name")]),
-        _vm._v(" "),
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "text", id: "nameRole" }
-        })
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -49342,12 +49358,10 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-group-append" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-default", attrs: { type: "submit" } },
-        [_c("i", { staticClass: "fas fa-search" })]
-      )
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h3", { staticClass: "card-title font-weight-bold" }, [
+        _vm._v("List Roles")
+      ])
     ])
   },
   function() {
@@ -66456,15 +66470,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************************!*\
   !*** ./resources/js/views/profile/components/message.vue ***!
   \***********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _message_vue_vue_type_template_id_72fc2273___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./message.vue?vue&type=template&id=72fc2273& */ "./resources/js/views/profile/components/message.vue?vue&type=template&id=72fc2273&");
 /* harmony import */ var _message_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./message.vue?vue&type=script&lang=js& */ "./resources/js/views/profile/components/message.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _message_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _message_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -66494,7 +66507,7 @@ component.options.__file = "resources/js/views/profile/components/message.vue"
 /*!************************************************************************************!*\
   !*** ./resources/js/views/profile/components/message.vue?vue&type=script&lang=js& ***!
   \************************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

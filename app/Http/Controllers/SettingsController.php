@@ -13,7 +13,7 @@ class SettingsController extends Controller
 
     public function menuRole()
     {
-        return Settings::getMenuRole();
+        return Settings::allMenuRole();
     }
 
 

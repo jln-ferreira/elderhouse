@@ -100,6 +100,13 @@ Route::get('/menus', 'MenuController@index');
 
 
 // ---------------
+// MENU ROLES
+Route::post('/menuroles', 'MenuRoleController@store');
+// END MENU ROLES
+// ------------------
+
+
+// ---------------
 // DIAGNOSTIC
 Route::get('/diagnostics', 'DiagnosticController@index');
 // END DIAGNOSTIC

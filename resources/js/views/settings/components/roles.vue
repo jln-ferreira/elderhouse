@@ -3,12 +3,12 @@
         <div class="row">
             <div class="col-xl-5">
 
-                <form method="post">
+                <form method="post" @submit.prevent="onSubmit_Role">
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="nameRole">Role Name</label>
-                            <input type="text" class="form-control" id="nameRole">
-                            <!-- <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('nameRole')" v-text="formDiagnostic.errors.get('nameRole')"></span> -->
+                            <input type="text" class="form-control" id="nameRole" v-model="formMenuRoles.roleName">
+                            <span class="invalid-feedback d-block" role="alert" v-if="formMenuRoles.errors.has('roleName')" v-text="formMenuRoles.errors.get('roleName')"></span>
                         </div>
                     </div>
 
@@ -16,10 +16,11 @@
                         <div class="form-group">
                             <div class="form-group col-md-3">
                                 <div class="custom-control custom-switch" v-for='menu in menus' v-bind:key='menu.id'>
-                                    <input type="checkbox" class="custom-control-input" :id="menu.name" v-model="formMenuRoles.Responsable" :value="menu.id">
+                                    <input type="checkbox" class="custom-control-input" :id="menu.name" v-model="formMenuRoles.menu" :value="menu.id">
                                     <label class="custom-control-label" :for="menu.name">{{ menu.name }}</label>
                                 </div>
                             </div>
+                            <span class="invalid-feedback d-block" role="alert" v-if="formMenuRoles.errors.has('menu')" v-text="formMenuRoles.errors.get('menu')"></span>
                         </div>
                     </div>
 
@@ -32,23 +33,13 @@
                         </div>
                     </div>
                 </form>
+
             </div>
             <!-- [ALL DIAGNOSTIC] -->
             <div class="col-xl-7">
                 <div class="card" style="min-height: 235px;">
                     <div class="card-header">
                         <h3 class="card-title font-weight-bold">List Roles</h3>
-
-                        <div class="card-tools">
-                            <div class="input-group input-group-sm" style="width: 150px;">
-                                <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                                </div>
-
-                            </div>
-                        </div>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body table-responsive text-center p-0">
@@ -62,10 +53,10 @@
                             </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="menuRole in menuRoles" v-bind:key="menuRole.id">
+                                <tr v-for="(menuRole, index) in menuRoles" v-bind:key="index">
                                     <td>{{menuRole.role_id}}</td>
                                     <td>{{menuRole.role_name}}</td>
-                                    <td><span v-for="menuName in menuRole.menus" v-bind:key="menuName">{{menuName.menu_name}}, </span></td>
+                                    <td><span v-for="menuName in menuRole.menus" v-bind:key="menuName.id">{{menuName.menu_name}}, </span></td>
                                     <td>
                                         <button type="edit" class="btn btn-primary"><i class="far fa-edit"></i></button>
                                         <a type="delete" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i></a>
@@ -94,13 +85,18 @@
                 menus    : [],
 
                 formMenuRoles: new Form({
-                    'id'          : '',
-                    'roleName'    : '',
-                    'Responsable' : [],
+                    'id'       : '',
+                    'roleName' : '',
+                    'menu'     : [],
                 }),
 
 
             }
+
+        },
+
+
+        computed: {
 
         },
 
@@ -124,6 +120,20 @@
 
 
         methods: {
+
+            // ---=== NEW ROLE_MENU ===---
+            onSubmit_Role()
+            {
+                this.formMenuRoles
+                .post('/menuroles')
+                    .then(response => {
+                        console.log(response);
+
+                        this.menuRoles.push(response[0]);
+
+                        this.$toaster.success('Role added.');
+                    })
+            }
 
             },
 
