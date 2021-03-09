@@ -72,14 +72,13 @@ class RoleController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Role $role)
+
+    public function destroy($role_id)
     {
-        //
+        $role = Role::find($role_id);
+        $role->active = 0;
+        $role->save();
+
+        return $role;
     }
 }

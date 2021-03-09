@@ -26,10 +26,9 @@
 
                     <div class="form-row">
                         <div class="form-group">
-                            <button type="save" class="btn btn-success"><i class="fa fa-plus"></i> Add</button>
-                            <a type="edit" class="btn btn-primary"><i class="fas fa-user-edit"></i> Edit</a>
-                            <a type="delete" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i> Delete</a>
-                            <a type="cancel" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                            <button type="save" class="btn btn-success" v-show="saveRole"><i class="fa fa-plus"></i> Add</button>
+                            <a type="edit" class="btn btn-primary" v-show="!saveRole" @click="modifyRole"><i class="fas fa-user-edit"></i> Edit</a>
+                            <a type="cancel" class="btn btn-warning text-white" v-show="!saveRole" @click="cancelRole"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                     </div>
                 </form>
@@ -58,8 +57,8 @@
                                     <td>{{menuRole.role_name}}</td>
                                     <td><span v-for="menuName in menuRole.menus" v-bind:key="menuName.id">{{menuName.menu_name}}, </span></td>
                                     <td>
-                                        <button type="edit" class="btn btn-primary"><i class="far fa-edit"></i></button>
-                                        <a type="delete" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i></a>
+                                        <button type="edit" class="btn btn-primary" @click="editRole(index)"><i class="far fa-edit"></i></button>
+                                        <a type="delete" class="btn btn-danger text-white" @click="deleteRole(index)"><i class="far fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -80,6 +79,8 @@
         data() {
 
             return {
+
+                saveRole : true,
 
                 menuRoles: [],
                 menus    : [],
@@ -133,9 +134,93 @@
 
                         this.$toaster.success('Role added.');
                     })
-            }
+            },
+
+
+            // ---=== DELETE ROLE_MENU ===---
+            deleteRole(index)
+            {
+                if(confirm("Do you really want to delete?"))
+                {
+                    let role_id = this.menuRoles[index].role_id;
+
+                    axios.post('/roles/' + role_id, {
+                    _method: 'DELETE'
+                    })
+                    .then(response => {
+                        var count = 0
+                        this.menuRoles.forEach(element => {
+                            element.role_id == (response.data.id) ? this.menuRoles.splice(count,1) : count +=1;
+                        });
+
+                        //clean field
+                        this.formMenuRoles.id       = '';
+                        this.formMenuRoles.roleName = '';
+                        this.formMenuRoles.menu     = [];
+
+                        this.saveRole = true;
+
+                        this.$toaster.success('Successful deleted');
+                    });
+                }
+            },
+
+
+            // ---=== EDIT ROLE_MENU ===---
+            editRole(index)
+            {
+                console.log('menu',this.menuRoles[index].menus);
+
+                this.saveRole = false;
+
+                //populate field
+                this.formMenuRoles.id       = this.menuRoles[index].role_id;
+                this.formMenuRoles.roleName = this.menuRoles[index].role_name;
+                this.formMenuRoles.menu     = [];
+
+                // populate checkbox
+                this.menuRoles[index].menus.forEach(element => {
+                   this.formMenuRoles.menu.push(element.menu_id);
+                });
 
             },
+
+
+            // ---=== MODIFY ROLE_MENU ===---
+            modifyRole()
+            {
+                this.formMenuRoles
+                    .patch('/menuroles')
+                    .then(response => {
+
+                        var index = this.menuRoles.findIndex(x => x.role_id === response[0].role_id);
+
+                        this.menuRoles[index].role_name = response[0].role_name;
+                        this.menuRoles[index].menus     = response[0].menus;
+
+                        this.saveRole = true;
+
+                        this.$toaster.success('Role edited.');
+                    });
+
+            },
+
+
+            // ---=== CANCEL ROLE_MENU ===---
+            cancelRole()
+            {
+                //clean field
+                this.formMenuRoles.id       = '';
+                this.formMenuRoles.roleName = '';
+                this.formMenuRoles.menu     = [];
+
+                this.saveRole = true;
+
+                this.$toaster.warning('Canceled');
+
+            }
+
+        },
 
     }
 

@@ -4754,10 +4754,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      saveRole: true,
       menuRoles: [],
       menus: [],
       formMenuRoles: new Form({
@@ -4794,6 +4794,71 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.$toaster.success('Role added.');
       });
+    },
+    // ---=== DELETE ROLE_MENU ===---
+    deleteRole: function deleteRole(index) {
+      var _this3 = this;
+
+      if (confirm("Do you really want to delete?")) {
+        var role_id = this.menuRoles[index].role_id;
+        axios.post('/roles/' + role_id, {
+          _method: 'DELETE'
+        }).then(function (response) {
+          var count = 0;
+
+          _this3.menuRoles.forEach(function (element) {
+            element.role_id == response.data.id ? _this3.menuRoles.splice(count, 1) : count += 1;
+          }); //clean field
+
+
+          _this3.formMenuRoles.id = '';
+          _this3.formMenuRoles.roleName = '';
+          _this3.formMenuRoles.menu = [];
+          _this3.saveRole = true;
+
+          _this3.$toaster.success('Successful deleted');
+        });
+      }
+    },
+    // ---=== EDIT ROLE_MENU ===---
+    editRole: function editRole(index) {
+      var _this4 = this;
+
+      console.log('menu', this.menuRoles[index].menus);
+      this.saveRole = false; //populate field
+
+      this.formMenuRoles.id = this.menuRoles[index].role_id;
+      this.formMenuRoles.roleName = this.menuRoles[index].role_name;
+      this.formMenuRoles.menu = []; // populate checkbox
+
+      this.menuRoles[index].menus.forEach(function (element) {
+        _this4.formMenuRoles.menu.push(element.menu_id);
+      });
+    },
+    // ---=== MODIFY ROLE_MENU ===---
+    modifyRole: function modifyRole() {
+      var _this5 = this;
+
+      this.formMenuRoles.patch('/menuroles').then(function (response) {
+        var index = _this5.menuRoles.findIndex(function (x) {
+          return x.role_id === response[0].role_id;
+        });
+
+        _this5.menuRoles[index].role_name = response[0].role_name;
+        _this5.menuRoles[index].menus = response[0].menus;
+        _this5.saveRole = true;
+
+        _this5.$toaster.success('Role edited.');
+      });
+    },
+    // ---=== CANCEL ROLE_MENU ===---
+    cancelRole: function cancelRole() {
+      //clean field
+      this.formMenuRoles.id = '';
+      this.formMenuRoles.roleName = '';
+      this.formMenuRoles.menu = [];
+      this.saveRole = true;
+      this.$toaster.warning('Canceled');
     }
   }
 });
@@ -49265,7 +49330,65 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _c("div", { staticClass: "form-row" }, [
+              _c("div", { staticClass: "form-group" }, [
+                _c(
+                  "button",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.saveRole,
+                        expression: "saveRole"
+                      }
+                    ],
+                    staticClass: "btn btn-success",
+                    attrs: { type: "save" }
+                  },
+                  [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.saveRole,
+                        expression: "!saveRole"
+                      }
+                    ],
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "edit" },
+                    on: { click: _vm.modifyRole }
+                  },
+                  [
+                    _c("i", { staticClass: "fas fa-user-edit" }),
+                    _vm._v(" Edit")
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.saveRole,
+                        expression: "!saveRole"
+                      }
+                    ],
+                    staticClass: "btn btn-warning text-white",
+                    attrs: { type: "cancel" },
+                    on: { click: _vm.cancelRole }
+                  },
+                  [_c("i", { staticClass: "fa fa-times" }), _vm._v(" Cancel")]
+                )
+              ])
+            ])
           ]
         )
       ]),
@@ -49275,14 +49398,14 @@ var render = function() {
           "div",
           { staticClass: "card", staticStyle: { "min-height": "235px" } },
           [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "div",
               { staticClass: "card-body table-responsive text-center p-0" },
               [
                 _c("table", { staticClass: "table table-hover" }, [
-                  _vm._m(2),
+                  _vm._m(1),
                   _vm._v(" "),
                   _c(
                     "tbody",
@@ -49302,7 +49425,35 @@ var render = function() {
                           0
                         ),
                         _vm._v(" "),
-                        _vm._m(3, true)
+                        _c("td", [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "edit" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.editRole(index)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "far fa-edit" })]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-danger text-white",
+                              attrs: { type: "delete" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteRole(index)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "far fa-trash-alt" })]
+                          )
+                        ])
                       ])
                     }),
                     0
@@ -49317,43 +49468,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-success", attrs: { type: "save" } },
-          [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add")]
-        ),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-primary", attrs: { type: "edit" } }, [
-          _c("i", { staticClass: "fas fa-user-edit" }),
-          _vm._v(" Edit")
-        ]),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-danger text-white",
-            attrs: { type: "delete" }
-          },
-          [_c("i", { staticClass: "far fa-trash-alt" }), _vm._v(" Delete")]
-        ),
-        _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "btn btn-warning text-white",
-            attrs: { type: "cancel" }
-          },
-          [_c("i", { staticClass: "fa fa-times" }), _vm._v(" Cancel")]
-        )
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -49378,24 +49492,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Actions")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "edit" } },
-        [_c("i", { staticClass: "far fa-edit" })]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        { staticClass: "btn btn-danger text-white", attrs: { type: "delete" } },
-        [_c("i", { staticClass: "far fa-trash-alt" })]
-      )
     ])
   }
 ]

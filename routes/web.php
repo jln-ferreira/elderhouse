@@ -88,6 +88,7 @@ Route::post('/deleteFamily', 'FamilyController@deleteClient');
 // ---------------
 // ROLES
 Route::get('/roles', 'RoleController@index');
+Route::delete('/roles/{role_id}', 'RoleController@destroy');
 // END ROLES
 // ------------------
 
@@ -102,6 +103,7 @@ Route::get('/menus', 'MenuController@index');
 // ---------------
 // MENU ROLES
 Route::post('/menuroles', 'MenuRoleController@store');
+Route::patch('/menuroles', 'MenuRoleController@update');
 // END MENU ROLES
 // ------------------
 

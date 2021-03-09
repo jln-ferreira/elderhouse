@@ -63,13 +63,39 @@ class MenuRoleController extends Controller
     }
 
 
-    public function update(Request $request, MenuRole $menuRole)
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'roleName' => ['required', 'string', 'max:50', 'min:3' ],
+            'menu'     => ['required', 'array', 'min:1'],
+        ])->validate();
+
+        // modify role
+        $role = Role::find($request['id']);
+        $role->name = $request['roleName'];
+        $role->save();
+
+        // modify roles
+        MenuRole::where([['active', 1],['role_id', $request['id']]])->update(['active' => 0]);
+
+        foreach ($request['menu'] as $key => $value) {
+            MenuRole::updateOrCreate(
+                [
+                    'role_id' => $request['id'],
+                    'menu_id' => $value
+                ],
+                [
+                    'menu_id' => $value,
+                    'active' => 1
+                ]
+            );
+        };
+
+        return Settings::getMenuRole($request['id']);
     }
 
 
-    public function destroy(MenuRole $menuRole)
+    public function destroy($id)
     {
         //
     }
