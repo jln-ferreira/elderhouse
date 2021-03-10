@@ -30,7 +30,21 @@ class DiagnosticController extends Controller
 
     public function store(Request $request)
     {
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:100'],
+            'rank' => ['required', 'integer'],
+        ])->validate();
 
+
+        // DIAGNOSTIC
+        $diagnostic = Diagnostic::Create([
+            'name' => $request['name'],
+            'rank' => $request['rank'],
+        ]);
+        $diagnostic->save();
+
+
+        return $diagnostic;
     }
 
     /**
@@ -55,26 +69,32 @@ class DiagnosticController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Diagnostic  $diagnostic
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Diagnostic $diagnostic)
+
+    public function update(Request $request)
     {
-        //
+
+        Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:100'],
+            'rank' => ['required', 'integer'],
+        ])->validate();
+
+        // modify diagnostic
+        $diagnostic = Diagnostic::find($request['id']);
+        $diagnostic->name = $request['name'];
+        $diagnostic->rank = $request['rank'];
+        $diagnostic->save();
+
+
+        return $diagnostic;
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Diagnostic  $diagnostic
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Diagnostic $diagnostic)
+    public function destroy($diagnosticId)
     {
-        //
+        $diagnostic = Diagnostic::find($diagnosticId);
+        $diagnostic->active = 0;
+        $diagnostic->save();
+
+        return $diagnostic;
     }
 }

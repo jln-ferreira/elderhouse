@@ -111,6 +111,9 @@ Route::patch('/menuroles', 'MenuRoleController@update');
 // ---------------
 // DIAGNOSTIC
 Route::get('/diagnostics', 'DiagnosticController@index');
+route::post('/diagnostics', 'DiagnosticController@store');
+Route::patch('/diagnostics', 'DiagnosticController@update');
+Route::delete('/diagnostics/{diagnosticId}', 'DiagnosticController@destroy');
 // END DIAGNOSTIC
 // ------------------
 

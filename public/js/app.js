@@ -4823,48 +4823,31 @@ __webpack_require__.r(__webpack_exports__);
         _this3.diagnostics.push(diagnostic);
 
         _this3.isShowing = false;
-        _this3.newDiagnostic = true;
 
         _this3.$toaster.success('Successful added ' + diagnostic.name);
       });
     },
-    //-------- MODIFY --------
-    editDiagnostic: function editDiagnostic() {
-      var _this4 = this;
-
-      this.form.patch('/diagnostics').then(function (response) {
-        _this4.diagnostics.find(function (diagnostic) {
-          return diagnostic.id == response.id;
-        }).name = response.name;
-        _this4.isShowing = false;
-        _this4.newDiagnostic = true;
-
-        _this4.$toaster.success('Successful Updated ' + response.name);
-      });
-    },
     // -----DELETE-----
-    deletediagnostic: function deletediagnostic(id) {
-      var _this5 = this;
+    deleteDiagnostic: function deleteDiagnostic(id) {
+      var _this4 = this;
 
       axios.post('/diagnostics/' + id, {
         _method: 'DELETE'
       }).then(function (response) {
         var count = 0;
 
-        _this5.diagnostics.forEach(function (element) {
-          element.id == response.data.id ? _this5.diagnostics.splice(count, 1) : count += 1;
+        _this4.diagnostics.forEach(function (element) {
+          element.id == response.data.id ? _this4.diagnostics.splice(count, 1) : count += 1;
         });
 
-        _this5.isShowing = false;
-        _this5.newDiagnostic = true;
+        _this4.isShowing = false;
+        _this4.newDiagnostic = true;
 
-        _this5.$toaster.success('Successful deleted ' + response.data.name);
+        _this4.$toaster.success('Successful deleted ' + response.data.name);
       });
     },
     // -----EDIT-----
-    editdiagnostic: function editdiagnostic(index) {
-      var _this6 = this;
-
+    editDiagnostic: function editDiagnostic(index) {
       this.isShowing = true; //open new diagnostic
 
       this.newDiagnostic = false; //button cancel and edit show
@@ -4874,26 +4857,33 @@ __webpack_require__.r(__webpack_exports__);
 
       this.form.id = diagnostic.id;
       this.form.name = diagnostic.name;
-      this.form.email = diagnostic.email; // Fetch all address of the diagnostic
+      this.form.rank = diagnostic.rank;
+    },
+    //-------- MODIFY --------
+    modifyDiagnostic: function modifyDiagnostic() {
+      var _this5 = this;
 
-      axios.get('/getdiagnosticAddressRole/' + diagnostic.id).then(function (response) {
-        // console.log(response);
-        // show value address
-        _this6.form.street = response.data.address.street;
-        _this6.form.number = response.data.address.number;
-        _this6.form.city = response.data.address.city;
-        _this6.form.state = response.data.address.state;
-        _this6.form.country = response.data.address.country; // show value roles
+      this.form.patch('/diagnostics').then(function (response) {
+        _this5.diagnostics.find(function (diagnostic) {
+          return diagnostic.id == response.id;
+        }).name = response.name;
+        _this5.diagnostics.find(function (diagnostic) {
+          return diagnostic.id == response.id;
+        }).rank = response.rank;
+        _this5.isShowing = false;
+        _this5.newDiagnostic = true;
 
-        _this6.form.checkedRoles = [];
-        response.data.role.forEach(function (element) {
-          _this6.form.checkedRoles.push(element.role_id);
-        });
+        _this5.$toaster.success('Successful Updated ' + response.name);
       });
     },
     cancelEdit: function cancelEdit() {
       this.newDiagnostic = true; //show button add diagnostic
-      // clean form
+
+      this.isShowing = false; // clean form
+
+      this.form.id = '';
+      this.form.name = '';
+      this.form.rank = '';
     }
   }
 });
@@ -49581,7 +49571,6 @@ var render = function() {
                         attrs: {
                           type: "number",
                           id: "rank",
-                          disabled: !_vm.newDiagnostic,
                           min: "1",
                           max: "10",
                           required: ""
@@ -49639,9 +49628,9 @@ var render = function() {
                           expression: "!this.newDiagnostic"
                         }
                       ],
-                      staticClass: "btn btn-primary",
+                      staticClass: "btn btn-primary text-white",
                       attrs: { type: "edit" },
-                      on: { click: _vm.editDiagnostic }
+                      on: { click: _vm.modifyDiagnostic }
                     },
                     [_c("i", { staticClass: "far fa-edit" }), _vm._v(" Edit")]
                   ),
@@ -49741,7 +49730,7 @@ var render = function() {
                         attrs: { type: "edit" },
                         on: {
                           click: function($event) {
-                            return _vm.editdiagnostic(index)
+                            return _vm.editDiagnostic(index)
                           }
                         }
                       },
@@ -49755,7 +49744,7 @@ var render = function() {
                         attrs: { type: "delete" },
                         on: {
                           click: function($event) {
-                            return _vm.deletediagnostic(diagnostic.id)
+                            return _vm.deleteDiagnostic(diagnostic.id)
                           }
                         }
                       },

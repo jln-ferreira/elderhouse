@@ -23,7 +23,7 @@
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="rank">Rank</label>
-                                    <input type="number" class="form-control" id="rank" v-model="form.rank" :disabled="!newDiagnostic" min="1" max="10" required>
+                                    <input type="number" class="form-control" id="rank" v-model="form.rank" min="1" max="10" required>
                                     <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('rank')" v-text="form.errors.get('rank')"></span>
                                 </div>
                             </div>
@@ -32,7 +32,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="save" v-show="this.newDiagnostic" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                            <a type="edit" v-show="!this.newDiagnostic" class="btn btn-primary" @click="editDiagnostic"><i class="far fa-edit"></i> Edit</a>
+                            <a type="edit" v-show="!this.newDiagnostic" class="btn btn-primary text-white" @click="modifyDiagnostic"><i class="far fa-edit"></i> Edit</a>
                             <a type="cancel" v-show="!this.newDiagnostic" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
@@ -80,8 +80,8 @@
                                 <td>{{diagnostic.name}}</td>
                                 <td>{{diagnostic.rank}}</td>
                                 <td>
-                                    <button type="edit" class="btn btn-primary" @click="editdiagnostic(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deletediagnostic(diagnostic.id)"><i class="far fa-trash-alt"></i></a>
+                                    <button type="edit" class="btn btn-primary" @click="editDiagnostic(index)"><i class="far fa-edit"></i></button>
+                                    <a type="delete" class="btn btn-danger text-white" @click="deleteDiagnostic(diagnostic.id)"><i class="far fa-trash-alt"></i></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -117,7 +117,8 @@
         },
 
 
-        created() {
+        created()
+        {
             // Fetch all diagnostics
             axios.get('/diagnostics')
                 .then(response => this.diagnostics = response.data);
@@ -126,7 +127,8 @@
 
 
         computed: {
-            filteredList() {
+            filteredList()
+            {
                 return this.diagnostics.filter(post => {
                     return post.name.toLowerCase().includes(this.search.toLowerCase());
                 });
@@ -135,7 +137,8 @@
 
 
         methods: {
-            newDiagnosticToggle(){
+            newDiagnosticToggle()
+            {
                 this.isShowing = !this.isShowing;
             },
             faChanging(){
@@ -144,34 +147,21 @@
 
 
             // ----- ADD  -----
-            onSubmit(){
-
+            onSubmit()
+            {
                 this.form
                     .post('/diagnostics')
                     .then(diagnostic => {
                         this.diagnostics.push(diagnostic);
                         this.isShowing = false;
-                        this.newDiagnostic   = true;
                         this.$toaster.success('Successful added ' + diagnostic.name);
                     })
             },
 
 
-            //-------- MODIFY --------
-            editDiagnostic(){
-               this.form
-                    .patch('/diagnostics')
-                    .then(response => {
-                        this.diagnostics.find(diagnostic => diagnostic.id == response.id).name = response.name;
-                        this.isShowing = false;
-                        this.newDiagnostic   = true;
-                        this.$toaster.success('Successful Updated ' + response.name);
-                    });
-            },
-
-
             // -----DELETE-----
-            deletediagnostic(id){
+            deleteDiagnostic(id)
+            {
                 axios.post('/diagnostics/' + id, {
                 _method: 'DELETE'
                 })
@@ -188,47 +178,48 @@
             },
 
 
-            // -----EDIT-----
-            editdiagnostic(index){
-                this.isShowing = true;          //open new diagnostic
-                this.newDiagnostic   = false;         //button cancel and edit show
 
-                let diagnostic = this.diagnostics[index];   //diagnostic clicked
+            // -----EDIT-----
+            editDiagnostic(index)
+            {
+                this.isShowing = true;                     //open new diagnostic
+                this.newDiagnostic   = false;              //button cancel and edit show
+
+                let diagnostic = this.diagnostics[index];  //diagnostic clicked
 
                 //show values diagnostic
-                this.form.id = diagnostic.id;
+                this.form.id   = diagnostic.id;
                 this.form.name = diagnostic.name;
-                this.form.email = diagnostic.email;
-
-
-                // Fetch all address of the diagnostic
-                axios.get('/getdiagnosticAddressRole/' + diagnostic.id)
-                .then(response => {
-                    // console.log(response);
-                    // show value address
-                    this.form.street = response.data.address.street;
-                    this.form.number = response.data.address.number;
-                    this.form.city = response.data.address.city;
-                    this.form.state = response.data.address.state;
-                    this.form.country = response.data.address.country;
-
-                    // show value roles
-                    this.form.checkedRoles = [];
-                    response.data.role.forEach(element => {
-                        this.form.checkedRoles.push(element.role_id)
-                    });
-
-                });
-
+                this.form.rank = diagnostic.rank;
 
             },
 
 
-            cancelEdit(){
-                this.newDiagnostic = true; //show button add diagnostic
-                // clean form
-            }
+            //-------- MODIFY --------
+            modifyDiagnostic()
+            {
+               this.form
+                    .patch('/diagnostics')
+                    .then(response => {
+                        this.diagnostics.find(diagnostic => diagnostic.id == response.id).name = response.name;
+                        this.diagnostics.find(diagnostic => diagnostic.id == response.id).rank = response.rank;
+                        this.isShowing = false;
+                        this.newDiagnostic   = true;
+                        this.$toaster.success('Successful Updated ' + response.name);
+                    });
+            },
 
+
+            cancelEdit()
+            {
+                this.newDiagnostic = true; //show button add diagnostic
+                this.isShowing = false;
+
+                // clean form
+                this.form.id   = '';
+                this.form.name = '';
+                this.form.rank = '';
+            }
         }
     }
 
