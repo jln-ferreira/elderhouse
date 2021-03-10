@@ -5,13 +5,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Client</h1>
+                <h1>Settings</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Clients</a></li>
-                    <li class="breadcrumb-item active">New Clients</li>
+                    <li class="breadcrumb-item active">Settings</li>
                 </ol>
             </div>
             </div>
@@ -28,6 +27,7 @@
                             <!-- <h3 class="card-title p-3" v-text="formInformation.name"></h3> -->
                             <ul class="nav nav-pills ml-auto p-2">
                                 <li class="nav-item"><a class="nav-link active" href="#roles" data-toggle="tab">Roles</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#diagnostics" data-toggle="tab">Diagnostics</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -39,6 +39,15 @@
                                 <div class="tab-pane active" id="roles">
 
                                     <roles/>
+
+                                </div>
+                                <!-- END ROLES -->
+
+                                <!-- ------=========== [ DIAGNOSTICS ] ===========------- -->
+                                <!-- --------------------------------------------------- -->
+                                <div class="tab-pane" id="diagnostics">
+
+                                    <diagnostics/>
 
                                 </div>
                                 <!-- END ROLES -->
@@ -59,12 +68,16 @@
 </template>
 
 <script>
+
 // imports
 import roles from './components/roles.vue'
+import Diagnostics from './components/diagnostics.vue'
+
 
 export default {
     components: {
         roles,
+        Diagnostics,
     },
     data(){
         return{
