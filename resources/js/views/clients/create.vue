@@ -31,6 +31,7 @@
                                     <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab">Diagnostic</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#contract" data-toggle="tab">Contract</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -416,6 +417,13 @@
                                     </div>
                                     <!-- /.tab-pane -->
 
+
+                                    <!-- CONTRACT TAB -->
+                                    <div class="tab-pane" id="contract">
+                                        <contract/>
+                                    </div>
+
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
@@ -432,8 +440,14 @@
 
 <script>
 
-    export default {
+    // imports
+    import contract from './components/contract.vue'
 
+
+    export default {
+        components: {
+            contract,
+        },
         data() {
 
             return {

@@ -2005,6 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_contract_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/contract.vue */ "./resources/js/views/clients/components/contract.vue");
 //
 //
 //
@@ -2437,7 +2438,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+// imports
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    contract: _components_contract_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       information_save: true,
@@ -41925,6 +41939,539 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "card" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        _c(
+          "div",
+          { staticClass: "tab-content" },
+          [
+            _c("p", [
+              _vm._v("Pelo presente instrumento particular, por um lado: ")
+            ]),
+            _c("br"),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "Sr(a)Janina Naceviciene Casagrande, CPF 310.097.668-13, doravante denominada (a) simplesmente CONTRATANTE;\n                    e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,\n                    cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao CONTRATANTE,\n                    doravante denominado simplesmente RESPONSÁVEL SOLIDÁRIO;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("e por outro:")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                     816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                     neste ato representada nos termos do estatuto por Rodrigo Leite Vilela, portador da cédula de identidade nº 23.806.305-7,\n                     inscrito no CPF/MF sob o nº  471.126.976-20  doravante denominada simplesmente CONTRATADA. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "As partes acima identificadas têm, entre si, justo e acertado este Contrato de Prestação de Serviços (“Contrato”),\n                    conforme determina o artigo 35 da Lei nº 10.741, de 1º de outubro de 2003 – Estatuto do Idoso e demais legislação aplicável à espécie,\n                    que se regerá pelas cláusulas seguintes e pelas condições dispostas nas normativas a seguir descritas:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("1. DO OBJETO")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "1.1\tA CONTRATADA disponibiliza alojamentos para pessoas acima de 60 anos, oferecendo infra-estrutura e recursos humanos adequados,\n                     hospedagem e atenção à saúde, dentro da legislação vigente. A CONTRATADA tem disponível em suas dependências dormitórios com diferentes\n                     números de leitos, de forma que a acomodação objeto deste Contrato está especificada na cláusula 1.3. abaixo."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "1.2 Ciente o CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO das condições que a CONTRATADA oferece e do Regimento Interno que integra este Contrato,\n                     neste ato o CONTRATANTE é admitido para residir no Residencial da CONTRATADA, no endereço indicado no preâmbulo deste Contrato,\n                     no seguinte tipo de acomodação:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("1.3\tApartamento  08    com 02 leitos.")]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                     a CONTRATADA disponibilizará para o CONTRATANTE:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.1 Serviços de hospedagem, nas condições descritas acima e que permita o adequado recebimento de visitas;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.2 Alimentação, por meio de seis refeições diárias balanceadas e em quantidades compatíveis com suas necessidades energéticas e nutricionais;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.3 Lavagem de suas roupas, limitado a 90 peças por mês."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.4 Auxílio na realização do seu asseio e higiene pessoal, na medida das suas necessidades e capacidades;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("2.1.5 Serviços contínuos de enfermagem;")]),
+            _vm._v(" "),
+            _c("p", [_vm._v("2.1.6 Acompanhamento médico, ")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.7 Promoção de atividades educacionais, esportivas, culturais e de lazer, promovendo, ainda, assistência religiosa aos idosos que assim desejarem;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("2.1.8 Convivência comunitária; e")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.1.9 Atendimento psicossocial ao CONTRATANTE e à sua família e RESPONSÁVEL SOLIDÁRIO."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.2 Dependendo das necessidades do CONTRATANTE, de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da CONTRATADA, serviços extras de atenção à saúde poderão ser prestados pela CONTRATADA, que incluem, mas não se limitam a:"
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(1),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do CONTRATANTE, sendo facultada a livre prestação dos serviços extras por terceiros"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.5 Na hipótese de CONTRATANTE capaz, sua saída ou recebimento de visitas não prescinde de autorização da CONTRATADA, devendo, em qualquer caso, serem observadas as regras do Regimento Interno da CONTRATADA."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.6 Para fins deste Contrato, a CONTRATADA compromete-se a observar as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("2.7 A CONTRATADA compromete-se, ainda, a:")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de CONTRATANTE portador de doenças infecto-contagiosas;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do CONTRATANTE, RESPONSÁVEL SOLIDÁRIO, parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e RESPONSÁVEL SOLIDÁRIO."
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [
+              _vm._v("3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO")
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.1 O CONTRANTE e/ou RESPONSÁVEL SOLIDÁRIO comprometem-se a:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.1.1 Pagar pontualmente as mensalidades e todos os serviços extras;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [_vm._v("3.1.2 Respeitar o Regimento Interno; e")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.1.3 Manter o alojamento do CONTRATANTE em ordem e em condições de habitabilidade."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.2 O RESPONSÁVEL SOLIDÁRIO compromete-se a realizar visitas periódicas ao CONTRATANTE, no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo CONTRATANTE como por suas visitas."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.3 O RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo CONTRATANTE perante àquelas instituições de saúde."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.4 Em caso de internação, o RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE no tratamento e procedimentos a serem adotados."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.5 No ato de alta hospitalar o CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do CONTRATANTE e as necessidades de atendimento especializado."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.6 O CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a obter e enviar relatório médico à CONTRATADA, descrevendo o estado geral de saúde do CONTRATANTE, os procedimentos realizados e os cuidados a serem adotados."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o RESPONSÁVEL SOLIDÁRIO compromete-se a informar a CONTRATADA a respeito das seguintes situações:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v("3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: ")
+            ]),
+            _vm._v(" "),
+            _vm._m(2),
+            _vm._v(" "),
+            _c("p", [_vm._v("3.7.2 Convênio médico do CONTRATANTE;")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do CONTRATANTE;"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.7.4 Os procedimentos a serem adotados em caso falecimento do CONTRATANTE; e"
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.7.5 Entregar para análise e aprovação da CONTRATADA, a lista de bens pessoais do CONTRATANTE, que serão deixados para uso durante a vigência do Contrato. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do CONTRATANTE, o RESPONSÁVEL SOLIDÁRIO compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "3.9 O RESPONSÁVEL SOLIDÁRIO compromete-se a providenciar a mudança do CONTRATANTE e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "4.1 O prazo deste Contrato é indeterminado, podendo ser renovado automaticamente havendo interesse entre as partes. Também pode ser rescindido a qualquer tempo, por qualquer das partes após comunicação por escrito da outra parte, com antecedência de 30 dias corridos."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "4.2 O Contrato também poderá ser rescindido de pleno direito pela CONTRATADA caso o CONTRATANTE deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do CONTRATANTE para além da capacidade de prestação de serviços adequados ao caso pelo CONTRATADA, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "4.4 Na hipótese de término do Contrato no curso do mês, a CONTRATADA compromete-se a reembolsar o CONTRATANTE dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.1 O valor  dos serviços objeto do Contrato é de R$6.500,00 (seis mil e quinhentos Reais) por mes, a ser pago antecipadamente até o dia 10 de cada mês.    "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.1.1 Neste ato, a CONTRATANTE expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:"
+              )
+            ]),
+            _vm._v(" "),
+            _c("ui", [
+              _c("li", [_vm._v("Multa de 10% (dez por cento);")]),
+              _vm._v(" "),
+              _c("li", [
+                _vm._v(
+                  "Atualização monetária pelo índice IGP-M da FGV, ou qualquer outro que venha a substituí-lo; e"
+                )
+              ]),
+              _vm._v(" "),
+              _c("li", [
+                _vm._v("Juros de 1% (um por cento) ao mês, pro rata die.")
+              ])
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a CONTRATADA a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "6.1 Neste ato, a CONTRATADA entrega para o CONTRATANTE e para o RESPONSÁVEL SOLIDÁRIO, cópias do Regimento Interno da CONTRATADA e reconhecem que leram o seu conteúdo, e o aceitam como parte integrante deste Contrato. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao CONTRATANTE e ao RESPONSÁVEL SOLIDÁRIO com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.1 O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO reconhecem que a CONTRATADA é entidade idônea, que desempenha da melhor forma possível as atividades necessárias ao pleno cumprimento deste Contrato."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.2 As partes aceitam a avaliação médica inicial realizada pelo médico geriatra da CONTRATADA a respeito do estado geral de saúde do CONTRATANTE, com base na anamnese realizada, incluindo as informações prestadas pelo RESPONSÁVEL SOLIDÁRIO, nos termos da Cláusula 3.7 acima."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do CONTRATANTE implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do CONTRATANTE, as seguintes correções se aplicarão aos valores contratuais:"
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(3),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "NB: por caráter temporário entende-se uma situação transitória de convalescença de no máximo 180 dias. Caso se caracterize uma transição definitiva para GRAU III, a CONTRATADA será levada a solicitar a rescisão deste Contrato."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.2.2 O CONTRATANTE autoriza desde já a CONTRATADA a prestar-lhe os primeiros socorros em caso de necessidade premente, e manifesta a sua concordância com o tratamento emergencial prescrito pela equipe de saúde que o atender, de acordo com o disposto no item 3.4 do Regimento Interno. "
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo CONTRATANTE, as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO, poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO expressa e automaticamente eximem a CONTRATADA de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.3 As partes não poderão ceder, total ou parcialmente, os direitos ou obrigações assumidas no presente contrato, salvo se expressamente aprovado pela outra parte."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.4 Qualquer tolerância das partes relativamente ao cumprimento das obrigações aqui assumidas não importará em novação ou alteração, tácita ou expressa, nem caracterizará renúncia de qualquer direito."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "7.5 Nenhuma das partes será responsável ou será considerada faltosa pelo descumprimento de qualquer cláusula deste Contrato, se impedida de desempenhar suas obrigações por motivos de força maior ou caso fortuito, incluindo, mas não se limitando a greves, incêndios, terremotos, guerras ou outras contingências além da previsão ou controle das partes, na forma do artigo 393 do Código Civil."
+              )
+            ]),
+            _vm._v(" "),
+            _c("h4", [_vm._v("8. FORO")]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "8.1 As partes elegem o Foro Central da Comarca de Barueri para dirimir as pendências que surgirem deste Contrato."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores."
+              )
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
+              )
+            ])
+          ],
+          1
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header d-flex p-0" }, [
+      _c("h3", { staticClass: "card-title p-3" }, [
+        _vm._v("CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE IDOSO CAPAZ")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", [
+      _c("li", [_vm._v("Serviços de acompanhante exclusivo;")]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Fornecimento de medicamentos, materiais e produtos de higiene pessoal, como sabonetes, fraldas e cremes; "
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Fornecimento de serviços especiais, conforme Tabela anexa, cujos preços sofrem ajustes periódicos, de acordo com o mercado; e"
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Outros serviços solicitados pelo CONTRATANTE ou RESPONSÁVEL SOLIDÁRIO, desde que não infrinjam o Regimento Interno ou não sejam objetados pela equipe médica da CONTRATADA."
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", [
+      _c("li", [_vm._v("Doenças pré-existentes;")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Fraturas consolidadas ou em consolidação;")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Tratamentos realizados e em curso;")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Cirurgias realizadas;")]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Alterações cognitivas e de comportamento;")]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Surtos e outras atitudes esporádicas não compatíveis com a normalidade."
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", [
+      _c("li", [_vm._v("Mudança de Grau I para Grau II: reajuste de 25%;")]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Mudança de Grau II para Grau III em caráter temporário: reajuste de 50%."
+        )
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/create.vue?vue&type=template&id=1a484022&":
 /*!************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/clients/create.vue?vue&type=template&id=1a484022& ***!
@@ -44598,6 +45145,13 @@ var render = function() {
                       ])
                     ])
                   ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "contract" } },
+                  [_c("contract")],
+                  1
                 )
               ])
             ])
@@ -44684,6 +45238,17 @@ var staticRenderFns = [
             attrs: { href: "#diagnostic", "data-toggle": "tab" }
           },
           [_vm._v("Diagnostic")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#contract", "data-toggle": "tab" }
+          },
+          [_vm._v("Contract")]
         )
       ])
     ])
@@ -66858,6 +67423,59 @@ var Form = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (Form);
+
+/***/ }),
+
+/***/ "./resources/js/views/clients/components/contract.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/views/clients/components/contract.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contract.vue?vue&type=template&id=53b01935& */ "./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
+  script,
+  _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/clients/components/contract.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./contract.vue?vue&type=template&id=53b01935& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
