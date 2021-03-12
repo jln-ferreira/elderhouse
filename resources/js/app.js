@@ -19,6 +19,9 @@ window.Form = Form;
 
 import router from './routes';
 
+//pads
+import VueSignaturePad from 'vue-signature-pad';
+Vue.use(VueSignaturePad);
 
 // TOASTER-----------
 import Toaster from 'v-toaster'

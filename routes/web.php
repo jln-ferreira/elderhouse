@@ -134,11 +134,17 @@ Route::patch('/clientCreditCard', 'BankaccountController@createClient');
 // ------------------
 
 
+//CONTRACT
+Route::post('/contracts', 'ContractController@store');
+// END CONTRACT
+
 // ---------------
 // SETTINGS
 Route::get('/menuRoleSettings', 'SettingsController@menuRole');
 // END SETTINGS
 // ------------------
+
+
 
 
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809

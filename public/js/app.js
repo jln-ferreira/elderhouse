@@ -1996,6 +1996,205 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'MySignaturePad',
+  data: function data() {
+    return {};
+  },
+  methods: {
+    undo: function undo() {
+      this.$refs.signaturePad.undoSignature();
+    },
+    save: function save(event) {
+      console.log(event.target);
+      console.log(this.$refs);
+
+      var _this$$refs$signature = this.$refs.signaturePadContratada.saveSignature(),
+          isEmpty = _this$$refs$signature.isEmpty,
+          data = _this$$refs$signature.data;
+
+      console.log(isEmpty);
+      console.log(data);
+      axios.post("/contracts", data).then(function (response) {
+        console.log(response);
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/create.vue?vue&type=script&lang=js&":
 /*!********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/clients/create.vue?vue&type=script&lang=js& ***!
@@ -38184,6 +38383,99 @@ return jQuery;
 
 /***/ }),
 
+/***/ "./node_modules/merge-images/dist/index.es2015.js":
+/*!********************************************************!*\
+  !*** ./node_modules/merge-images/dist/index.es2015.js ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Defaults
+var defaultOptions = {
+	format: 'image/png',
+	quality: 0.92,
+	width: undefined,
+	height: undefined,
+	Canvas: undefined,
+	crossOrigin: undefined
+};
+
+// Return Promise
+var mergeImages = function (sources, options) {
+	if ( sources === void 0 ) sources = [];
+	if ( options === void 0 ) options = {};
+
+	return new Promise(function (resolve) {
+	options = Object.assign({}, defaultOptions, options);
+
+	// Setup browser/Node.js specific variables
+	var canvas = options.Canvas ? new options.Canvas() : window.document.createElement('canvas');
+	var Image = options.Canvas ? options.Canvas.Image : window.Image;
+	if (options.Canvas) {
+		options.quality *= 100;
+	}
+
+	// Load sources
+	var images = sources.map(function (source) { return new Promise(function (resolve, reject) {
+		// Convert sources to objects
+		if (source.constructor.name !== 'Object') {
+			source = { src: source };
+		}
+
+		// Resolve source and img when loaded
+		var img = new Image();
+		img.crossOrigin = options.crossOrigin;
+		img.onerror = function () { return reject(new Error('Couldn\'t load image')); };
+		img.onload = function () { return resolve(Object.assign({}, source, { img: img })); };
+		img.src = source.src;
+	}); });
+
+	// Get canvas context
+	var ctx = canvas.getContext('2d');
+
+	// When sources have loaded
+	resolve(Promise.all(images)
+		.then(function (images) {
+			// Set canvas dimensions
+			var getSize = function (dim) { return options[dim] || Math.max.apply(Math, images.map(function (image) { return image.img[dim]; })); };
+			canvas.width = getSize('width');
+			canvas.height = getSize('height');
+
+			// Draw images to canvas
+			images.forEach(function (image) {
+				ctx.globalAlpha = image.opacity ? image.opacity : 1;
+				return ctx.drawImage(image.img, image.x || 0, image.y || 0);
+			});
+
+			if (options.Canvas && options.format === 'image/jpeg') {
+				// Resolve data URI for node-canvas jpeg async
+				return new Promise(function (resolve) {
+					canvas.toDataURL(options.format, {
+						quality: options.quality,
+						progressive: false
+					}, function (err, jpeg) {
+						if (err) {
+							throw err;
+						}
+						resolve(jpeg);
+					});
+				});
+			}
+
+			// Resolve all other data URIs sync
+			return canvas.toDataURL(options.format, options.quality);
+		}));
+});
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (mergeImages);
+//# sourceMappingURL=index.es2015.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/popper.js/dist/esm/popper.js":
 /*!***************************************************!*\
   !*** ./node_modules/popper.js/dist/esm/popper.js ***!
@@ -41207,6 +41499,515 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/signature_pad/dist/signature_pad.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/signature_pad/dist/signature_pad.js ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/*!
+ * Signature Pad v3.0.0-beta.4 | https://github.com/szimek/signature_pad
+ * (c) 2020 Szymon Nowak | Released under the MIT license
+ */
+
+class Point {
+    constructor(x, y, time) {
+        this.x = x;
+        this.y = y;
+        this.time = time || Date.now();
+    }
+    distanceTo(start) {
+        return Math.sqrt(Math.pow(this.x - start.x, 2) + Math.pow(this.y - start.y, 2));
+    }
+    equals(other) {
+        return this.x === other.x && this.y === other.y && this.time === other.time;
+    }
+    velocityFrom(start) {
+        return this.time !== start.time
+            ? this.distanceTo(start) / (this.time - start.time)
+            : 0;
+    }
+}
+
+class Bezier {
+    constructor(startPoint, control2, control1, endPoint, startWidth, endWidth) {
+        this.startPoint = startPoint;
+        this.control2 = control2;
+        this.control1 = control1;
+        this.endPoint = endPoint;
+        this.startWidth = startWidth;
+        this.endWidth = endWidth;
+    }
+    static fromPoints(points, widths) {
+        const c2 = this.calculateControlPoints(points[0], points[1], points[2]).c2;
+        const c3 = this.calculateControlPoints(points[1], points[2], points[3]).c1;
+        return new Bezier(points[1], c2, c3, points[2], widths.start, widths.end);
+    }
+    static calculateControlPoints(s1, s2, s3) {
+        const dx1 = s1.x - s2.x;
+        const dy1 = s1.y - s2.y;
+        const dx2 = s2.x - s3.x;
+        const dy2 = s2.y - s3.y;
+        const m1 = { x: (s1.x + s2.x) / 2.0, y: (s1.y + s2.y) / 2.0 };
+        const m2 = { x: (s2.x + s3.x) / 2.0, y: (s2.y + s3.y) / 2.0 };
+        const l1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
+        const l2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+        const dxm = m1.x - m2.x;
+        const dym = m1.y - m2.y;
+        const k = l2 / (l1 + l2);
+        const cm = { x: m2.x + dxm * k, y: m2.y + dym * k };
+        const tx = s2.x - cm.x;
+        const ty = s2.y - cm.y;
+        return {
+            c1: new Point(m1.x + tx, m1.y + ty),
+            c2: new Point(m2.x + tx, m2.y + ty),
+        };
+    }
+    length() {
+        const steps = 10;
+        let length = 0;
+        let px;
+        let py;
+        for (let i = 0; i <= steps; i += 1) {
+            const t = i / steps;
+            const cx = this.point(t, this.startPoint.x, this.control1.x, this.control2.x, this.endPoint.x);
+            const cy = this.point(t, this.startPoint.y, this.control1.y, this.control2.y, this.endPoint.y);
+            if (i > 0) {
+                const xdiff = cx - px;
+                const ydiff = cy - py;
+                length += Math.sqrt(xdiff * xdiff + ydiff * ydiff);
+            }
+            px = cx;
+            py = cy;
+        }
+        return length;
+    }
+    point(t, start, c1, c2, end) {
+        return (start * (1.0 - t) * (1.0 - t) * (1.0 - t))
+            + (3.0 * c1 * (1.0 - t) * (1.0 - t) * t)
+            + (3.0 * c2 * (1.0 - t) * t * t)
+            + (end * t * t * t);
+    }
+}
+
+function throttle(fn, wait = 250) {
+    let previous = 0;
+    let timeout = null;
+    let result;
+    let storedContext;
+    let storedArgs;
+    const later = () => {
+        previous = Date.now();
+        timeout = null;
+        result = fn.apply(storedContext, storedArgs);
+        if (!timeout) {
+            storedContext = null;
+            storedArgs = [];
+        }
+    };
+    return function wrapper(...args) {
+        const now = Date.now();
+        const remaining = wait - (now - previous);
+        storedContext = this;
+        storedArgs = args;
+        if (remaining <= 0 || remaining > wait) {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            previous = now;
+            result = fn.apply(storedContext, storedArgs);
+            if (!timeout) {
+                storedContext = null;
+                storedArgs = [];
+            }
+        }
+        else if (!timeout) {
+            timeout = window.setTimeout(later, remaining);
+        }
+        return result;
+    };
+}
+
+class SignaturePad {
+    constructor(canvas, options = {}) {
+        this.canvas = canvas;
+        this.options = options;
+        this._handleMouseDown = (event) => {
+            if (event.which === 1) {
+                this._mouseButtonDown = true;
+                this._strokeBegin(event);
+            }
+        };
+        this._handleMouseMove = (event) => {
+            if (this._mouseButtonDown) {
+                this._strokeMoveUpdate(event);
+            }
+        };
+        this._handleMouseUp = (event) => {
+            if (event.which === 1 && this._mouseButtonDown) {
+                this._mouseButtonDown = false;
+                this._strokeEnd(event);
+            }
+        };
+        this._handleTouchStart = (event) => {
+            event.preventDefault();
+            if (event.targetTouches.length === 1) {
+                const touch = event.changedTouches[0];
+                this._strokeBegin(touch);
+            }
+        };
+        this._handleTouchMove = (event) => {
+            event.preventDefault();
+            const touch = event.targetTouches[0];
+            this._strokeMoveUpdate(touch);
+        };
+        this._handleTouchEnd = (event) => {
+            const wasCanvasTouched = event.target === this.canvas;
+            if (wasCanvasTouched) {
+                event.preventDefault();
+                const touch = event.changedTouches[0];
+                this._strokeEnd(touch);
+            }
+        };
+        this.velocityFilterWeight = options.velocityFilterWeight || 0.7;
+        this.minWidth = options.minWidth || 0.5;
+        this.maxWidth = options.maxWidth || 2.5;
+        this.throttle = ('throttle' in options ? options.throttle : 16);
+        this.minDistance = ('minDistance' in options
+            ? options.minDistance
+            : 5);
+        this.dotSize =
+            options.dotSize ||
+                function dotSize() {
+                    return (this.minWidth + this.maxWidth) / 2;
+                };
+        this.penColor = options.penColor || 'black';
+        this.backgroundColor = options.backgroundColor || 'rgba(0,0,0,0)';
+        this.onBegin = options.onBegin;
+        this.onEnd = options.onEnd;
+        this._strokeMoveUpdate = this.throttle
+            ? throttle(SignaturePad.prototype._strokeUpdate, this.throttle)
+            : SignaturePad.prototype._strokeUpdate;
+        this._ctx = canvas.getContext('2d');
+        this.clear();
+        this.on();
+    }
+    clear() {
+        const { _ctx: ctx, canvas } = this;
+        ctx.fillStyle = this.backgroundColor;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        this._data = [];
+        this._reset();
+        this._isEmpty = true;
+    }
+    fromDataURL(dataUrl, options = {}, callback) {
+        const image = new Image();
+        const ratio = options.ratio || window.devicePixelRatio || 1;
+        const width = options.width || this.canvas.width / ratio;
+        const height = options.height || this.canvas.height / ratio;
+        this._reset();
+        image.onload = () => {
+            this._ctx.drawImage(image, 0, 0, width, height);
+            if (callback) {
+                callback();
+            }
+        };
+        image.onerror = (error) => {
+            if (callback) {
+                callback(error);
+            }
+        };
+        image.src = dataUrl;
+        this._isEmpty = false;
+    }
+    toDataURL(type = 'image/png', encoderOptions) {
+        switch (type) {
+            case 'image/svg+xml':
+                return this._toSVG();
+            default:
+                return this.canvas.toDataURL(type, encoderOptions);
+        }
+    }
+    on() {
+        this.canvas.style.touchAction = 'none';
+        this.canvas.style.msTouchAction = 'none';
+        if (window.PointerEvent) {
+            this._handlePointerEvents();
+        }
+        else {
+            this._handleMouseEvents();
+            if ('ontouchstart' in window) {
+                this._handleTouchEvents();
+            }
+        }
+    }
+    off() {
+        this.canvas.style.touchAction = 'auto';
+        this.canvas.style.msTouchAction = 'auto';
+        this.canvas.removeEventListener('pointerdown', this._handleMouseDown);
+        this.canvas.removeEventListener('pointermove', this._handleMouseMove);
+        document.removeEventListener('pointerup', this._handleMouseUp);
+        this.canvas.removeEventListener('mousedown', this._handleMouseDown);
+        this.canvas.removeEventListener('mousemove', this._handleMouseMove);
+        document.removeEventListener('mouseup', this._handleMouseUp);
+        this.canvas.removeEventListener('touchstart', this._handleTouchStart);
+        this.canvas.removeEventListener('touchmove', this._handleTouchMove);
+        this.canvas.removeEventListener('touchend', this._handleTouchEnd);
+    }
+    isEmpty() {
+        return this._isEmpty;
+    }
+    fromData(pointGroups) {
+        this.clear();
+        this._fromData(pointGroups, ({ color, curve }) => this._drawCurve({ color, curve }), ({ color, point }) => this._drawDot({ color, point }));
+        this._data = pointGroups;
+    }
+    toData() {
+        return this._data;
+    }
+    _strokeBegin(event) {
+        const newPointGroup = {
+            color: this.penColor,
+            points: [],
+        };
+        if (typeof this.onBegin === 'function') {
+            this.onBegin(event);
+        }
+        this._data.push(newPointGroup);
+        this._reset();
+        this._strokeUpdate(event);
+    }
+    _strokeUpdate(event) {
+        if (this._data.length === 0) {
+            this._strokeBegin(event);
+            return;
+        }
+        const x = event.clientX;
+        const y = event.clientY;
+        const point = this._createPoint(x, y);
+        const lastPointGroup = this._data[this._data.length - 1];
+        const lastPoints = lastPointGroup.points;
+        const lastPoint = lastPoints.length > 0 && lastPoints[lastPoints.length - 1];
+        const isLastPointTooClose = lastPoint
+            ? point.distanceTo(lastPoint) <= this.minDistance
+            : false;
+        const color = lastPointGroup.color;
+        if (!lastPoint || !(lastPoint && isLastPointTooClose)) {
+            const curve = this._addPoint(point);
+            if (!lastPoint) {
+                this._drawDot({ color, point });
+            }
+            else if (curve) {
+                this._drawCurve({ color, curve });
+            }
+            lastPoints.push({
+                time: point.time,
+                x: point.x,
+                y: point.y,
+            });
+        }
+    }
+    _strokeEnd(event) {
+        this._strokeUpdate(event);
+        if (typeof this.onEnd === 'function') {
+            this.onEnd(event);
+        }
+    }
+    _handlePointerEvents() {
+        this._mouseButtonDown = false;
+        this.canvas.addEventListener('pointerdown', this._handleMouseDown);
+        this.canvas.addEventListener('pointermove', this._handleMouseMove);
+        document.addEventListener('pointerup', this._handleMouseUp);
+    }
+    _handleMouseEvents() {
+        this._mouseButtonDown = false;
+        this.canvas.addEventListener('mousedown', this._handleMouseDown);
+        this.canvas.addEventListener('mousemove', this._handleMouseMove);
+        document.addEventListener('mouseup', this._handleMouseUp);
+    }
+    _handleTouchEvents() {
+        this.canvas.addEventListener('touchstart', this._handleTouchStart);
+        this.canvas.addEventListener('touchmove', this._handleTouchMove);
+        this.canvas.addEventListener('touchend', this._handleTouchEnd);
+    }
+    _reset() {
+        this._lastPoints = [];
+        this._lastVelocity = 0;
+        this._lastWidth = (this.minWidth + this.maxWidth) / 2;
+        this._ctx.fillStyle = this.penColor;
+    }
+    _createPoint(x, y) {
+        const rect = this.canvas.getBoundingClientRect();
+        return new Point(x - rect.left, y - rect.top, new Date().getTime());
+    }
+    _addPoint(point) {
+        const { _lastPoints } = this;
+        _lastPoints.push(point);
+        if (_lastPoints.length > 2) {
+            if (_lastPoints.length === 3) {
+                _lastPoints.unshift(_lastPoints[0]);
+            }
+            const widths = this._calculateCurveWidths(_lastPoints[1], _lastPoints[2]);
+            const curve = Bezier.fromPoints(_lastPoints, widths);
+            _lastPoints.shift();
+            return curve;
+        }
+        return null;
+    }
+    _calculateCurveWidths(startPoint, endPoint) {
+        const velocity = this.velocityFilterWeight * endPoint.velocityFrom(startPoint) +
+            (1 - this.velocityFilterWeight) * this._lastVelocity;
+        const newWidth = this._strokeWidth(velocity);
+        const widths = {
+            end: newWidth,
+            start: this._lastWidth,
+        };
+        this._lastVelocity = velocity;
+        this._lastWidth = newWidth;
+        return widths;
+    }
+    _strokeWidth(velocity) {
+        return Math.max(this.maxWidth / (velocity + 1), this.minWidth);
+    }
+    _drawCurveSegment(x, y, width) {
+        const ctx = this._ctx;
+        ctx.moveTo(x, y);
+        ctx.arc(x, y, width, 0, 2 * Math.PI, false);
+        this._isEmpty = false;
+    }
+    _drawCurve({ color, curve }) {
+        const ctx = this._ctx;
+        const widthDelta = curve.endWidth - curve.startWidth;
+        const drawSteps = Math.floor(curve.length()) * 2;
+        ctx.beginPath();
+        ctx.fillStyle = color;
+        for (let i = 0; i < drawSteps; i += 1) {
+            const t = i / drawSteps;
+            const tt = t * t;
+            const ttt = tt * t;
+            const u = 1 - t;
+            const uu = u * u;
+            const uuu = uu * u;
+            let x = uuu * curve.startPoint.x;
+            x += 3 * uu * t * curve.control1.x;
+            x += 3 * u * tt * curve.control2.x;
+            x += ttt * curve.endPoint.x;
+            let y = uuu * curve.startPoint.y;
+            y += 3 * uu * t * curve.control1.y;
+            y += 3 * u * tt * curve.control2.y;
+            y += ttt * curve.endPoint.y;
+            const width = Math.min(curve.startWidth + ttt * widthDelta, this.maxWidth);
+            this._drawCurveSegment(x, y, width);
+        }
+        ctx.closePath();
+        ctx.fill();
+    }
+    _drawDot({ color, point, }) {
+        const ctx = this._ctx;
+        const width = typeof this.dotSize === 'function' ? this.dotSize() : this.dotSize;
+        ctx.beginPath();
+        this._drawCurveSegment(point.x, point.y, width);
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+    }
+    _fromData(pointGroups, drawCurve, drawDot) {
+        for (const group of pointGroups) {
+            const { color, points } = group;
+            if (points.length > 1) {
+                for (let j = 0; j < points.length; j += 1) {
+                    const basicPoint = points[j];
+                    const point = new Point(basicPoint.x, basicPoint.y, basicPoint.time);
+                    this.penColor = color;
+                    if (j === 0) {
+                        this._reset();
+                    }
+                    const curve = this._addPoint(point);
+                    if (curve) {
+                        drawCurve({ color, curve });
+                    }
+                }
+            }
+            else {
+                this._reset();
+                drawDot({
+                    color,
+                    point: points[0],
+                });
+            }
+        }
+    }
+    _toSVG() {
+        const pointGroups = this._data;
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        const minX = 0;
+        const minY = 0;
+        const maxX = this.canvas.width / ratio;
+        const maxY = this.canvas.height / ratio;
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', this.canvas.width.toString());
+        svg.setAttribute('height', this.canvas.height.toString());
+        this._fromData(pointGroups, ({ color, curve }) => {
+            const path = document.createElement('path');
+            if (!isNaN(curve.control1.x) &&
+                !isNaN(curve.control1.y) &&
+                !isNaN(curve.control2.x) &&
+                !isNaN(curve.control2.y)) {
+                const attr = `M ${curve.startPoint.x.toFixed(3)},${curve.startPoint.y.toFixed(3)} ` +
+                    `C ${curve.control1.x.toFixed(3)},${curve.control1.y.toFixed(3)} ` +
+                    `${curve.control2.x.toFixed(3)},${curve.control2.y.toFixed(3)} ` +
+                    `${curve.endPoint.x.toFixed(3)},${curve.endPoint.y.toFixed(3)}`;
+                path.setAttribute('d', attr);
+                path.setAttribute('stroke-width', (curve.endWidth * 2.25).toFixed(3));
+                path.setAttribute('stroke', color);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(path);
+            }
+        }, ({ color, point }) => {
+            const circle = document.createElement('circle');
+            const dotSize = typeof this.dotSize === 'function' ? this.dotSize() : this.dotSize;
+            circle.setAttribute('r', dotSize.toString());
+            circle.setAttribute('cx', point.x.toString());
+            circle.setAttribute('cy', point.y.toString());
+            circle.setAttribute('fill', color);
+            svg.appendChild(circle);
+        });
+        const prefix = 'data:image/svg+xml;base64,';
+        const header = '<svg' +
+            ' xmlns="http://www.w3.org/2000/svg"' +
+            ' xmlns:xlink="http://www.w3.org/1999/xlink"' +
+            ` viewBox="${minX} ${minY} ${maxX} ${maxY}"` +
+            ` width="${maxX}"` +
+            ` height="${maxY}"` +
+            '>';
+        let body = svg.innerHTML;
+        if (body === undefined) {
+            const dummy = document.createElement('dummy');
+            const nodes = svg.childNodes;
+            dummy.innerHTML = '';
+            for (let i = 0; i < nodes.length; i += 1) {
+                dummy.appendChild(nodes[i].cloneNode(true));
+            }
+            body = dummy.innerHTML;
+        }
+        const footer = '</svg>';
+        const data = header + body + footer;
+        return prefix + btoa(data);
+    }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SignaturePad);
+//# sourceMappingURL=signature_pad.js.map
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/settings/components/diagnostics.vue?vue&type=style&index=0&lang=css&":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/settings/components/diagnostics.vue?vue&type=style&index=0&lang=css& ***!
@@ -41959,435 +42760,489 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
-        _c(
-          "div",
-          { staticClass: "tab-content" },
-          [
-            _c("p", [
-              _vm._v("Pelo presente instrumento particular, por um lado: ")
-            ]),
-            _c("br"),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "Sr(a)Janina Naceviciene Casagrande, CPF 310.097.668-13, doravante denominada (a) simplesmente CONTRATANTE;\n                    e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,\n                    cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao CONTRATANTE,\n                    doravante denominado simplesmente RESPONSÁVEL SOLIDÁRIO;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("e por outro:")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                     816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                     neste ato representada nos termos do estatuto por Rodrigo Leite Vilela, portador da cédula de identidade nº 23.806.305-7,\n                     inscrito no CPF/MF sob o nº  471.126.976-20  doravante denominada simplesmente CONTRATADA. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "As partes acima identificadas têm, entre si, justo e acertado este Contrato de Prestação de Serviços (“Contrato”),\n                    conforme determina o artigo 35 da Lei nº 10.741, de 1º de outubro de 2003 – Estatuto do Idoso e demais legislação aplicável à espécie,\n                    que se regerá pelas cláusulas seguintes e pelas condições dispostas nas normativas a seguir descritas:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("1. DO OBJETO")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "1.1\tA CONTRATADA disponibiliza alojamentos para pessoas acima de 60 anos, oferecendo infra-estrutura e recursos humanos adequados,\n                     hospedagem e atenção à saúde, dentro da legislação vigente. A CONTRATADA tem disponível em suas dependências dormitórios com diferentes\n                     números de leitos, de forma que a acomodação objeto deste Contrato está especificada na cláusula 1.3. abaixo."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "1.2 Ciente o CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO das condições que a CONTRATADA oferece e do Regimento Interno que integra este Contrato,\n                     neste ato o CONTRATANTE é admitido para residir no Residencial da CONTRATADA, no endereço indicado no preâmbulo deste Contrato,\n                     no seguinte tipo de acomodação:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("1.3\tApartamento  08    com 02 leitos.")]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                     a CONTRATADA disponibilizará para o CONTRATANTE:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.1 Serviços de hospedagem, nas condições descritas acima e que permita o adequado recebimento de visitas;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.2 Alimentação, por meio de seis refeições diárias balanceadas e em quantidades compatíveis com suas necessidades energéticas e nutricionais;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.3 Lavagem de suas roupas, limitado a 90 peças por mês."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.4 Auxílio na realização do seu asseio e higiene pessoal, na medida das suas necessidades e capacidades;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("2.1.5 Serviços contínuos de enfermagem;")]),
-            _vm._v(" "),
-            _c("p", [_vm._v("2.1.6 Acompanhamento médico, ")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.7 Promoção de atividades educacionais, esportivas, culturais e de lazer, promovendo, ainda, assistência religiosa aos idosos que assim desejarem;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("2.1.8 Convivência comunitária; e")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.1.9 Atendimento psicossocial ao CONTRATANTE e à sua família e RESPONSÁVEL SOLIDÁRIO."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.2 Dependendo das necessidades do CONTRATANTE, de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da CONTRATADA, serviços extras de atenção à saúde poderão ser prestados pela CONTRATADA, que incluem, mas não se limitam a:"
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do CONTRATANTE, sendo facultada a livre prestação dos serviços extras por terceiros"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.5 Na hipótese de CONTRATANTE capaz, sua saída ou recebimento de visitas não prescinde de autorização da CONTRATADA, devendo, em qualquer caso, serem observadas as regras do Regimento Interno da CONTRATADA."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.6 Para fins deste Contrato, a CONTRATADA compromete-se a observar as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("2.7 A CONTRATADA compromete-se, ainda, a:")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de CONTRATANTE portador de doenças infecto-contagiosas;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do CONTRATANTE, RESPONSÁVEL SOLIDÁRIO, parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e RESPONSÁVEL SOLIDÁRIO."
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [
-              _vm._v("3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO")
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.1 O CONTRANTE e/ou RESPONSÁVEL SOLIDÁRIO comprometem-se a:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.1.1 Pagar pontualmente as mensalidades e todos os serviços extras;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [_vm._v("3.1.2 Respeitar o Regimento Interno; e")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.1.3 Manter o alojamento do CONTRATANTE em ordem e em condições de habitabilidade."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.2 O RESPONSÁVEL SOLIDÁRIO compromete-se a realizar visitas periódicas ao CONTRATANTE, no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo CONTRATANTE como por suas visitas."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.3 O RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo CONTRATANTE perante àquelas instituições de saúde."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.4 Em caso de internação, o RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE no tratamento e procedimentos a serem adotados."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.5 No ato de alta hospitalar o CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do CONTRATANTE e as necessidades de atendimento especializado."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.6 O CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a obter e enviar relatório médico à CONTRATADA, descrevendo o estado geral de saúde do CONTRATANTE, os procedimentos realizados e os cuidados a serem adotados."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o RESPONSÁVEL SOLIDÁRIO compromete-se a informar a CONTRATADA a respeito das seguintes situações:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v("3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: ")
-            ]),
-            _vm._v(" "),
-            _vm._m(2),
-            _vm._v(" "),
-            _c("p", [_vm._v("3.7.2 Convênio médico do CONTRATANTE;")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do CONTRATANTE;"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.7.4 Os procedimentos a serem adotados em caso falecimento do CONTRATANTE; e"
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.7.5 Entregar para análise e aprovação da CONTRATADA, a lista de bens pessoais do CONTRATANTE, que serão deixados para uso durante a vigência do Contrato. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do CONTRATANTE, o RESPONSÁVEL SOLIDÁRIO compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "3.9 O RESPONSÁVEL SOLIDÁRIO compromete-se a providenciar a mudança do CONTRATANTE e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "4.1 O prazo deste Contrato é indeterminado, podendo ser renovado automaticamente havendo interesse entre as partes. Também pode ser rescindido a qualquer tempo, por qualquer das partes após comunicação por escrito da outra parte, com antecedência de 30 dias corridos."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "4.2 O Contrato também poderá ser rescindido de pleno direito pela CONTRATADA caso o CONTRATANTE deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do CONTRATANTE para além da capacidade de prestação de serviços adequados ao caso pelo CONTRATADA, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "4.4 Na hipótese de término do Contrato no curso do mês, a CONTRATADA compromete-se a reembolsar o CONTRATANTE dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.1 O valor  dos serviços objeto do Contrato é de R$6.500,00 (seis mil e quinhentos Reais) por mes, a ser pago antecipadamente até o dia 10 de cada mês.    "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.1.1 Neste ato, a CONTRATANTE expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:"
-              )
-            ]),
-            _vm._v(" "),
-            _c("ui", [
-              _c("li", [_vm._v("Multa de 10% (dez por cento);")]),
-              _vm._v(" "),
-              _c("li", [
-                _vm._v(
-                  "Atualização monetária pelo índice IGP-M da FGV, ou qualquer outro que venha a substituí-lo; e"
-                )
-              ]),
-              _vm._v(" "),
-              _c("li", [
-                _vm._v("Juros de 1% (um por cento) ao mês, pro rata die.")
-              ])
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a CONTRATADA a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "6.1 Neste ato, a CONTRATADA entrega para o CONTRATANTE e para o RESPONSÁVEL SOLIDÁRIO, cópias do Regimento Interno da CONTRATADA e reconhecem que leram o seu conteúdo, e o aceitam como parte integrante deste Contrato. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao CONTRATANTE e ao RESPONSÁVEL SOLIDÁRIO com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.1 O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO reconhecem que a CONTRATADA é entidade idônea, que desempenha da melhor forma possível as atividades necessárias ao pleno cumprimento deste Contrato."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.2 As partes aceitam a avaliação médica inicial realizada pelo médico geriatra da CONTRATADA a respeito do estado geral de saúde do CONTRATANTE, com base na anamnese realizada, incluindo as informações prestadas pelo RESPONSÁVEL SOLIDÁRIO, nos termos da Cláusula 3.7 acima."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do CONTRATANTE implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do CONTRATANTE, as seguintes correções se aplicarão aos valores contratuais:"
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(3),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "NB: por caráter temporário entende-se uma situação transitória de convalescença de no máximo 180 dias. Caso se caracterize uma transição definitiva para GRAU III, a CONTRATADA será levada a solicitar a rescisão deste Contrato."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.2.2 O CONTRATANTE autoriza desde já a CONTRATADA a prestar-lhe os primeiros socorros em caso de necessidade premente, e manifesta a sua concordância com o tratamento emergencial prescrito pela equipe de saúde que o atender, de acordo com o disposto no item 3.4 do Regimento Interno. "
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo CONTRATANTE, as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO, poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO expressa e automaticamente eximem a CONTRATADA de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.3 As partes não poderão ceder, total ou parcialmente, os direitos ou obrigações assumidas no presente contrato, salvo se expressamente aprovado pela outra parte."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.4 Qualquer tolerância das partes relativamente ao cumprimento das obrigações aqui assumidas não importará em novação ou alteração, tácita ou expressa, nem caracterizará renúncia de qualquer direito."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "7.5 Nenhuma das partes será responsável ou será considerada faltosa pelo descumprimento de qualquer cláusula deste Contrato, se impedida de desempenhar suas obrigações por motivos de força maior ou caso fortuito, incluindo, mas não se limitando a greves, incêndios, terremotos, guerras ou outras contingências além da previsão ou controle das partes, na forma do artigo 393 do Código Civil."
-              )
-            ]),
-            _vm._v(" "),
-            _c("h4", [_vm._v("8. FORO")]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "8.1 As partes elegem o Foro Central da Comarca de Barueri para dirimir as pendências que surgirem deste Contrato."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores."
-              )
-            ]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v(
-                "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
-              )
-            ])
-          ],
-          1
-        )
+        _c("div", { staticClass: "tab-content" }, [
+          _c("p", [
+            _vm._v("Pelo presente instrumento particular, por um lado: ")
+          ]),
+          _c("br"),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Sr(a)Janina Naceviciene Casagrande, CPF 310.097.668-13, doravante denominada (a) simplesmente CONTRATANTE;\n                    e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,\n                    cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao CONTRATANTE,\n                    doravante denominado simplesmente RESPONSÁVEL SOLIDÁRIO;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("e por outro:")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                     816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                     neste ato representada nos termos do estatuto por Rodrigo Leite Vilela, portador da cédula de identidade nº 23.806.305-7,\n                     inscrito no CPF/MF sob o nº  471.126.976-20  doravante denominada simplesmente CONTRATADA. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "As partes acima identificadas têm, entre si, justo e acertado este Contrato de Prestação de Serviços (“Contrato”),\n                    conforme determina o artigo 35 da Lei nº 10.741, de 1º de outubro de 2003 – Estatuto do Idoso e demais legislação aplicável à espécie,\n                    que se regerá pelas cláusulas seguintes e pelas condições dispostas nas normativas a seguir descritas:"
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("1. DO OBJETO")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "1.1\tA CONTRATADA disponibiliza alojamentos para pessoas acima de 60 anos, oferecendo infra-estrutura e recursos humanos adequados,\n                     hospedagem e atenção à saúde, dentro da legislação vigente. A CONTRATADA tem disponível em suas dependências dormitórios com diferentes\n                     números de leitos, de forma que a acomodação objeto deste Contrato está especificada na cláusula 1.3. abaixo."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "1.2 Ciente o CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO das condições que a CONTRATADA oferece e do Regimento Interno que integra este Contrato,\n                     neste ato o CONTRATANTE é admitido para residir no Residencial da CONTRATADA, no endereço indicado no preâmbulo deste Contrato,\n                     no seguinte tipo de acomodação:"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("1.3\tApartamento  08    com 02 leitos.")]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                     a CONTRATADA disponibilizará para o CONTRATANTE:"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1.1 Serviços de hospedagem, nas condições descritas acima e que permita o adequado recebimento de visitas;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1.2 Alimentação, por meio de seis refeições diárias balanceadas e em quantidades compatíveis com suas necessidades energéticas e nutricionais;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("2.1.3 Lavagem de suas roupas, limitado a 90 peças por mês.")
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1.4 Auxílio na realização do seu asseio e higiene pessoal, na medida das suas necessidades e capacidades;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("2.1.5 Serviços contínuos de enfermagem;")]),
+          _vm._v(" "),
+          _c("p", [_vm._v("2.1.6 Acompanhamento médico, ")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1.7 Promoção de atividades educacionais, esportivas, culturais e de lazer, promovendo, ainda, assistência religiosa aos idosos que assim desejarem;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("2.1.8 Convivência comunitária; e")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.1.9 Atendimento psicossocial ao CONTRATANTE e à sua família e RESPONSÁVEL SOLIDÁRIO."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.2 Dependendo das necessidades do CONTRATANTE, de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da CONTRATADA, serviços extras de atenção à saúde poderão ser prestados pela CONTRATADA, que incluem, mas não se limitam a:"
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do CONTRATANTE, sendo facultada a livre prestação dos serviços extras por terceiros"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.5 Na hipótese de CONTRATANTE capaz, sua saída ou recebimento de visitas não prescinde de autorização da CONTRATADA, devendo, em qualquer caso, serem observadas as regras do Regimento Interno da CONTRATADA."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.6 Para fins deste Contrato, a CONTRATADA compromete-se a observar as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("2.7 A CONTRATADA compromete-se, ainda, a:")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de CONTRATANTE portador de doenças infecto-contagiosas;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do CONTRATANTE, RESPONSÁVEL SOLIDÁRIO, parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e RESPONSÁVEL SOLIDÁRIO."
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [
+            _vm._v("3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO")
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.1 O CONTRANTE e/ou RESPONSÁVEL SOLIDÁRIO comprometem-se a:"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.1.1 Pagar pontualmente as mensalidades e todos os serviços extras;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [_vm._v("3.1.2 Respeitar o Regimento Interno; e")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.1.3 Manter o alojamento do CONTRATANTE em ordem e em condições de habitabilidade."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.2 O RESPONSÁVEL SOLIDÁRIO compromete-se a realizar visitas periódicas ao CONTRATANTE, no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo CONTRATANTE como por suas visitas."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.3 O RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo CONTRATANTE perante àquelas instituições de saúde."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.4 Em caso de internação, o RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE no tratamento e procedimentos a serem adotados."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.5 No ato de alta hospitalar o CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do CONTRATANTE e as necessidades de atendimento especializado."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.6 O CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a obter e enviar relatório médico à CONTRATADA, descrevendo o estado geral de saúde do CONTRATANTE, os procedimentos realizados e os cuidados a serem adotados."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o RESPONSÁVEL SOLIDÁRIO compromete-se a informar a CONTRATADA a respeito das seguintes situações:"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: ")
+          ]),
+          _vm._v(" "),
+          _vm._m(2),
+          _vm._v(" "),
+          _c("p", [_vm._v("3.7.2 Convênio médico do CONTRATANTE;")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do CONTRATANTE;"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.7.4 Os procedimentos a serem adotados em caso falecimento do CONTRATANTE; e"
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.7.5 Entregar para análise e aprovação da CONTRATADA, a lista de bens pessoais do CONTRATANTE, que serão deixados para uso durante a vigência do Contrato. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do CONTRATANTE, o RESPONSÁVEL SOLIDÁRIO compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "3.9 O RESPONSÁVEL SOLIDÁRIO compromete-se a providenciar a mudança do CONTRATANTE e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "4.1 O prazo deste Contrato é indeterminado, podendo ser renovado automaticamente havendo interesse entre as partes. Também pode ser rescindido a qualquer tempo, por qualquer das partes após comunicação por escrito da outra parte, com antecedência de 30 dias corridos."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "4.2 O Contrato também poderá ser rescindido de pleno direito pela CONTRATADA caso o CONTRATANTE deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do CONTRATANTE para além da capacidade de prestação de serviços adequados ao caso pelo CONTRATADA, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "4.4 Na hipótese de término do Contrato no curso do mês, a CONTRATADA compromete-se a reembolsar o CONTRATANTE dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.1 O valor  dos serviços objeto do Contrato é de R$6.500,00 (seis mil e quinhentos Reais) por mes, a ser pago antecipadamente até o dia 10 de cada mês.    "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.1.1 Neste ato, a CONTRATANTE expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:"
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(3),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a CONTRATADA a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "6.1 Neste ato, a CONTRATADA entrega para o CONTRATANTE e para o RESPONSÁVEL SOLIDÁRIO, cópias do Regimento Interno da CONTRATADA e reconhecem que leram o seu conteúdo, e o aceitam como parte integrante deste Contrato. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao CONTRATANTE e ao RESPONSÁVEL SOLIDÁRIO com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.1 O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO reconhecem que a CONTRATADA é entidade idônea, que desempenha da melhor forma possível as atividades necessárias ao pleno cumprimento deste Contrato."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.2 As partes aceitam a avaliação médica inicial realizada pelo médico geriatra da CONTRATADA a respeito do estado geral de saúde do CONTRATANTE, com base na anamnese realizada, incluindo as informações prestadas pelo RESPONSÁVEL SOLIDÁRIO, nos termos da Cláusula 3.7 acima."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do CONTRATANTE implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do CONTRATANTE, as seguintes correções se aplicarão aos valores contratuais:"
+            )
+          ]),
+          _vm._v(" "),
+          _vm._m(4),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "NB: por caráter temporário entende-se uma situação transitória de convalescença de no máximo 180 dias. Caso se caracterize uma transição definitiva para GRAU III, a CONTRATADA será levada a solicitar a rescisão deste Contrato."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.2.2 O CONTRATANTE autoriza desde já a CONTRATADA a prestar-lhe os primeiros socorros em caso de necessidade premente, e manifesta a sua concordância com o tratamento emergencial prescrito pela equipe de saúde que o atender, de acordo com o disposto no item 3.4 do Regimento Interno. "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo CONTRATANTE, as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO, poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO expressa e automaticamente eximem a CONTRATADA de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.3 As partes não poderão ceder, total ou parcialmente, os direitos ou obrigações assumidas no presente contrato, salvo se expressamente aprovado pela outra parte."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.4 Qualquer tolerância das partes relativamente ao cumprimento das obrigações aqui assumidas não importará em novação ou alteração, tácita ou expressa, nem caracterizará renúncia de qualquer direito."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "7.5 Nenhuma das partes será responsável ou será considerada faltosa pelo descumprimento de qualquer cláusula deste Contrato, se impedida de desempenhar suas obrigações por motivos de força maior ou caso fortuito, incluindo, mas não se limitando a greves, incêndios, terremotos, guerras ou outras contingências além da previsão ou controle das partes, na forma do artigo 393 do Código Civil."
+            )
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("8. FORO")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "8.1 As partes elegem o Foro Central da Comarca de Barueri para dirimir as pendências que surgirem deste Contrato."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
+            )
+          ]),
+          _vm._v(" "),
+          _c("br"),
+          _c("br"),
+          _c("br"),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("Santana de Parnaíba, 06  de  Fevereiro  de 2021 .")
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "div",
+              { staticClass: "signatures" },
+              [
+                _c("VueSignaturePad", {
+                  ref: "signaturePadContratada",
+                  staticClass: "border-bottom bg-light",
+                  attrs: {
+                    width: "500px",
+                    height: "100px",
+                    saveType: "image/png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("p", [_vm._v("Contratada: ")])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "signatures" },
+              [
+                _c("VueSignaturePad", {
+                  ref: "signaturePadContratante",
+                  staticClass: "border-bottom bg-light",
+                  attrs: {
+                    width: "500px",
+                    height: "100px",
+                    saveType: "image/png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("p", [_vm._v("Contratante: ")])
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "signatures" },
+              [
+                _c("VueSignaturePad", {
+                  ref: "signaturePadResponsavel",
+                  staticClass: "border-bottom bg-light",
+                  attrs: {
+                    width: "500px",
+                    height: "100px",
+                    saveType: "image/png"
+                  }
+                }),
+                _vm._v(" "),
+                _c("p", [_vm._v("Responsable: ")])
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c("button", { on: { click: _vm.save } }, [_vm._v("Save")]),
+            _vm._v(" "),
+            _c("button", { on: { click: _vm.undo } }, [_vm._v("Undo")])
+          ])
+        ])
       ])
     ])
   ])
@@ -42449,6 +43304,22 @@ var staticRenderFns = [
           "Surtos e outras atitudes esporádicas não compatíveis com a normalidade."
         )
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", [
+      _c("li", [_vm._v("Multa de 10% (dez por cento);")]),
+      _vm._v(" "),
+      _c("li", [
+        _vm._v(
+          "Atualização monetária pelo índice IGP-M da FGV, ou qualquer outro que venha a substituí-lo; e"
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [_vm._v("Juros de 1% (um por cento) ao mês, pro rata die.")])
     ])
   },
   function() {
@@ -42609,8 +43480,7 @@ var render = function() {
                                         id: "name",
                                         name: "name",
                                         placeholder: "Name",
-                                        required: "",
-                                        autofocus: ""
+                                        required: ""
                                       },
                                       domProps: {
                                         value: _vm.formInformation.name
@@ -54888,6 +55758,376 @@ if (inBrowser && window.Vue) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-signature-pad/dist/vue-signature-pad.esm.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/vue-signature-pad/dist/vue-signature-pad.esm.js ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var signature_pad__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! signature_pad */ "./node_modules/signature_pad/dist/signature_pad.js");
+/* harmony import */ var merge_images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! merge-images */ "./node_modules/merge-images/dist/index.es2015.js");
+
+
+
+var IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml'];
+
+var checkSaveType = function (type) { return IMAGE_TYPES.includes(type); };
+
+var DEFAULT_OPTIONS = {
+  dotSize: (0.5 + 2.5) / 2,
+  minWidth: 0.5,
+  maxWidth: 2.5,
+  throttle: 16,
+  minDistance: 5,
+  backgroundColor: 'rgba(0,0,0,0)',
+  penColor: 'black',
+  velocityFilterWeight: 0.7,
+  onBegin: function () {},
+  onEnd: function () {}
+};
+
+var convert2NonReactive = function (observerValue) { return JSON.parse(JSON.stringify(observerValue)); };
+
+var TRANSPARENT_PNG = {
+  src:
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+  x: 0,
+  y: 0
+};
+
+var script = {
+  name: 'VueSignaturePad',
+  props: {
+    width: {
+      type: String,
+      default: '100%'
+    },
+    height: {
+      type: String,
+      default: '100%'
+    },
+    customStyle: {
+      type: Object,
+      default: function () { return ({}); }
+    },
+    options: {
+      type: Object,
+      default: function () { return ({}); }
+    },
+    images: {
+      type: Array,
+      default: function () { return []; }
+    }
+  },
+  data: function () { return ({
+    signaturePad: {},
+    cacheImages: [],
+    signatureData: TRANSPARENT_PNG,
+    onResizeHandler: null
+  }); },
+  computed: {
+    propsImagesAndCustomImages: function propsImagesAndCustomImages() {
+      var nonReactiveProrpImages = convert2NonReactive(this.images);
+      var nonReactiveCachImages = convert2NonReactive(this.cacheImages);
+
+      return nonReactiveProrpImages.concat( nonReactiveCachImages);
+    }
+  },
+  watch: {
+    options: function (nextOptions) {
+      var this$1 = this;
+
+      Object.keys(nextOptions).forEach(function (option) {
+        if (this$1.signaturePad[option]) {
+          this$1.signaturePad[option] = nextOptions[option];
+        }
+      });
+    }
+  },
+  mounted: function mounted() {
+    var ref = this;
+    var options = ref.options;
+    var canvas = this.$refs.signaturePadCanvas;
+    var signaturePad = new signature_pad__WEBPACK_IMPORTED_MODULE_0__["default"](canvas, Object.assign({}, DEFAULT_OPTIONS,
+      options));
+    this.signaturePad = signaturePad;
+
+    this.onResizeHandler = this.resizeCanvas.bind(this);
+
+    window.addEventListener('resize', this.onResizeHandler, false);
+
+    this.resizeCanvas();
+  },
+  beforeDestroy: function beforeDestroy() {
+    if (this.onResizeHandler) {
+      window.removeEventListener('resize', this.onResizeHandler, false);
+    }
+  },
+  methods: {
+    resizeCanvas: function resizeCanvas() {
+      var canvas = this.$refs.signaturePadCanvas;
+      var data = this.signaturePad.toData();
+      var ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+      canvas.width = canvas.offsetWidth * ratio;
+      canvas.height = canvas.offsetHeight * ratio;
+      canvas.getContext('2d').scale(ratio, ratio);
+
+      this.signaturePad.clear();
+      this.signatureData = TRANSPARENT_PNG;
+      this.signaturePad.fromData(data);
+    },
+    saveSignature: function saveSignature(type, encoderOptions) {
+      if ( type === void 0 ) type = IMAGE_TYPES[0];
+
+      var ref = this;
+      var signaturePad = ref.signaturePad;
+      var status = { isEmpty: false, data: undefined };
+
+      if (!checkSaveType(type)) {
+        var imageTypesString = IMAGE_TYPES.join(', ');
+        throw new Error(
+          ("The Image type is incorrect! We are support " + imageTypesString + " types.")
+        );
+      }
+
+      if (signaturePad.isEmpty()) {
+        return Object.assign({}, status,
+          {isEmpty: true});
+      } else {
+        this.signatureData = signaturePad.toDataURL(type, encoderOptions);
+
+        return Object.assign({}, status,
+          {data: this.signatureData});
+      }
+    },
+    undoSignature: function undoSignature() {
+      var ref = this;
+      var signaturePad = ref.signaturePad;
+      var record = signaturePad.toData();
+
+      if (record) {
+        return signaturePad.fromData(record.slice(0, -1));
+      }
+    },
+    mergeImageAndSignature: function mergeImageAndSignature(customSignature) {
+      this.signatureData = customSignature;
+
+      return Object(merge_images__WEBPACK_IMPORTED_MODULE_1__["default"])(( this.images ).concat( this.cacheImages,
+        [this.signatureData]
+      ));
+    },
+    addImages: function addImages(images) {
+      if ( images === void 0 ) images = [];
+
+      this.cacheImages = ( this.cacheImages ).concat( images);
+
+      return Object(merge_images__WEBPACK_IMPORTED_MODULE_1__["default"])(( this.images ).concat( this.cacheImages,
+        [this.signatureData]
+      ));
+    },
+    fromDataURL: function fromDataURL(data, options, callback) {
+      if ( options === void 0 ) options = {};
+
+      return this.signaturePad.fromDataURL(data, options, callback);
+    },
+    fromData: function fromData(data) {
+      return this.signaturePad.fromData(data);
+    },
+    toData: function toData() {
+      return this.signaturePad.toData();
+    },
+    lockSignaturePad: function lockSignaturePad() {
+      return this.signaturePad.off();
+    },
+    openSignaturePad: function openSignaturePad() {
+      return this.signaturePad.on();
+    },
+    isEmpty: function isEmpty() {
+      return this.signaturePad.isEmpty();
+    },
+    getPropImagesAndCacheImages: function getPropImagesAndCacheImages() {
+      return this.propsImagesAndCustomImages;
+    },
+    clearCacheImages: function clearCacheImages() {
+      this.cacheImages = [];
+
+      return this.cacheImages;
+    },
+    clearSignature: function clearSignature() {
+      return this.signaturePad.clear();
+    }
+  },
+  render: function render(createElement) {
+    var ref = this;
+    var width = ref.width;
+    var height = ref.height;
+    var customStyle = ref.customStyle;
+
+    return createElement(
+      'div',
+      {
+        style: Object.assign({}, {width: width,
+          height: height},
+          customStyle)
+      },
+      [
+        createElement('canvas', {
+          style: {
+            width: '100%',
+            height: '100%'
+          },
+          ref: 'signaturePadCanvas'
+        })
+      ]
+    );
+  }
+};
+
+function normalizeComponent(template, style, script, scopeId, isFunctionalTemplate, moduleIdentifier /* server only */, shadowMode, createInjector, createInjectorSSR, createInjectorShadow) {
+    if (typeof shadowMode !== 'boolean') {
+        createInjectorSSR = createInjector;
+        createInjector = shadowMode;
+        shadowMode = false;
+    }
+    // Vue.extend constructor export interop.
+    const options = typeof script === 'function' ? script.options : script;
+    // render functions
+    if (template && template.render) {
+        options.render = template.render;
+        options.staticRenderFns = template.staticRenderFns;
+        options._compiled = true;
+        // functional template
+        if (isFunctionalTemplate) {
+            options.functional = true;
+        }
+    }
+    // scopedId
+    if (scopeId) {
+        options._scopeId = scopeId;
+    }
+    let hook;
+    if (moduleIdentifier) {
+        // server build
+        hook = function (context) {
+            // 2.3 injection
+            context =
+                context || // cached call
+                    (this.$vnode && this.$vnode.ssrContext) || // stateful
+                    (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext); // functional
+            // 2.2 with runInNewContext: true
+            if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+                context = __VUE_SSR_CONTEXT__;
+            }
+            // inject component styles
+            if (style) {
+                style.call(this, createInjectorSSR(context));
+            }
+            // register component module identifier for async chunk inference
+            if (context && context._registeredComponents) {
+                context._registeredComponents.add(moduleIdentifier);
+            }
+        };
+        // used by ssr in case component is cached and beforeCreate
+        // never gets called
+        options._ssrRegister = hook;
+    }
+    else if (style) {
+        hook = shadowMode
+            ? function (context) {
+                style.call(this, createInjectorShadow(context, this.$root.$options.shadowRoot));
+            }
+            : function (context) {
+                style.call(this, createInjector(context));
+            };
+    }
+    if (hook) {
+        if (options.functional) {
+            // register for functional component in vue file
+            const originalRender = options.render;
+            options.render = function renderWithStyleInjection(h, context) {
+                hook.call(context);
+                return originalRender(h, context);
+            };
+        }
+        else {
+            // inject component registration as beforeCreate hook
+            const existing = options.beforeCreate;
+            options.beforeCreate = existing ? [].concat(existing, hook) : [hook];
+        }
+    }
+    return script;
+}
+
+/* script */
+var __vue_script__ = script;
+
+/* template */
+
+  /* style */
+  var __vue_inject_styles__ = undefined;
+  /* scoped */
+  var __vue_scope_id__ = undefined;
+  /* module identifier */
+  var __vue_module_identifier__ = undefined;
+  /* functional template */
+  var __vue_is_functional_template__ = undefined;
+  /* style inject */
+  
+  /* style inject SSR */
+  
+  /* style inject shadow dom */
+  
+
+  
+  var __vue_component__ = /*#__PURE__*/normalizeComponent(
+    {},
+    __vue_inject_styles__,
+    __vue_script__,
+    __vue_scope_id__,
+    __vue_is_functional_template__,
+    __vue_module_identifier__,
+    false,
+    undefined,
+    undefined,
+    undefined
+  );
+
+function install(Vue) {
+  if (install.installed) {
+    return;
+  }
+
+  install.installed = true;
+  Vue.component(__vue_component__.name, __vue_component__);
+}
+
+var plugin = {
+  install: install
+};
+
+var GlobalVue = null;
+if (typeof window !== 'undefined') {
+  GlobalVue = window.Vue;
+}
+
+if (typeof global !== 'undefined') {
+  GlobalVue = global.Vue;
+}
+
+if (GlobalVue) {
+  GlobalVue.use(plugin);
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (plugin);
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -66952,10 +68192,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _utilities_Form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utilities/Form */ "./resources/js/utilities/Form.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var v_toaster__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! v-toaster */ "./node_modules/v-toaster/dist/v-toaster.js");
-/* harmony import */ var v_toaster__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(v_toaster__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! v-toaster/dist/v-toaster.css */ "./node_modules/v-toaster/dist/v-toaster.css");
-/* harmony import */ var v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var vue_signature_pad__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-signature-pad */ "./node_modules/vue-signature-pad/dist/vue-signature-pad.esm.js");
+/* harmony import */ var v_toaster__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! v-toaster */ "./node_modules/v-toaster/dist/v-toaster.js");
+/* harmony import */ var v_toaster__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(v_toaster__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! v-toaster/dist/v-toaster.css */ "./node_modules/v-toaster/dist/v-toaster.css");
+/* harmony import */ var v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(v_toaster_dist_v_toaster_css__WEBPACK_IMPORTED_MODULE_6__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -66971,12 +68212,15 @@ window.Vue = vue__WEBPACK_IMPORTED_MODULE_0___default.a;
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 
 window.Form = _utilities_Form__WEBPACK_IMPORTED_MODULE_2__["default"];
- // TOASTER-----------
+ //pads
+
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_signature_pad__WEBPACK_IMPORTED_MODULE_4__["default"]); // TOASTER-----------
 
  // You need a specific loader for CSS files like https://github.com/webpack/css-loader
 
 
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(v_toaster__WEBPACK_IMPORTED_MODULE_4___default.a, {
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(v_toaster__WEBPACK_IMPORTED_MODULE_5___default.a, {
   timeout: 3000
 }); // END TOASTER
 
@@ -67436,15 +68680,17 @@ var Form = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contract.vue?vue&type=template&id=53b01935& */ "./resources/js/views/clients/components/contract.vue?vue&type=template&id=53b01935&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _contract_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./contract.vue?vue&type=script&lang=js& */ "./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _contract_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["render"],
   _contract_vue_vue_type_template_id_53b01935___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -67458,6 +68704,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/views/clients/components/contract.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_contract_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./contract.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/clients/components/contract.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_contract_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 

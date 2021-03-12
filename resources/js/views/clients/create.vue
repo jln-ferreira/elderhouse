@@ -69,7 +69,7 @@
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="name">Name</label>
-                                                                <input type="text" class="form-control" v-model="formInformation.name" id="name" name="name" placeholder="Name" required autofocus >
+                                                                <input type="text" class="form-control" v-model="formInformation.name" id="name" name="name" placeholder="Name" required >
                                                                 <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('name')" v-text="formInformation.errors.get('name')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
@@ -569,6 +569,7 @@
                 const data = new FormData();
                 data.append('photo', this.formInformation.photo);
                 data.append('description', this.formInformation.photoName);
+
 
                 axios.post("/photoClient", data)
                 .then(response =>{

@@ -97,11 +97,11 @@
                     <p>5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno.</p>
                     <p>5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional.</p>
                     <p>5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:</p>
-                    <ui>
+                    <ul>
                         <li>Multa de 10% (dez por cento);</li>
                         <li>Atualização monetária pelo índice IGP-M da FGV, ou qualquer outro que venha a substituí-lo; e</li>
                         <li>Juros de 1% (um por cento) ao mês, pro rata die.</li>
-                    </ui>
+                    </ul>
                     <p>5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a CONTRATADA a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. </p>
 
                     <h4>6. REGIMENTO INTERNO</h4>
@@ -129,6 +129,29 @@
                     <p>Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores.</p>
                     <p>E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas.</p>
 
+                    <br><br><br>
+                    <p>Santana de Parnaíba, 06  de  Fevereiro  de 2021 .</p>
+
+                    <div>
+                        <div class="signatures">
+                            <VueSignaturePad class="border-bottom bg-light" width="500px" height="100px" ref="signaturePadContratada" saveType="image/png"/>
+                            <p>Contratada: </p>
+                        </div>
+                        <div class="signatures">
+                            <VueSignaturePad class="border-bottom bg-light" width="500px" height="100px" ref="signaturePadContratante" saveType="image/png"/>
+                            <p>Contratante: </p>
+                        </div>
+                        <div class="signatures">
+                            <VueSignaturePad class="border-bottom bg-light" width="500px" height="100px" ref="signaturePadResponsavel" saveType="image/png"/>
+                            <p>Responsable: </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button @click="save">Save</button>
+                        <button @click="undo">Undo</button>
+                    </div>
+
 
 
                 </div>
@@ -136,3 +159,42 @@
         </div>
     </div>
 </template>
+
+<script>
+
+export default {
+    name: 'MySignaturePad',
+
+    data(){
+        return{
+
+        }
+    },
+    methods:{
+
+            undo() {
+                this.$refs.signaturePad.undoSignature();
+            },
+            save(event) {
+                console.log(event.target);
+                console.log(this.$refs);
+                const { isEmpty, data } = this.$refs.signaturePadContratada.saveSignature();
+
+
+                console.log(isEmpty);
+                console.log(data);
+
+
+                axios.post("/contracts", data)
+                .then(response =>{
+                    console.log(response);
+                })
+
+            }
+
+    },
+
+}
+</script>
+
+
