@@ -20,7 +20,7 @@ let routes = [
     },
     {
         path: '/users',
-        component: require('./views/users').default
+        component: require('./views/users/users').default
     },
     {
         path: '/profile',

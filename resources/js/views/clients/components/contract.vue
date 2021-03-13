@@ -7,7 +7,7 @@
             <div class="card-body">
                 <div class="tab-content">
                     <p>Pelo presente instrumento particular, por um lado: </p><br>
-                    <p>Sr(a)Janina Naceviciene Casagrande, CPF 310.097.668-13, doravante denominada (a) simplesmente CONTRATANTE;
+                    <p>Sr(a)<b> {{client.name}} {{client.surname}}</b>, CPF <b>{{client.CPF}}</b>, doravante denominada (a) simplesmente CONTRATANTE;
                         e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,
                         cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao CONTRATANTE,
                         doravante denominado simplesmente RESPONSÁVEL SOLIDÁRIO;</p>
@@ -135,7 +135,7 @@
                     <div>
                         <div class="signatures">
                             <VueSignaturePad class="border-bottom bg-light" width="500px" height="100px" ref="signaturePadContratada" saveType="image/png"/>
-                            <p>Contratada: </p>
+                            <p>Contratada - <b>{{client.name}} {{client.surname}} - {{client.CPF}}</b></p>
                         </div>
                         <div class="signatures">
                             <VueSignaturePad class="border-bottom bg-light" width="500px" height="100px" ref="signaturePadContratante" saveType="image/png"/>
@@ -165,6 +165,7 @@
 export default {
     name: 'MySignaturePad',
 
+    props: ['client'],
     data(){
         return{
 
@@ -175,20 +176,20 @@ export default {
             undo() {
                 this.$refs.signaturePad.undoSignature();
             },
-            save(event) {
-                console.log(event.target);
-                console.log(this.$refs);
-                const { isEmpty, data } = this.$refs.signaturePadContratada.saveSignature();
+            save() {
 
+                console.log(this.client);
+                // SAVE CONTRACT
+                // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
+                // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
+                // const { isEmptyResponsavel, dataResponsavel } = this.$refs.signaturePadResponsavel.saveSignature();
 
-                console.log(isEmpty);
-                console.log(data);
+                // let signatures = [dataContratada, dataContratante, dataResponsavel];
 
-
-                axios.post("/contracts", data)
-                .then(response =>{
-                    console.log(response);
-                })
+                // axios.post("/contracts", signatures)
+                // .then(response =>{
+                //     console.log(response);
+                // })
 
             }
 

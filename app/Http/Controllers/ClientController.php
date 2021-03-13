@@ -51,17 +51,19 @@ class ClientController extends Controller
     {
         Validator::make($request->all(), [
 
-            'name'       => ['required', 'string', 'max:100'],
-            'surname'    => ['required', 'string', 'max:100'],
-            'datastart'  => ['required', 'date'],
-            'databirth'  => ['required', 'date'],
-            'phonenumber'=> ['required', 'numeric', 'max:999999999'],
-            'appartament'=> ['nullable', 'numeric', 'max:40', 'min:0'],
-            'gender'     => ['required', 'nullable'],
-            'height'     => ['nullable', 'numeric'],
-            'color'      => ['required'],
-            'religion'   => ['required'],
-            'ocupation'  => ['max:500'],
+            'name'        => ['required', 'string', 'max:100'],
+            'surname'     => ['required', 'string', 'max:100'],
+            'datastart'   => ['required', 'date'],
+            'databirth'   => ['required', 'date'],
+            'phonenumber' => ['required', 'numeric', 'digits_between:8,10'],
+            'appartament' => ['nullable', 'numeric', 'max:40', 'min:0'],
+            'CPF'         => ['required', 'numeric','digits_between:10,12'],
+            'RG'          => ['required', 'numeric','digits_between:9,10'],
+            'gender'      => ['required', 'nullable'],
+            'height'      => ['nullable', 'numeric'],
+            'color'       => ['required'],
+            'religion'    => ['required'],
+            'ocupation'   => ['max:500'],
 
         ])->validate();
 

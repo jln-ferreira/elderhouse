@@ -33,6 +33,8 @@ class UsersController extends Controller
             'name'         => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'     => ['required', 'string', 'min:8'],
+            'CPF'          => ['required', 'numeric','digits_between:10,12'],
+            'RG'           => ['required', 'numeric','digits_between:9,10'],
             'street'       => ['nullable', 'string', 'max:55'],
             'number'       => ['nullable', 'numeric', 'min:1'],
             'city'         => ['nullable', 'string', 'max:55'],
@@ -43,13 +45,15 @@ class UsersController extends Controller
 
         //save new user
         $user = User::create([
-            'name' => $request['name'],
-            'email' => $request['email'],
+            'name'     => $request['name'],
+            'email'    => $request['email'],
+            'CPF'      => $request['CPF'],
+            'RG'       => $request['RG'],
             'password' => Hash::make($request['password']),
         ]);
 
         // save new address with user id
-        Address::create([
+        $address = Address::create([
             'user_id'  => $user->id,
             'street'   => $request['street'],
             'number'   => $request['number'],
@@ -91,6 +95,8 @@ class UsersController extends Controller
             'name'         => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255'],
             'password'     => ['nullable', 'string', 'min:8'],
+            'CPF'          => ['numeric','min:10', 'max:12'],
+            'RG'           => ['numeric','min:9', 'max:10'],
             'street'       => ['nullable', 'string', 'max:55'],
             'number'       => ['nullable', 'numeric', 'min:1'],
             'city'         => ['nullable', 'string', 'max:55'],
@@ -102,6 +108,8 @@ class UsersController extends Controller
         // modify user
         $user = User::find($request['id']);
         $user->name = $request['name'];
+        $user->CPF  = $request['CPF'];
+        $user->RG   = $request['RG'];
         is_null(!$request['password']) ? $user->password = Hash::make($request['password']) : "";
         $user->save();
 

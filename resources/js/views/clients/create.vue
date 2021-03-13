@@ -108,12 +108,12 @@
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="CPF">CPF</label>
-                                                                <input type="text" class="form-control" v-model="formInformation.CPF" id="CPF" name="CPF" placeholder="421-110-223-27">
+                                                                <input type="number" class="form-control" v-model="formInformation.CPF" id="CPF" name="CPF" placeholder="421-110-223-27" required>
                                                                 <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('CPF')" v-text="formInformation.errors.get('CPF')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
                                                                 <label for="RG">RG</label>
-                                                                <input type="text" class="form-control" v-model="formInformation.RG" id="RG" placeholder="42.188.403-3">
+                                                                <input type="number" class="form-control" v-model="formInformation.RG" id="RG" placeholder="42.188.403-3" required>
                                                                 <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('RG')" v-text="formInformation.errors.get('RG')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
@@ -149,7 +149,7 @@
                                                             </div>
                                                             <div class="form-group col-md-3">
                                                                 <label for="religion">Religion</label>
-                                                                <select class="form-control" v-model="formInformation.religion" id="religion" name="religion" required>
+                                                                <select class="form-control" v-model="formInformation.religion" id="religion" name="religion">
                                                                     <option>Christianity</option>
                                                                     <option>Judaism</option>
                                                                     <option>Islam</option>
@@ -420,7 +420,7 @@
 
                                     <!-- CONTRACT TAB -->
                                     <div class="tab-pane" id="contract">
-                                        <contract/>
+                                        <contract :client="formInformation"/>
                                     </div>
 
 
