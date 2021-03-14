@@ -69,7 +69,7 @@ class ClientController extends Controller
 
         // FIND URL
         $url = true;
-        $findURL = Client::find($request['id']);
+        $findURL = Client::find($request['clientId']);
         if(isset($findURL)){
             if ($request['url'] != '') $url = $request['url'];
             else $url = $findURL->url;
@@ -81,7 +81,7 @@ class ClientController extends Controller
         // CLIENT
         $client = Client::updateOrCreate(
             [
-                'id'        => $request['id'],
+                'id'        => $request['clientId'],
             ],
             [
                 'name'        => $request['name'],

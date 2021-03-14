@@ -32,6 +32,7 @@
                                     <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab">Diagnostic</a></li>
                                     <li class="nav-item"><a class="nav-link" href="#creditcard" data-toggle="tab">Credit Card</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#contract" data-toggle="tab">Contract</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
@@ -69,7 +70,7 @@
                                                         <div class="form-row">
                                                             <div class="form-group col-md-4">
                                                                 <label for="name">Name</label>
-                                                                <input type="text" class="form-control" v-model="formInformation.name" id="name" name="name" placeholder="Name" required autofocus >
+                                                                <input type="text" class="form-control" v-model="formInformation.name" id="name" name="name" placeholder="Name" required>
                                                                 <span class="invalid-feedback d-block" role="alert" v-if="formInformation.errors.has('name')" v-text="formInformation.errors.get('name')"></span>
                                                             </div>
                                                             <div class="form-group col-md-4">
@@ -476,6 +477,13 @@
                                     </div>
 
 
+                                     <!-- CONTRACT TAB -->
+                                    <div class="tab-pane" id="contract">
+                                        <contract :client="formInformation"/>
+                                    </div>
+
+
+
                                 </div>
                                 <!-- /.tab-content -->
                             </div><!-- /.card-body -->
@@ -492,7 +500,13 @@
 
  <script>
 
+    // imports
+    import contract from './components/contract.vue'
+
     export default {
+        components: {
+            contract,
+        },
 
         data() {
             return {
@@ -514,7 +528,6 @@
                     'url':'',
 
                     //information
-                    'infoId'   : '',
                     'CPF'      : '',
                     'RG'       : '',
                     'otherdoc' : '',
@@ -664,15 +677,17 @@
             axios.get('/bankAccountClient/' + this.clientId)
                 .then(response => {
 
-                    let expDate = response.data.expiration_date.split('/');
+                    if(response.data.id != null){
+                        let expDate = response.data.expiration_date.split('/');
 
-                    //Credit Card
-                    this.formCreditCard.id              = response.data.id;
-                    this.formCreditCard.numberCard      = response.data.card_number;
-                    this.formCreditCard.nameCard        = response.data.name_card;
-                    this.formCreditCard.expirationMonth = expDate[0];
-                    this.formCreditCard.expirationYear  = expDate[1];
-                    this.formCreditCard.expirationCVV   = response.data.cvv;
+                        //Credit Card
+                        this.formCreditCard.id              = response.data.id;
+                        this.formCreditCard.numberCard      = response.data.card_number;
+                        this.formCreditCard.nameCard        = response.data.name_card;
+                        this.formCreditCard.expirationMonth = expDate[0];
+                        this.formCreditCard.expirationYear  = expDate[1];
+                        this.formCreditCard.expirationCVV   = response.data.cvv;
+                    }
 
                 });
         },

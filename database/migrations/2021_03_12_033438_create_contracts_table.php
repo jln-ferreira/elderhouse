@@ -15,6 +15,14 @@ class CreateContractsTable extends Migration
     {
         Schema::create('contracts', function (Blueprint $table) {
             $table->id();
+            $table->integer('client_id')->unsigned();
+            $table->text('client_signature');
+            $table->integer('user_id')->unsigned();
+            $table->text('user_signature');
+            $table->integer('family_id')->unsigned();
+            $table->text('family_signature');
+            $table->date('date');
+            $table->smallInteger('active')->default('1');
             $table->timestamps();
         });
     }

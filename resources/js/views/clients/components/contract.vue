@@ -1,5 +1,31 @@
 <template>
     <div class="container">
+
+        <!-- //ALL CONTRACTS -->
+        <div class="row">
+
+            <div class="col-lg-2 col-md-3 col-sm-4 col-6">
+                <div class="card">
+                    <div class="card-header bg-success">Header</div>
+                    <div class="card-body">Content</div>
+                    <div class="card-footer">
+                        <div class="text-right">
+                            <a class="btn btn-sm btn-primary text-white" >
+                                <i class="fas fa-user"></i> View
+                            </a>
+                            <a class="btn btn-sm bg-danger">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- END ALL CONTRACTS -->
+
+
+        <!-- CONTRACT SHOW -->
         <div class="card">
             <div class="card-header d-flex p-0">
                 <h3 class="card-title p-3">CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE IDOSO CAPAZ</h3>
@@ -129,6 +155,16 @@
                     <p>Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores.</p>
                     <p>E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas.</p>
 
+                    <br><br>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="commentsContract">Comments</label>
+                            <textarea class="form-control" id="commentsContract"></textarea>
+                            <!-- <span class="invalid-feedback d-block" role="alert" v-if="formDiagnostic.errors.has('comments')" v-text="formDiagnostic.errors.get('comments')"></span> -->
+                        </div>
+                    </div>
+
                     <br><br><br>
                     <p>Santana de Parnaíba, 06  de  Fevereiro  de 2021 .</p>
 
@@ -157,6 +193,9 @@
                 </div>
             </div>
         </div>
+        <!-- END CONTRACT SHOW -->
+
+
     </div>
 </template>
 
@@ -168,9 +207,27 @@ export default {
     props: ['client'],
     data(){
         return{
+            contracts: '',
 
         }
     },
+
+
+    created() {
+
+        console.log(this.client.CPF);
+
+        if(this.client.clientId == null){
+            axios.get('/fullContract' + this.client.id)
+                .then(response => {
+                    console.log(response);
+                    this.contracts = response.data
+                });
+        }
+    },
+
+
+
     methods:{
 
             undo() {

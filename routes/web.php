@@ -135,6 +135,7 @@ Route::patch('/clientCreditCard', 'BankaccountController@createClient');
 
 
 //CONTRACT
+Route::get('/fullContract', 'ContractController@fullShow');
 Route::post('/contracts', 'ContractController@store');
 // END CONTRACT
 

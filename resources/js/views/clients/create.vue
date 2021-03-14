@@ -460,7 +460,7 @@
                 formInformation: new Form({
 
                     //client
-                    'id'         : '',
+                    'clientId'   : '',
                     'name'       : '',
                     'surname'    : '',
                     'datastart'  : '',
@@ -472,6 +472,7 @@
                     'url'        : '',
 
                     //information
+                    'infoId'   : '',
                     'CPF'      : '',
                     'RG'       : '',
                     'otherdoc' : '',
@@ -581,7 +582,7 @@
                     .then(response => {
 
                         //client
-                        this.formInformation.id          = response.client.id;
+                        this.formInformation.clientId    = response.client.id;
                         this.formInformation.name        = response.client.name;
                         this.formInformation.surname     = response.client.surname;
                         this.formInformation.datastart   = response.client.datastart;
@@ -603,9 +604,9 @@
                         this.formInformation.ocupation = response.specification.ocupation;
 
                         // use client_id into address | family | Diagnostic
-                        this.formAddress.client_id    = this.formInformation.id;
-                        this.formFamily.client_id     = this.formInformation.id;
-                        this.formDiagnostic.client_id = this.formInformation.id;
+                        this.formAddress.client_id    = this.formInformation.clientId;
+                        this.formFamily.client_id     = this.formInformation.clientId;
+                        this.formDiagnostic.client_id = this.formInformation.clientId;
 
                         this.information_save = false;
                         this.$toaster.success(this.formInformation.name + ' successful added.');

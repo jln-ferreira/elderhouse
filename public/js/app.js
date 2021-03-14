@@ -2167,11 +2167,64 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'MySignaturePad',
   props: ['client'],
   data: function data() {
-    return {};
+    return {
+      contracts: ''
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    console.log(this.client.CPF);
+
+    if (this.client.clientId == null) {
+      axios.get('/fullContract' + this.client.id).then(function (response) {
+        console.log(response);
+        _this.contracts = response.data;
+      });
+    }
   },
   methods: {
     undo: function undo() {
@@ -2658,7 +2711,7 @@ __webpack_require__.r(__webpack_exports__);
       // Information
       formInformation: new Form({
         //client
-        'id': '',
+        'clientId': '',
         'name': '',
         'surname': '',
         'datastart': '',
@@ -2669,6 +2722,7 @@ __webpack_require__.r(__webpack_exports__);
         'appartament': '',
         'url': '',
         //information
+        'infoId': '',
         'CPF': '',
         'RG': '',
         'otherdoc': '',
@@ -2754,7 +2808,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this3.formInformation.post('/clients').then(function (response) {
           //client
-          _this3.formInformation.id = response.client.id;
+          _this3.formInformation.clientId = response.client.id;
           _this3.formInformation.name = response.client.name;
           _this3.formInformation.surname = response.client.surname;
           _this3.formInformation.datastart = response.client.datastart; // this.formInformation.photoName   = response.client.photoName;
@@ -2774,9 +2828,9 @@ __webpack_require__.r(__webpack_exports__);
           _this3.formInformation.available = response.specification.available;
           _this3.formInformation.ocupation = response.specification.ocupation; // use client_id into address | family | Diagnostic
 
-          _this3.formAddress.client_id = _this3.formInformation.id;
-          _this3.formFamily.client_id = _this3.formInformation.id;
-          _this3.formDiagnostic.client_id = _this3.formInformation.id;
+          _this3.formAddress.client_id = _this3.formInformation.clientId;
+          _this3.formFamily.client_id = _this3.formInformation.clientId;
+          _this3.formDiagnostic.client_id = _this3.formInformation.clientId;
           _this3.information_save = false;
 
           _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
@@ -3151,6 +3205,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_contract_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/contract.vue */ "./resources/js/views/clients/components/contract.vue");
 //
 //
 //
@@ -3643,7 +3698,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+// imports
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    contract: _components_contract_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
       clientId: this.$route.params.id,
@@ -3661,7 +3729,6 @@ __webpack_require__.r(__webpack_exports__);
         'appartament': '',
         'url': '',
         //information
-        'infoId': '',
         'CPF': '',
         'RG': '',
         'otherdoc': '',
@@ -3781,14 +3848,16 @@ __webpack_require__.r(__webpack_exports__);
     }); // Fetch especific CREDIT CARD
 
     axios.get('/bankAccountClient/' + this.clientId).then(function (response) {
-      var expDate = response.data.expiration_date.split('/'); //Credit Card
+      if (response.data.id != null) {
+        var expDate = response.data.expiration_date.split('/'); //Credit Card
 
-      _this2.formCreditCard.id = response.data.id;
-      _this2.formCreditCard.numberCard = response.data.card_number;
-      _this2.formCreditCard.nameCard = response.data.name_card;
-      _this2.formCreditCard.expirationMonth = expDate[0];
-      _this2.formCreditCard.expirationYear = expDate[1];
-      _this2.formCreditCard.expirationCVV = response.data.cvv;
+        _this2.formCreditCard.id = response.data.id;
+        _this2.formCreditCard.numberCard = response.data.card_number;
+        _this2.formCreditCard.nameCard = response.data.name_card;
+        _this2.formCreditCard.expirationMonth = expDate[0];
+        _this2.formCreditCard.expirationYear = expDate[1];
+        _this2.formCreditCard.expirationCVV = response.data.cvv;
+      }
     });
   },
   methods: {
@@ -42807,8 +42876,10 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
+    _vm._m(0),
+    _vm._v(" "),
     _c("div", { staticClass: "card" }, [
-      _vm._m(0),
+      _vm._m(1),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
         _c("div", { staticClass: "tab-content" }, [
@@ -42915,7 +42986,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(1),
+          _vm._m(2),
           _vm._v(" "),
           _c("p", [
             _vm._v(
@@ -43031,7 +43102,7 @@ var render = function() {
             _vm._v("3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: ")
           ]),
           _vm._v(" "),
-          _vm._m(2),
+          _vm._m(3),
           _vm._v(" "),
           _c("p", [_vm._v("3.7.2 Convênio médico do CONTRATANTE;")]),
           _vm._v(" "),
@@ -43123,7 +43194,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(3),
+          _vm._m(4),
           _vm._v(" "),
           _c("p", [
             _vm._v(
@@ -43165,7 +43236,7 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._m(4),
+          _vm._m(5),
           _vm._v(" "),
           _c("p", [
             _vm._v(
@@ -43228,6 +43299,11 @@ var render = function() {
               "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
             )
           ]),
+          _vm._v(" "),
+          _c("br"),
+          _c("br"),
+          _vm._v(" "),
+          _vm._m(6),
           _vm._v(" "),
           _c("br"),
           _c("br"),
@@ -43322,6 +43398,35 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-lg-2 col-md-3 col-sm-4 col-6" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header bg-success" }, [
+            _vm._v("Header")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [_vm._v("Content")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-footer" }, [
+            _c("div", { staticClass: "text-right" }, [
+              _c("a", { staticClass: "btn btn-sm btn-primary text-white" }, [
+                _c("i", { staticClass: "fas fa-user" }),
+                _vm._v(" View\n                        ")
+              ]),
+              _vm._v(" "),
+              _c("a", { staticClass: "btn btn-sm bg-danger" }, [
+                _c("i", { staticClass: "fas fa-times" })
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header d-flex p-0" }, [
       _c("h3", { staticClass: "card-title p-3" }, [
         _vm._v("CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE IDOSO CAPAZ")
@@ -43403,6 +43508,23 @@ var staticRenderFns = [
         _vm._v(
           "Mudança de Grau II para Grau III em caráter temporário: reajuste de 50%."
         )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-row" }, [
+      _c("div", { staticClass: "form-group col-md-12" }, [
+        _c("label", { attrs: { for: "commentsContract" } }, [
+          _vm._v("Comments")
+        ]),
+        _vm._v(" "),
+        _c("textarea", {
+          staticClass: "form-control",
+          attrs: { id: "commentsContract" }
+        })
       ])
     ])
   }
@@ -46586,8 +46708,7 @@ var render = function() {
                                         id: "name",
                                         name: "name",
                                         placeholder: "Name",
-                                        required: "",
-                                        autofocus: ""
+                                        required: ""
                                       },
                                       domProps: {
                                         value: _vm.formInformation.name
@@ -49427,6 +49548,13 @@ var render = function() {
                       ])
                     ])
                   ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "tab-pane", attrs: { id: "contract" } },
+                  [_c("contract", { attrs: { client: _vm.formInformation } })],
+                  1
                 )
               ])
             ])
@@ -49524,6 +49652,17 @@ var staticRenderFns = [
             attrs: { href: "#creditcard", "data-toggle": "tab" }
           },
           [_vm._v("Credit Card")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", { staticClass: "nav-item" }, [
+        _c(
+          "a",
+          {
+            staticClass: "nav-link",
+            attrs: { href: "#contract", "data-toggle": "tab" }
+          },
+          [_vm._v("Contract")]
         )
       ])
     ])
