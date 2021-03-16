@@ -47,8 +47,7 @@ class ContractController extends Controller
 
     public function fullShow($clientId)
     {
-        $contracts = Contract::getFullContract($clientId);
-        return $contracts;
+        return Contract::getFullContract($clientId);
     }
 
 

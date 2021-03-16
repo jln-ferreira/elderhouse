@@ -18,6 +18,7 @@ class CreateFamiliesTable extends Migration
             $table->integer('client_id')->unsigned();
             $table->text('name');
             $table->text('surname');
+            $table->text('CPF');
             $table->text('parent');
             $table->text('phonenumber');
             $table->text('email');

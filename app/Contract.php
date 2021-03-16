@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Contract extends Model
 {
@@ -28,13 +29,16 @@ class Contract extends Model
             "families.surname AS families_surname",
             "families.parent",
             "families.email AS families_email",
-            "contracts.families_signature",
-            "clients.appartament"
+            "contracts.family_signature",
+            "clients.appartament",
+            "contracts.comments",
+            "contracts.date"
             )
-        ->leftJoin('clients', 'contracts.client_id', '=', 'client.id')
+        ->leftJoin('clients', 'contracts.client_id', '=', 'clients.id')
         ->leftJoin('specifications', 'clients.id', '=', 'specifications.client_id')
-        ->leftJoin('families', 'diagnostic_clients.diagnostic_id', '=', 'diagnostics.id')
-        ->where(['contracts.active', 1],['specifications.active', 1], ['families.responsable', 1], ['contracts.client_id', $clientId])
+        ->leftJoin('families', 'contracts.family_id', '=', 'families.id')
+        ->leftJoin('users', 'contracts.user_id', '=', 'users.id')
+        ->where([['contracts.active', 1],['specifications.active', 1], ['families.active', 1], ['families.responsable', 1], ['contracts.client_id', $clientId]])
         ->get();
     }
 }

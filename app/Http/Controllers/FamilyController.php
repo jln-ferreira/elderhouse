@@ -32,6 +32,7 @@ class FamilyController extends Controller
 
             'name'        => ['required', 'string', 'max:100'],
             'surname'     => ['required', 'string', 'max:100'],
+            'CPF'         => ['required', 'numeric','digits_between:10,12'],
             'parent'      => ['required', 'string', 'max:100'],
             'gender'      => ['required'],
             'phonenumber' => ['required', 'numeric'],
@@ -47,6 +48,7 @@ class FamilyController extends Controller
             'client_id'   => $request['client_id'],
             'name'        => $request['name'],
             'surname'     => $request['surname'],
+            'CPF'         => $request['CPF'],
             'parent'      => $request['parent'],
             'gender'      => $request['gender'],
             'phonenumber' => $request['phonenumber'],
@@ -79,6 +81,7 @@ class FamilyController extends Controller
 
             'name'        => ['required', 'string', 'max:100'],
             'surname'     => ['required', 'string', 'max:100'],
+            'CPF'         => ['required', 'numeric','digits_between:10,12'],
             'parent'      => ['required', 'string', 'max:100'],
             'gender'      => ['required'],
             'phonenumber' => ['required', 'numeric'],
@@ -92,6 +95,7 @@ class FamilyController extends Controller
 
         $family->name        = $request['name'];
         $family->surname     = $request['surname'];
+        $family->CPF         = $request['CPF'];
         $family->parent      = $request['parent'];
         $family->gender      = $request['gender'];
         $family->phonenumber = $request['phonenumber'];
