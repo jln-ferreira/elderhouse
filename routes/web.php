@@ -33,6 +33,7 @@ Route::get('/home/', function () {
 // ---------------
 // USERS
 Route::get('/users', 'UsersController@index');
+Route::get('/users/{id}', 'UsersController@show');
 Route::post('/users', 'UsersController@create');
 Route::patch('/users', 'UsersController@update');
 Route::delete('/users/{id}', 'UsersController@destroy');

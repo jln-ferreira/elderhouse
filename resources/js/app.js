@@ -30,6 +30,10 @@ import 'v-toaster/dist/v-toaster.css'
 Vue.use(Toaster, {timeout: 3000})
 // END TOASTER
 
+
+//get Authentication from Laravel to VUE JS
+Vue.prototype.$userId = document.querySelector("meta[name='user_id']").getAttribute('content');
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

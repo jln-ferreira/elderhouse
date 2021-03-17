@@ -2623,6 +2623,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      user_id: this.$userId,
+      //======> AUTH()->id
+      user: '',
+      //full user
       information_save: true,
       address_save: true,
       family_save: true,
@@ -2687,7 +2691,18 @@ __webpack_require__.r(__webpack_exports__);
       }),
       search: '',
       diagnosticListClient: [],
-      diagnosticList: []
+      diagnosticList: [],
+      //Contracts
+      formContract: new Form({
+        'id': '',
+        'client_id': '',
+        'userId': this.$userId,
+        'familyId': '',
+        'familyName': '',
+        'CPF': '',
+        'date': new Date(),
+        'comments': ''
+      })
     };
   },
   created: function created() {
@@ -2696,6 +2711,10 @@ __webpack_require__.r(__webpack_exports__);
     // Fetch especific diagnostic
     axios.get('/diagnostics').then(function (response) {
       return _this.diagnosticList = response.data;
+    }); // Fetch USER AUTH()
+
+    axios.get('/users/' + this.user_id).then(function (response) {
+      return _this.user = response.data;
     });
   },
   computed: {
@@ -2751,6 +2770,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.formAddress.client_id = _this3.formInformation.clientId;
           _this3.formFamily.client_id = _this3.formInformation.clientId;
           _this3.formDiagnostic.client_id = _this3.formInformation.clientId;
+          _this3.formContract.client_id = _this3.formInformation.clientId;
           _this3.information_save = false;
 
           _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
@@ -2978,6 +2998,17 @@ __webpack_require__.r(__webpack_exports__);
     },
     // -------------------------- [ CONSTRACT ] -------------------------
     // ==================================================================
+    onChangeContractFamily: function onChangeContractFamily(event) {
+      var _this11 = this;
+
+      this.formContract.familyId = event.target.value; // change CPF AND NAME
+
+      var family = this.familyList.find(function (x) {
+        return x.id == _this11.formContract.familyId;
+      });
+      this.formContract.CPF = family.CPF;
+      this.formContract.familyName = family.name + ' ' + family.surname;
+    },
     undo: function undo() {
       this.$refs.signaturePad.undoSignature();
     },
@@ -3848,6 +3879,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      user_id: this.$userId,
+      //======> AUTH()->id
+      user: '',
+      //full user
       clientId: this.$route.params.id,
       // Information
       formInformation: new Form({
@@ -3923,6 +3958,16 @@ __webpack_require__.r(__webpack_exports__);
         'expirationCVV': ''
       }),
       //Contracts
+      formContract: new Form({
+        'id': '',
+        'clientId': this.$route.params.id,
+        'userId': this.$userId,
+        'familyId': '',
+        'familyName': '',
+        'CPF': '',
+        'date': new Date(),
+        'comments': ''
+      }),
       allContracts: ''
     };
   },
@@ -3999,6 +4044,10 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/fullContract/' + this.clientId).then(function (response) {
       return _this2.allContracts = response.data;
+    }); // Fetch USER AUTH()
+
+    axios.get('/users/' + this.user_id).then(function (response) {
+      return _this2.user = response.data;
     });
   },
   methods: {
@@ -4284,10 +4333,28 @@ __webpack_require__.r(__webpack_exports__);
     },
     // -------------------------- [ CONSTRACT ] -------------------------
     // ==================================================================
+    onChangeContractFamily: function onChangeContractFamily(event) {
+      var _this12 = this;
+
+      this.formContract.familyId = event.target.value; // change CPF AND NAME
+
+      var family = this.familyList.find(function (x) {
+        return x.id == _this12.formContract.familyId;
+      });
+      this.formContract.CPF = family.CPF;
+      this.formContract.familyName = family.name + ' ' + family.surname;
+    },
     undo: function undo() {
       this.$refs.signaturePad.undoSignature();
     },
-    save: function save() {// console.log(this.client.id);
+    save: function save() {// const doc = new jsPDF();
+      // const contentHtml = this.$refs.content.innerHTML;
+      // console.log(contentHtml);
+      // doc.html(contentHtml, 15, 15, {
+      //     width: 170
+      // });
+      // doc.save("sample.pdf");
+      // console.log(this.client.id);
       // SAVE CONTRACT
       // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
       // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
@@ -45768,7 +45835,7 @@ var render = function() {
                                 " " +
                                   _vm._s(_vm.formInformation.name) +
                                   " " +
-                                  _vm._s(_vm.formInformation.name)
+                                  _vm._s(_vm.formInformation.surname)
                               )
                             ]),
                             _vm._v(", CPF "),
@@ -45776,7 +45843,62 @@ var render = function() {
                             _vm._v(", doravante denominada (a) simplesmente "),
                             _c("b", [_vm._v("CONTRATANTE")]),
                             _vm._v(
-                              ";\n                                                    e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,\n                                                    cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao "
+                              ";\n                                                    e a Sr(a) "
+                            ),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formContract.familyId,
+                                    expression: "formContract.familyId"
+                                  }
+                                ],
+                                on: {
+                                  change: [
+                                    function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.formContract,
+                                        "familyId",
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.onChangeContractFamily($event)
+                                    }
+                                  ]
+                                }
+                              },
+                              _vm._l(_vm.familyList, function(family, index) {
+                                return _c("option", {
+                                  key: index,
+                                  domProps: {
+                                    value: family.id,
+                                    innerHTML: _vm._s(family.name)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(", portador(a)  do CPF/MF sob o nr "),
+                            _c("b", [_vm._v(_vm._s(_vm.formContract.CPF))]),
+                            _vm._v(
+                              " que\n                                                     assina este Contrato como interveniente anuente e em caráter solidário ao "
                             ),
                             _c("b", [_vm._v("CONTRATANTE")]),
                             _vm._v(
@@ -45788,7 +45910,21 @@ var render = function() {
                           _vm._v(" "),
                           _c("p", [_vm._v("e por outro:")]),
                           _vm._v(" "),
-                          _vm._m(5),
+                          _c("p", [
+                            _vm._v(
+                              "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                    816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                    neste ato representada nos termos do estatuto por "
+                            ),
+                            _c("b", [_vm._v(_vm._s(_vm.user.name))]),
+                            _vm._v(", portador da cédula de identidade nº "),
+                            _c("b", [_vm._v(_vm._s(_vm.user.RG))]),
+                            _vm._v(
+                              ",\n                                                    inscrito no CPF/MF sob o nº "
+                            ),
+                            _c("b", [_vm._v(_vm._s(_vm.user.CPF))]),
+                            _vm._v(" doravante denominada simplesmente "),
+                            _c("b", [_vm._v("CONTRATADA")]),
+                            _vm._v(". ")
+                          ]),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -45798,9 +45934,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("h4", [_vm._v("1. DO OBJETO")]),
                           _vm._v(" "),
-                          _vm._m(6),
+                          _vm._m(5),
                           _vm._v(" "),
-                          _vm._m(7),
+                          _vm._m(6),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v("1.3\tApartamento  08    com 02 leitos.")
@@ -45808,7 +45944,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
                           _vm._v(" "),
-                          _vm._m(8),
+                          _vm._m(7),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -45848,11 +45984,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("p", [_vm._v("2.1.8 Convivência comunitária; e")]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.1.9 Atendimento psicossocial ao CONTRATANTE e à sua família e RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(8),
                           _vm._v(" "),
                           _vm._m(9),
                           _vm._v(" "),
@@ -45864,23 +45996,15 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do CONTRATANTE, sendo facultada a livre prestação dos serviços extras por terceiros"
-                            )
-                          ]),
-                          _vm._v(" "),
                           _vm._m(11),
                           _vm._v(" "),
                           _vm._m(12),
                           _vm._v(" "),
                           _vm._m(13),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de CONTRATANTE portador de doenças infecto-contagiosas;"
-                            )
-                          ]),
+                          _vm._m(14),
+                          _vm._v(" "),
+                          _vm._m(15),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -45888,29 +46012,13 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do CONTRATANTE, RESPONSÁVEL SOLIDÁRIO, parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
-                            )
-                          ]),
+                          _vm._m(16),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(17),
                           _vm._v(" "),
-                          _c("h4", [
-                            _vm._v(
-                              "3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO"
-                            )
-                          ]),
+                          _vm._m(18),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.1 O CONTRANTE e/ou RESPONSÁVEL SOLIDÁRIO comprometem-se a:"
-                            )
-                          ]),
+                          _vm._m(19),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -45922,77 +46030,35 @@ var render = function() {
                             _vm._v("3.1.2 Respeitar o Regimento Interno; e")
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.1.3 Manter o alojamento do CONTRATANTE em ordem e em condições de habitabilidade."
-                            )
-                          ]),
+                          _vm._m(20),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.2 O RESPONSÁVEL SOLIDÁRIO compromete-se a realizar visitas periódicas ao CONTRATANTE, no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo CONTRATANTE como por suas visitas."
-                            )
-                          ]),
+                          _vm._m(21),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.3 O RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo CONTRATANTE perante àquelas instituições de saúde."
-                            )
-                          ]),
+                          _vm._m(22),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.4 Em caso de internação, o RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE no tratamento e procedimentos a serem adotados."
-                            )
-                          ]),
+                          _vm._m(23),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.5 No ato de alta hospitalar o CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do CONTRATANTE e as necessidades de atendimento especializado."
-                            )
-                          ]),
+                          _vm._m(24),
                           _vm._v(" "),
-                          _vm._m(14),
+                          _vm._m(25),
                           _vm._v(" "),
-                          _vm._m(15),
+                          _vm._m(26),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: "
-                            )
-                          ]),
+                          _vm._m(27),
                           _vm._v(" "),
-                          _vm._m(16),
+                          _vm._m(28),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v("3.7.2 Convênio médico do CONTRATANTE;")
-                          ]),
+                          _vm._m(29),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do CONTRATANTE;"
-                            )
-                          ]),
+                          _vm._m(30),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.4 Os procedimentos a serem adotados em caso falecimento do CONTRATANTE; e"
-                            )
-                          ]),
+                          _vm._m(31),
                           _vm._v(" "),
-                          _vm._m(17),
+                          _vm._m(32),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do CONTRATANTE, o RESPONSÁVEL SOLIDÁRIO compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
-                            )
-                          ]),
+                          _vm._m(33),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.9 O RESPONSÁVEL SOLIDÁRIO compromete-se a providenciar a mudança do CONTRATANTE e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
-                            )
-                          ]),
+                          _vm._m(34),
                           _vm._v(" "),
                           _c("h4", [
                             _vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")
@@ -46004,11 +46070,11 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._m(18),
+                          _vm._m(35),
                           _vm._v(" "),
-                          _vm._m(19),
+                          _vm._m(36),
                           _vm._v(" "),
-                          _vm._m(20),
+                          _vm._m(37),
                           _vm._v(" "),
                           _c("h4", [
                             _vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")
@@ -46020,17 +46086,9 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "5.1.1 Neste ato, a CONTRATANTE expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
-                            )
-                          ]),
+                          _vm._m(38),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
-                            )
-                          ]),
+                          _vm._m(39),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -46044,45 +46102,33 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._m(21),
+                          _vm._m(40),
                           _vm._v(" "),
-                          _vm._m(22),
+                          _vm._m(41),
                           _vm._v(" "),
                           _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
                           _vm._v(" "),
-                          _vm._m(23),
+                          _vm._m(42),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao CONTRATANTE e ao RESPONSÁVEL SOLIDÁRIO com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
-                            )
-                          ]),
+                          _vm._m(43),
                           _vm._v(" "),
                           _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
                           _vm._v(" "),
-                          _vm._m(24),
+                          _vm._m(44),
                           _vm._v(" "),
-                          _vm._m(25),
+                          _vm._m(45),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do CONTRATANTE implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do CONTRATANTE, as seguintes correções se aplicarão aos valores contratuais:"
-                            )
-                          ]),
+                          _vm._m(46),
                           _vm._v(" "),
-                          _vm._m(26),
+                          _vm._m(47),
                           _vm._v(" "),
-                          _vm._m(27),
+                          _vm._m(48),
                           _vm._v(" "),
-                          _vm._m(28),
+                          _vm._m(49),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo CONTRATANTE, as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO, poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(50),
                           _vm._v(" "),
-                          _vm._m(29),
+                          _vm._m(51),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -46125,16 +46171,53 @@ var render = function() {
                           _c("br"),
                           _c("br"),
                           _vm._v(" "),
-                          _vm._m(30),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c("div", { staticClass: "form-group col-md-12" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "commentsContract" } },
+                                [_vm._v("Comments")]
+                              ),
+                              _vm._v(" "),
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formContract.comments,
+                                    expression: "formContract.comments"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { id: "commentsContract" },
+                                domProps: { value: _vm.formContract.comments },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formContract,
+                                      "comments",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c("br"),
                           _c("br"),
                           _c("br"),
                           _vm._v(" "),
                           _c("p", [
-                            _vm._v(
-                              "Santana de Parnaíba, 06  de  Fevereiro  de 2021 ."
-                            )
+                            _c("i", [
+                              _vm._v(
+                                "Santana de Parnaíba, - " +
+                                  _vm._s(_vm.formContract.date)
+                              )
+                            ])
                           ]),
                           _vm._v(" "),
                           _c("div", [
@@ -46156,11 +46239,9 @@ var render = function() {
                                   _vm._v("Contratada - "),
                                   _c("b", [
                                     _vm._v(
-                                      _vm._s(_vm.formInformation.name) +
-                                        " " +
-                                        _vm._s(_vm.formInformation.name) +
+                                      _vm._s(_vm.user.name) +
                                         " - " +
-                                        _vm._s(_vm.formInformation.CPF)
+                                        _vm._s(_vm.user.CPF)
                                     )
                                   ])
                                 ])
@@ -46182,7 +46263,18 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("p", [_vm._v("Contratante: ")])
+                                _c("p", [
+                                  _vm._v("Contratante - "),
+                                  _c("b", [
+                                    _vm._v(
+                                      _vm._s(_vm.formInformation.name) +
+                                        " " +
+                                        _vm._s(_vm.formInformation.surname) +
+                                        " - " +
+                                        _vm._s(_vm.formInformation.CPF)
+                                    )
+                                  ])
+                                ])
                               ],
                               1
                             ),
@@ -46201,7 +46293,16 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("p", [_vm._v("Responsable: ")])
+                                _c("p", [
+                                  _vm._v("Responsable - "),
+                                  _c("b", [
+                                    _vm._v(
+                                      _vm._s(_vm.formContract.familyName) +
+                                        " - " +
+                                        _vm._s(_vm.formContract.CPF)
+                                    )
+                                  ])
+                                ])
                               ],
                               1
                             )
@@ -46358,22 +46459,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v(
-        "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                    816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                    neste ato representada nos termos do estatuto por "
-      ),
-      _c("b", [_vm._v("Rodrigo Leite Vilela")]),
-      _vm._v(
-        ", portador da cédula de identidade nº 23.806.305-7,\n                                                    inscrito no CPF/MF sob o nº  471.126.976-20  doravante denominada simplesmente "
-      ),
-      _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(". ")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [
       _vm._v("1.1\tA "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -46390,13 +46475,17 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v(
-        "1.2 Ciente o CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO das condições que a "
-      ),
+      _vm._v("1.2 Ciente o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" das condições que a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        " oferece e do Regimento Interno que integra este Contrato,\n                                                    neste ato o CONTRATANTE é admitido para residir no Residencial da "
+        " oferece e do Regimento Interno que integra este Contrato,\n                                                    neste ato o "
       ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" é admitido para residir no Residencial da "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         ", no endereço indicado no preâmbulo deste Contrato,\n                                                    no seguinte tipo de acomodação:"
@@ -46412,7 +46501,9 @@ var staticRenderFns = [
         "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                                                    a "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(" disponibilizará para o CONTRATANTE:")
+      _vm._v(" disponibilizará para o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(":")
     ])
   },
   function() {
@@ -46420,8 +46511,22 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
+      _vm._v("2.1.9 Atendimento psicossocial ao "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e à sua família e "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("2.2 Dependendo das necessidades do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        "2.2 Dependendo das necessidades do CONTRATANTE, de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da "
+        ", de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -46451,8 +46556,12 @@ var staticRenderFns = [
       ]),
       _vm._v(" "),
       _c("li", [
+        _vm._v("Outros serviços solicitados pelo "),
+        _c("b", [_vm._v("CONTRATANTE")]),
+        _vm._v(" ou "),
+        _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
         _vm._v(
-          "Outros serviços solicitados pelo CONTRATANTE ou RESPONSÁVEL SOLIDÁRIO, desde que não infrinjam o Regimento Interno ou não sejam objetados pela equipe médica da "
+          ", desde que não infrinjam o Regimento Interno ou não sejam objetados pela equipe médica da "
         ),
         _c("b", [_vm._v("CONTRATADA")]),
         _vm._v(".")
@@ -46465,7 +46574,23 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "2.5 Na hipótese de CONTRATANTE capaz, sua saída ou recebimento de visitas não prescinde de autorização da "
+        "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        ", sendo facultada a livre prestação dos serviços extras por terceiros"
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("2.5 Na hipótese de "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " capaz, sua saída ou recebimento de visitas não prescinde de autorização da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -46503,11 +46628,25 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "3.6 O CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a obter e enviar relatório médico à "
+        "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de "
       ),
-      _c("b", [_vm._v("CONTRATADA")]),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" portador de doenças infecto-contagiosas;")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v(
-        ", descrevendo o estado geral de saúde do CONTRATANTE, os procedimentos realizados e os cuidados a serem adotados."
+        "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        ", parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
       )
     ])
   },
@@ -46517,10 +46656,141 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o RESPONSÁVEL SOLIDÁRIO compromete-se a informar a "
+        "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e "
       ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h4", [
+      _vm._v("3. OBRIGAÇÕES DO "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" E DO "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.1 O CONTRANTE e/ou "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" comprometem-se a:")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.1.3 Manter o alojamento do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" em ordem e em condições de habitabilidade.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.2 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a realizar visitas periódicas ao "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        ", no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" como por suas visitas.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.3 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a acompanhar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" perante àquelas instituições de saúde.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.4 Em caso de internação, o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a acompanhar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" no tratamento e procedimentos a serem adotados.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.5 No ato de alta hospitalar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e as necessidades de atendimento especializado.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.6 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" comprometem-se a obter e enviar relatório médico à "),
+      _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(", descrevendo o estado geral de saúde do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", os procedimentos realizados e os cuidados a serem adotados.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o "
+      ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a informar a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(" a respeito das seguintes situações:")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.7.1 Estado de Saúde e quadro clínico do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(": ")
     ])
   },
   function() {
@@ -46550,10 +46820,72 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
+      _vm._v("3.7.2 Convênio médico do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(";")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(";")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.7.4 Os procedimentos a serem adotados em caso falecimento do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v("; e")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v("3.7.5 Entregar para análise e aprovação da "),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(", a lista de bens pessoais do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", que serão deixados para uso durante a vigência do Contrato. ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v(
-        ", a lista de bens pessoais do CONTRATANTE, que serão deixados para uso durante a vigência do Contrato. "
+        "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.9 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a providenciar a mudança do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
       )
     ])
   },
@@ -46566,8 +46898,10 @@ var staticRenderFns = [
         "4.2 O Contrato também poderá ser rescindido de pleno direito pela "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" caso o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " caso o CONTRATANTE deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
+        " deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
       )
     ])
   },
@@ -46577,7 +46911,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do CONTRATANTE para além da capacidade de prestação de serviços adequados ao caso pelo "
+        "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " para além da capacidade de prestação de serviços adequados ao caso pelo "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -46592,8 +46930,36 @@ var staticRenderFns = [
     return _c("p", [
       _vm._v("4.4 Na hipótese de término do Contrato no curso do mês, a "),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" compromete-se a reembolsar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " compromete-se a reembolsar o CONTRATANTE dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+        " dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("5.1.1 Neste ato, a "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
       )
     ])
   },
@@ -46622,8 +46988,10 @@ var staticRenderFns = [
         "5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" a incluir o nome do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
+        " no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
       )
     ])
   },
@@ -46634,9 +47002,11 @@ var staticRenderFns = [
     return _c("p", [
       _vm._v("6.1 Neste ato, a "),
       _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(
-        " entrega para o CONTRATANTE e para o RESPONSÁVEL SOLIDÁRIO, cópias do Regimento Interno da "
-      ),
+      _vm._v(" entrega para o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e para o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(", cópias do Regimento Interno da "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " e reconhecem que leram o seu conteúdo, e o aceitam como parte integrante deste Contrato. "
@@ -46648,7 +47018,27 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v("7.1 O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO reconhecem que a "),
+      _vm._v(
+        "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e ao "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("7.1 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" reconhecem que a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " é entidade idônea, que desempenha da melhor forma possível as atividades necessárias ao pleno cumprimento deste Contrato."
@@ -46664,9 +47054,29 @@ var staticRenderFns = [
         "7.2 As partes aceitam a avaliação médica inicial realizada pelo médico geriatra da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" a respeito do estado geral de saúde do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " a respeito do estado geral de saúde do CONTRATANTE, com base na anamnese realizada, incluindo as informações prestadas pelo RESPONSÁVEL SOLIDÁRIO, nos termos da Cláusula 3.7 acima."
-      )
+        ", com base na anamnese realizada, incluindo as informações prestadas pelo "
+      ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(", nos termos da Cláusula 3.7 acima.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", as seguintes correções se aplicarão aos valores contratuais:")
     ])
   },
   function() {
@@ -46700,7 +47110,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v("7.2.2 O CONTRATANTE autoriza desde já a "),
+      _vm._v("7.2.2 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" autoriza desde já a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " a prestar-lhe os primeiros socorros em caso de necessidade premente, e manifesta a sua concordância com o tratamento emergencial prescrito pela equipe de saúde que o atender, de acordo com o disposto no item 3.4 do Regimento Interno. "
@@ -46713,29 +47125,40 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO expressa e automaticamente eximem a "
+        "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo "
       ),
-      _c("b", [_vm._v("CONTRATADA")]),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
-      )
+        ", as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou do "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        ", poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou do "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group col-md-12" }, [
-        _c("label", { attrs: { for: "commentsContract" } }, [
-          _vm._v("Comments")
-        ]),
-        _vm._v(" "),
-        _c("textarea", {
-          staticClass: "form-control",
-          attrs: { id: "commentsContract" }
-        })
-      ])
+    return _c("p", [
+      _vm._v(
+        "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" expressa e automaticamente eximem a "),
+      _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(
+        " de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
+      )
     ])
   }
 ]
@@ -50024,7 +50447,7 @@ var render = function() {
                       0
                     ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "card" }, [
+                    _c("div", { ref: "content", staticClass: "card" }, [
                       _vm._m(11),
                       _vm._v(" "),
                       _c("div", { staticClass: "card-body" }, [
@@ -50043,7 +50466,7 @@ var render = function() {
                                 " " +
                                   _vm._s(_vm.formInformation.name) +
                                   " " +
-                                  _vm._s(_vm.formInformation.name)
+                                  _vm._s(_vm.formInformation.surname)
                               )
                             ]),
                             _vm._v(", CPF "),
@@ -50051,7 +50474,62 @@ var render = function() {
                             _vm._v(", doravante denominada (a) simplesmente "),
                             _c("b", [_vm._v("CONTRATANTE")]),
                             _vm._v(
-                              ";\n                                                    e a Sra Eda Casagrande Felizzola,  portador(a)  do CPF/MF sob o nr 566.753.138-00, residente à Alameda Corvina 293 Residencial XI,\n                                                    cidade de Santana de Parnaíba , estado de SP que assina este Contrato como interveniente anuente e em caráter solidário ao "
+                              ";\n                                                    e a Sr(a) "
+                            ),
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formContract.familyId,
+                                    expression: "formContract.familyId"
+                                  }
+                                ],
+                                on: {
+                                  change: [
+                                    function($event) {
+                                      var $$selectedVal = Array.prototype.filter
+                                        .call($event.target.options, function(
+                                          o
+                                        ) {
+                                          return o.selected
+                                        })
+                                        .map(function(o) {
+                                          var val =
+                                            "_value" in o ? o._value : o.value
+                                          return val
+                                        })
+                                      _vm.$set(
+                                        _vm.formContract,
+                                        "familyId",
+                                        $event.target.multiple
+                                          ? $$selectedVal
+                                          : $$selectedVal[0]
+                                      )
+                                    },
+                                    function($event) {
+                                      return _vm.onChangeContractFamily($event)
+                                    }
+                                  ]
+                                }
+                              },
+                              _vm._l(_vm.familyList, function(family, index) {
+                                return _c("option", {
+                                  key: index,
+                                  domProps: {
+                                    value: family.id,
+                                    innerHTML: _vm._s(family.name)
+                                  }
+                                })
+                              }),
+                              0
+                            ),
+                            _vm._v(", portador(a)  do CPF/MF sob o nr "),
+                            _c("b", [_vm._v(_vm._s(_vm.formContract.CPF))]),
+                            _vm._v(
+                              " que\n                                                     assina este Contrato como interveniente anuente e em caráter solidário ao "
                             ),
                             _c("b", [_vm._v("CONTRATANTE")]),
                             _vm._v(
@@ -50063,7 +50541,21 @@ var render = function() {
                           _vm._v(" "),
                           _c("p", [_vm._v("e por outro:")]),
                           _vm._v(" "),
-                          _vm._m(12),
+                          _c("p", [
+                            _vm._v(
+                              "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                    816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                    neste ato representada nos termos do estatuto por "
+                            ),
+                            _c("b", [_vm._v(_vm._s(_vm.user.name))]),
+                            _vm._v(", portador da cédula de identidade nº "),
+                            _c("b", [_vm._v(_vm._s(_vm.user.RG))]),
+                            _vm._v(
+                              ",\n                                                    inscrito no CPF/MF sob o nº "
+                            ),
+                            _c("b", [_vm._v(_vm._s(_vm.user.CPF))]),
+                            _vm._v(" doravante denominada simplesmente "),
+                            _c("b", [_vm._v("CONTRATADA")]),
+                            _vm._v(". ")
+                          ]),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50073,9 +50565,9 @@ var render = function() {
                           _vm._v(" "),
                           _c("h4", [_vm._v("1. DO OBJETO")]),
                           _vm._v(" "),
-                          _vm._m(13),
+                          _vm._m(12),
                           _vm._v(" "),
-                          _vm._m(14),
+                          _vm._m(13),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v("1.3\tApartamento  08    com 02 leitos.")
@@ -50083,7 +50575,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
                           _vm._v(" "),
-                          _vm._m(15),
+                          _vm._m(14),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50123,11 +50615,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("p", [_vm._v("2.1.8 Convivência comunitária; e")]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.1.9 Atendimento psicossocial ao CONTRATANTE e à sua família e RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(15),
                           _vm._v(" "),
                           _vm._m(16),
                           _vm._v(" "),
@@ -50139,23 +50627,15 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do CONTRATANTE, sendo facultada a livre prestação dos serviços extras por terceiros"
-                            )
-                          ]),
-                          _vm._v(" "),
                           _vm._m(18),
                           _vm._v(" "),
                           _vm._m(19),
                           _vm._v(" "),
                           _vm._m(20),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de CONTRATANTE portador de doenças infecto-contagiosas;"
-                            )
-                          ]),
+                          _vm._m(21),
+                          _vm._v(" "),
+                          _vm._m(22),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50163,17 +50643,9 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do CONTRATANTE, RESPONSÁVEL SOLIDÁRIO, parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
-                            )
-                          ]),
+                          _vm._m(23),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(24),
                           _vm._v(" "),
                           _c("h4", [
                             _vm._v(
@@ -50181,11 +50653,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.1 O CONTRANTE e/ou RESPONSÁVEL SOLIDÁRIO comprometem-se a:"
-                            )
-                          ]),
+                          _vm._m(25),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50197,77 +50665,35 @@ var render = function() {
                             _vm._v("3.1.2 Respeitar o Regimento Interno; e")
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.1.3 Manter o alojamento do CONTRATANTE em ordem e em condições de habitabilidade."
-                            )
-                          ]),
+                          _vm._m(26),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.2 O RESPONSÁVEL SOLIDÁRIO compromete-se a realizar visitas periódicas ao CONTRATANTE, no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo CONTRATANTE como por suas visitas."
-                            )
-                          ]),
+                          _vm._m(27),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.3 O RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo CONTRATANTE perante àquelas instituições de saúde."
-                            )
-                          ]),
+                          _vm._m(28),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.4 Em caso de internação, o RESPONSÁVEL SOLIDÁRIO compromete-se a acompanhar o CONTRATANTE no tratamento e procedimentos a serem adotados."
-                            )
-                          ]),
+                          _vm._m(29),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.5 No ato de alta hospitalar o CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do CONTRATANTE e as necessidades de atendimento especializado."
-                            )
-                          ]),
+                          _vm._m(30),
                           _vm._v(" "),
-                          _vm._m(21),
+                          _vm._m(31),
                           _vm._v(" "),
-                          _vm._m(22),
+                          _vm._m(32),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.1 Estado de Saúde e quadro clínico do CONTRATANTE: "
-                            )
-                          ]),
+                          _vm._m(33),
                           _vm._v(" "),
-                          _vm._m(23),
+                          _vm._m(34),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v("3.7.2 Convênio médico do CONTRATANTE;")
-                          ]),
+                          _vm._m(35),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do CONTRATANTE;"
-                            )
-                          ]),
+                          _vm._m(36),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.7.4 Os procedimentos a serem adotados em caso falecimento do CONTRATANTE; e"
-                            )
-                          ]),
+                          _vm._m(37),
                           _vm._v(" "),
-                          _vm._m(24),
+                          _vm._m(38),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do CONTRATANTE, o RESPONSÁVEL SOLIDÁRIO compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
-                            )
-                          ]),
+                          _vm._m(39),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "3.9 O RESPONSÁVEL SOLIDÁRIO compromete-se a providenciar a mudança do CONTRATANTE e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
-                            )
-                          ]),
+                          _vm._m(40),
                           _vm._v(" "),
                           _c("h4", [
                             _vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")
@@ -50279,11 +50705,11 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._m(25),
+                          _vm._m(41),
                           _vm._v(" "),
-                          _vm._m(26),
+                          _vm._m(42),
                           _vm._v(" "),
-                          _vm._m(27),
+                          _vm._m(43),
                           _vm._v(" "),
                           _c("h4", [
                             _vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")
@@ -50295,17 +50721,9 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "5.1.1 Neste ato, a CONTRATANTE expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
-                            )
-                          ]),
+                          _vm._m(44),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo CONTRATANTE no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
-                            )
-                          ]),
+                          _vm._m(45),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50319,45 +50737,33 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _vm._m(28),
+                          _vm._m(46),
                           _vm._v(" "),
-                          _vm._m(29),
+                          _vm._m(47),
                           _vm._v(" "),
                           _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
                           _vm._v(" "),
-                          _vm._m(30),
+                          _vm._m(48),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao CONTRATANTE e ao RESPONSÁVEL SOLIDÁRIO com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
-                            )
-                          ]),
+                          _vm._m(49),
                           _vm._v(" "),
                           _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
                           _vm._v(" "),
-                          _vm._m(31),
+                          _vm._m(50),
                           _vm._v(" "),
-                          _vm._m(32),
+                          _vm._m(51),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do CONTRATANTE implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do CONTRATANTE, as seguintes correções se aplicarão aos valores contratuais:"
-                            )
-                          ]),
+                          _vm._m(52),
                           _vm._v(" "),
-                          _vm._m(33),
+                          _vm._m(53),
                           _vm._v(" "),
-                          _vm._m(34),
+                          _vm._m(54),
                           _vm._v(" "),
-                          _vm._m(35),
+                          _vm._m(55),
                           _vm._v(" "),
-                          _c("p", [
-                            _vm._v(
-                              "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo CONTRATANTE, as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO, poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo CONTRATANTE ou do RESPONSÁVEL SOLIDÁRIO."
-                            )
-                          ]),
+                          _vm._m(56),
                           _vm._v(" "),
-                          _vm._m(36),
+                          _vm._m(57),
                           _vm._v(" "),
                           _c("p", [
                             _vm._v(
@@ -50400,16 +50806,53 @@ var render = function() {
                           _c("br"),
                           _c("br"),
                           _vm._v(" "),
-                          _vm._m(37),
+                          _c("div", { staticClass: "form-row" }, [
+                            _c("div", { staticClass: "form-group col-md-12" }, [
+                              _c(
+                                "label",
+                                { attrs: { for: "commentsContract" } },
+                                [_vm._v("Comments")]
+                              ),
+                              _vm._v(" "),
+                              _c("textarea", {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: _vm.formContract.comments,
+                                    expression: "formContract.comments"
+                                  }
+                                ],
+                                staticClass: "form-control",
+                                attrs: { id: "commentsContract" },
+                                domProps: { value: _vm.formContract.comments },
+                                on: {
+                                  input: function($event) {
+                                    if ($event.target.composing) {
+                                      return
+                                    }
+                                    _vm.$set(
+                                      _vm.formContract,
+                                      "comments",
+                                      $event.target.value
+                                    )
+                                  }
+                                }
+                              })
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c("br"),
                           _c("br"),
                           _c("br"),
                           _vm._v(" "),
                           _c("p", [
-                            _vm._v(
-                              "Santana de Parnaíba, 06  de  Fevereiro  de 2021 ."
-                            )
+                            _c("i", [
+                              _vm._v(
+                                "Santana de Parnaíba, - " +
+                                  _vm._s(_vm.formContract.date)
+                              )
+                            ])
                           ]),
                           _vm._v(" "),
                           _c("div", [
@@ -50431,11 +50874,9 @@ var render = function() {
                                   _vm._v("Contratada - "),
                                   _c("b", [
                                     _vm._v(
-                                      _vm._s(_vm.formInformation.name) +
-                                        " " +
-                                        _vm._s(_vm.formInformation.name) +
+                                      _vm._s(_vm.user.name) +
                                         " - " +
-                                        _vm._s(_vm.formInformation.CPF)
+                                        _vm._s(_vm.user.CPF)
                                     )
                                   ])
                                 ])
@@ -50457,7 +50898,18 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("p", [_vm._v("Contratante: ")])
+                                _c("p", [
+                                  _vm._v("Contratante - "),
+                                  _c("b", [
+                                    _vm._v(
+                                      _vm._s(_vm.formInformation.name) +
+                                        " " +
+                                        _vm._s(_vm.formInformation.surname) +
+                                        " - " +
+                                        _vm._s(_vm.formInformation.CPF)
+                                    )
+                                  ])
+                                ])
                               ],
                               1
                             ),
@@ -50476,13 +50928,26 @@ var render = function() {
                                   }
                                 }),
                                 _vm._v(" "),
-                                _c("p", [_vm._v("Responsable: ")])
+                                _c("p", [
+                                  _vm._v("Responsable - "),
+                                  _c("b", [
+                                    _vm._v(
+                                      _vm._s(_vm.formContract.familyName) +
+                                        " - " +
+                                        _vm._s(_vm.formContract.CPF)
+                                    )
+                                  ])
+                                ])
                               ],
                               1
                             )
                           ]),
                           _vm._v(" "),
-                          _c("div")
+                          _c("div", [
+                            _c("button", { on: { click: _vm.save } }, [
+                              _vm._v("Save")
+                            ])
+                          ])
                         ])
                       ])
                     ])
@@ -50492,7 +50957,8 @@ var render = function() {
             ])
           ])
         ])
-      ])
+      ]),
+      _vm._v("\n            " + _vm._s(_vm.formContract.date) + "\n\n        ")
     ])
   ])
 }
@@ -50739,22 +51205,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v(
-        "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                    816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                    neste ato representada nos termos do estatuto por "
-      ),
-      _c("b", [_vm._v("Rodrigo Leite Vilela")]),
-      _vm._v(
-        ", portador da cédula de identidade nº 23.806.305-7,\n                                                    inscrito no CPF/MF sob o nº  471.126.976-20  doravante denominada simplesmente "
-      ),
-      _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(". ")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [
       _vm._v("1.1\tA "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -50771,13 +51221,17 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v(
-        "1.2 Ciente o CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO das condições que a "
-      ),
+      _vm._v("1.2 Ciente o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" das condições que a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        " oferece e do Regimento Interno que integra este Contrato,\n                                                    neste ato o CONTRATANTE é admitido para residir no Residencial da "
+        " oferece e do Regimento Interno que integra este Contrato,\n                                                    neste ato o "
       ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" é admitido para residir no Residencial da "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         ", no endereço indicado no preâmbulo deste Contrato,\n                                                    no seguinte tipo de acomodação:"
@@ -50793,7 +51247,9 @@ var staticRenderFns = [
         "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                                                    a "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(" disponibilizará para o CONTRATANTE:")
+      _vm._v(" disponibilizará para o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(":")
     ])
   },
   function() {
@@ -50801,8 +51257,22 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
+      _vm._v("2.1.9 Atendimento psicossocial ao "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e à sua família e "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("2.2 Dependendo das necessidades do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        "2.2 Dependendo das necessidades do CONTRATANTE, de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da "
+        ", de acordo a avaliação médica inicial, abaixo prevista, realizada pelo médico geriatra da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -50832,8 +51302,12 @@ var staticRenderFns = [
       ]),
       _vm._v(" "),
       _c("li", [
+        _vm._v("Outros serviços solicitados pelo "),
+        _c("b", [_vm._v("CONTRATANTE")]),
+        _vm._v(" ou "),
+        _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
         _vm._v(
-          "Outros serviços solicitados pelo CONTRATANTE ou RESPONSÁVEL SOLIDÁRIO, desde que não infrinjam o Regimento Interno ou não sejam objetados pela equipe médica da "
+          ", desde que não infrinjam o Regimento Interno ou não sejam objetados pela equipe médica da "
         ),
         _c("b", [_vm._v("CONTRATADA")]),
         _vm._v(".")
@@ -50846,7 +51320,23 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "2.5 Na hipótese de CONTRATANTE capaz, sua saída ou recebimento de visitas não prescinde de autorização da "
+        "2.4 Os serviços extras somente poderão ser prestados mediante autorização expressa do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        ", sendo facultada a livre prestação dos serviços extras por terceiros"
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("2.5 Na hipótese de "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " capaz, sua saída ou recebimento de visitas não prescinde de autorização da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -50884,11 +51374,25 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "3.6 O CONTRATANTE ou o RESPONSÁVEL SOLIDÁRIO comprometem-se a obter e enviar relatório médico à "
+        "2.7.1 Comunicar à autoridade competente de saúde toda ocorrência de "
       ),
-      _c("b", [_vm._v("CONTRATADA")]),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" portador de doenças infecto-contagiosas;")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v(
-        ", descrevendo o estado geral de saúde do CONTRATANTE, os procedimentos realizados e os cuidados a serem adotados."
+        "2.7.3 Manter banco de dados constando a data e circunstâncias do atendimento, nome do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        ", parentes, endereços, cidade, relação de seus pertences, e demais dados que possibilitem sua identificação e a individualização do atendimento; e"
       )
     ])
   },
@@ -50898,10 +51402,130 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o RESPONSÁVEL SOLIDÁRIO compromete-se a informar a "
+        "2.7.4 Comunicar ao Ministério Público, para as providências cabíveis, a situação de abandono moral ou material por parte dos familiares e "
       ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.1 O CONTRANTE e/ou "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" comprometem-se a:")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.1.3 Manter o alojamento do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" em ordem e em condições de habitabilidade.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.2 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a realizar visitas periódicas ao "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        ", no mínimo duas vezes ao mês na modalidade de serviço residente, para verificar seu estado geral, receber informações a seu respeito e verificar o respeito e cumprimento do Regimento Interno, tanto pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" como por suas visitas.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.3 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a acompanhar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " nos exames laboratoriais e nas internações hospitalares, assumindo a responsabilidade pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" perante àquelas instituições de saúde.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.4 Em caso de internação, o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a acompanhar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" no tratamento e procedimentos a serem adotados.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.5 No ato de alta hospitalar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " comprometem-se a avisar previamente a gerência do Residencial, para que a equipe multidisciplinar avalie o estado geral do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e as necessidades de atendimento especializado.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.6 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" comprometem-se a obter e enviar relatório médico à "),
+      _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(", descrevendo o estado geral de saúde do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", os procedimentos realizados e os cuidados a serem adotados.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "3.7 No início da vigência deste Contrato, e adicionalmente, a cada alteração clínica constatada, o "
+      ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a informar a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(" a respeito das seguintes situações:")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.7.1 Estado de Saúde e quadro clínico do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(": ")
     ])
   },
   function() {
@@ -50931,10 +51555,72 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
+      _vm._v("3.7.2 Convênio médico do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(";")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "3.7.3 Orientações referentes à dieta ou quaisquer outras de origem médica do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(";")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.7.4 Os procedimentos a serem adotados em caso falecimento do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v("; e")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v("3.7.5 Entregar para análise e aprovação da "),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(", a lista de bens pessoais do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", que serão deixados para uso durante a vigência do Contrato. ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
       _vm._v(
-        ", a lista de bens pessoais do CONTRATANTE, que serão deixados para uso durante a vigência do Contrato. "
+        "3.8 Caso as avaliações médicas mensais indiquem alteração no estado de saúde do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " compromete-se a oferecer imediatamente um atendimento médico especializado adequado, na forma de convênio médico ou outro tipo de atendimento."
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("3.9 O "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" compromete-se a providenciar a mudança do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " e de seus pertences no prazo de 5 dias a contar do término do Contrato por qualquer razão."
       )
     ])
   },
@@ -50947,8 +51633,10 @@ var staticRenderFns = [
         "4.2 O Contrato também poderá ser rescindido de pleno direito pela "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" caso o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " caso o CONTRATANTE deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
+        " deixe de pagar duas mensalidades consecutivas, independentemente de aviso, notificação ou interpelação prévia."
       )
     ])
   },
@@ -50958,7 +51646,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do CONTRATANTE para além da capacidade de prestação de serviços adequados ao caso pelo "
+        "4.3 O Contrato será rescindido em função do agravamento do estado físico e/ou mental do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " para além da capacidade de prestação de serviços adequados ao caso pelo "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
@@ -50973,8 +51665,36 @@ var staticRenderFns = [
     return _c("p", [
       _vm._v("4.4 Na hipótese de término do Contrato no curso do mês, a "),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" compromete-se a reembolsar o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " compromete-se a reembolsar o CONTRATANTE dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+        " dos dias pagos e não utilizados, de forma proporcional, abatida a taxa de 10% incidente sobre a parcela mensal."
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("5.1.1 Neste ato, a "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " expressa sua decisão de contratar os serviços objeto deste Contrato pela modalidade marcada acima. "
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "5.1.2 Na hipótese de contratação de materiais, medicamentos e serviços extras, nos termos das Cláusulas 2.2., 2.3 e 2.4, esses deverão ser reembolsados pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " no mês imediatamente seguinte, de acordo com romaneio descritivo que deverá acompanhar a respectiva nota fiscal, com o acréscimo da taxa administrativa definida no Regimento Interno."
       )
     ])
   },
@@ -51003,8 +51723,10 @@ var staticRenderFns = [
         "5.4 O atraso do pagamento por mais de 30 (trinta) dias permite a "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" a incluir o nome do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " a incluir o nome do CONTRATANTE no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
+        " no Serviço de Proteção ao Crédito, bem como interpor ação judicial visando o recebimento do débito, após prévia notificação com antecedência de 10 dias. "
       )
     ])
   },
@@ -51015,9 +51737,11 @@ var staticRenderFns = [
     return _c("p", [
       _vm._v("6.1 Neste ato, a "),
       _c("b", [_vm._v("CONTRATADA")]),
-      _vm._v(
-        " entrega para o CONTRATANTE e para o RESPONSÁVEL SOLIDÁRIO, cópias do Regimento Interno da "
-      ),
+      _vm._v(" entrega para o "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e para o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(", cópias do Regimento Interno da "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " e reconhecem que leram o seu conteúdo, e o aceitam como parte integrante deste Contrato. "
@@ -51029,7 +51753,27 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v("7.1 O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO reconhecem que a "),
+      _vm._v(
+        "6.2 Eventuais alterações no Regimento Interno serão comunicadas e divulgadas ao "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e ao "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        " com a devida antecedência, ficando facultada a resilição do Contrato, caso discordem de suas alterações. "
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("7.1 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" reconhecem que a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " é entidade idônea, que desempenha da melhor forma possível as atividades necessárias ao pleno cumprimento deste Contrato."
@@ -51045,9 +51789,29 @@ var staticRenderFns = [
         "7.2 As partes aceitam a avaliação médica inicial realizada pelo médico geriatra da "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(" a respeito do estado geral de saúde do "),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " a respeito do estado geral de saúde do CONTRATANTE, com base na anamnese realizada, incluindo as informações prestadas pelo RESPONSÁVEL SOLIDÁRIO, nos termos da Cláusula 3.7 acima."
-      )
+        ", com base na anamnese realizada, incluindo as informações prestadas pelo "
+      ),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(", nos termos da Cláusula 3.7 acima.")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v(
+        "7.2.1 Qualquer alteração significativa no estado geral (mental ou físico) do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(
+        " implicará na revisão dos termos deste Contrato ou mesmo na sua rescisão, conforme o caso, observadas as regras da Resolução RDC 283/05 ou da legislação que vier a substituí-la. Em função das características e do quadro evolutivo do estado geral do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(", as seguintes correções se aplicarão aos valores contratuais:")
     ])
   },
   function() {
@@ -51081,7 +51845,9 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("p", [
-      _vm._v("7.2.2 O CONTRATANTE autoriza desde já a "),
+      _vm._v("7.2.2 O "),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" autoriza desde já a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
         " a prestar-lhe os primeiros socorros em caso de necessidade premente, e manifesta a sua concordância com o tratamento emergencial prescrito pela equipe de saúde que o atender, de acordo com o disposto no item 3.4 do Regimento Interno. "
@@ -51094,29 +51860,40 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O CONTRATANTE e o RESPONSÁVEL SOLIDÁRIO expressa e automaticamente eximem a "
+        "7.2.3 As Partes acordam que inexistindo plano de saúde particular contratado pelo "
       ),
-      _c("b", [_vm._v("CONTRATADA")]),
+      _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(
-        " de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
-      )
+        ", as emergências de que trata a cláusula 7.2.2. acima deverão ser atendidas pelo Sistema Único de Saúde – SUS e, excepcionalmente, em caso de autorização expressa do "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou do "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(
+        ", poderá ser utilizado serviço de saúde particular para referidas demandas, que deverão ser arcados pelo "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" ou do "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(".")
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-row" }, [
-      _c("div", { staticClass: "form-group col-md-12" }, [
-        _c("label", { attrs: { for: "commentsContract" } }, [
-          _vm._v("Comments")
-        ]),
-        _vm._v(" "),
-        _c("textarea", {
-          staticClass: "form-control",
-          attrs: { id: "commentsContract" }
-        })
-      ])
+    return _c("p", [
+      _vm._v(
+        "7.2.4 A escolha do atendimento médico do indivíduo é uma decisão pessoal ou de seu responsável legal, conforme o caso. O "
+      ),
+      _c("b", [_vm._v("CONTRATANTE")]),
+      _vm._v(" e o "),
+      _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+      _vm._v(" expressa e automaticamente eximem a "),
+      _c("b", [_vm._v("CONTRATADA")]),
+      _vm._v(
+        " de qualquer responsabilidade sobre eventuais complicações decorrentes de uma opção de conduta médica diferente daquela sugerida pelo corpo médico da CONTRATADA."
+      )
     ])
   }
 ]
@@ -69826,7 +70603,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_signature_pad__WEBPACK_IMPORT
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(v_toaster__WEBPACK_IMPORTED_MODULE_5___default.a, {
   timeout: 3000
 }); // END TOASTER
+//get Authentication from Laravel to VUE JS
 
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.prototype.$userId = document.querySelector("meta[name='user_id']").getAttribute('content');
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

@@ -19,9 +19,12 @@ class UsersController extends Controller
 
     public function index()
     {
-
         return User::where('active', 1)->get();
+    }
 
+    public function show($id)
+    {
+        return User::where('id', $id)->get()->first();
     }
 
 
