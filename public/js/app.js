@@ -4347,14 +4347,31 @@ __webpack_require__.r(__webpack_exports__);
     undo: function undo() {
       this.$refs.signaturePad.undoSignature();
     },
-    save: function save() {// const doc = new jsPDF();
+    save: function save() {
+      // const doc = new jsPDF();
       // const contentHtml = this.$refs.content.innerHTML;
       // console.log(contentHtml);
       // doc.html(contentHtml, 15, 15, {
       //     width: 170
       // });
       // doc.save("sample.pdf");
-      // console.log(this.client.id);
+
+      /** WITH CSS */
+      domtoimage.toPng(this.$refs.content).then(function (dataUrl) {
+        var img = new Image();
+        img.src = dataUrl;
+        var doc = new jsPDF({
+          orientation: "portrait",
+          // unit: "pt",
+          format: [900, 1400]
+        });
+        doc.addImage(img, "JPEG", 20, 20);
+        var date = new Date();
+        var filename = "timechart_" + date.getFullYear() + ("0" + (date.getMonth() + 1)).slice(-2) + ("0" + date.getDate()).slice(-2) + ("0" + date.getHours()).slice(-2) + ("0" + date.getMinutes()).slice(-2) + ("0" + date.getSeconds()).slice(-2) + ".pdf";
+        doc.save(filename);
+      })["catch"](function (error) {
+        console.error("oops, something went wrong!", error);
+      }); // console.log(this.client.id);
       // SAVE CONTRACT
       // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
       // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
