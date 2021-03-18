@@ -3993,6 +3993,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -4463,10 +4476,14 @@ __webpack_require__.r(__webpack_exports__);
       this.formContract.CPF = family.CPF;
       this.formContract.familyName = family.name + ' ' + family.surname;
     },
-    undo: function undo() {
-      this.$refs.signaturePad.undoSignature();
+    undoContract: function undoContract() {
+      this.formContract.comments = '';
+      this.$refs.signaturePadContratada.undoSignature();
+      this.$refs.signaturePadContratante.undoSignature();
+      this.$refs.signaturePadResponsavel.undoSignature();
     },
-    save: function save() {
+    saveContract: function saveContract() {
+      //GENERATE THE CONTRACT TO PDF
       var HTML_Width = $("#printMe").width();
       var HTML_Height = $("#printMe").height();
       var top_left_margin = 15;
@@ -4483,44 +4500,30 @@ __webpack_require__.r(__webpack_exports__);
         windowWidth: document.body.scrollWidth,
         windowHeight: document.body.scrollHeight,
         x: 0,
-        y: 4500
+        y: 5000
       }).then(function (canvas) {
         canvas.getContext('2d');
         console.log(canvas.height + "  " + canvas.width);
         var imgData = canvas.toDataURL("image/jpeg");
-        var pdf = new jspdf__WEBPACK_IMPORTED_MODULE_1__["default"]('p', 'pt', [PDF_Width, PDF_Height]);
-        pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+        var pdf = new jspdf__WEBPACK_IMPORTED_MODULE_1__["default"]('p', 'mm', [PDF_Width, PDF_Height]);
+        pdf.addImage(imgData, 'jpeg', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
 
         for (var i = 1; i <= totalPDFPages; i++) {
           pdf.addPage();
-          pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height * i) + top_left_margin * 4, canvas_image_width, canvas_image_height);
-        }
+          pdf.addImage(imgData, 'jpeg', top_left_margin, -(PDF_Height * i) + top_left_margin * 4, canvas_image_width, canvas_image_height);
+        } // SAVE
 
-        pdf.save("HTML-Document.pdf");
-        var data = btoa(pdf.output());
-        axios.post("/contracts", data).then(function (response) {
+
+        pdf.save("HTML-Document.pdf"); //END GENERATE THE CONTRACT TO PDF
+        // Send information to PHP to save ON SERVER
+
+        var dataPdf = pdf.output('blob');
+        var formData = new FormData();
+        formData.append('pdf', dataPdf);
+        axios.post("/contracts", formData).then(function (response) {
           console.log(response);
         });
-      }); // html2canvas(document.getElementById('printMe'), {
-      //     // useCORS: true,
-      //     width: window.screen.availWidth,
-      //     height: 6500,
-      //     windowWidth: 1000,
-      //     windowHeight: document.body.scrollHeight,
-      //     x: 0,
-      //     y: window.pageYOffset
-      // }).then(function(canvas){
-      //     document.body.appendChild(canvas)
-      //     var imgData = canvas.toDataURL('image/png')
-      //     // PHOTO
-      //     const data = new FormData();
-      //     data.append('photo', imgData);
-      //     axios.post("/contracts", data)
-      //     .then(response =>{
-      //         console.log(response);
-      //     });
-      // })
-      // console.log(this.client.id);
+      }); // console.log(this.client.id);
       // SAVE CONTRACT
       // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
       // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
@@ -60019,17 +60022,23 @@ var render = function() {
                           "div",
                           {
                             key: contract.id,
-                            staticClass: "col-lg-2 col-md-3 col-sm-4 col-6"
+                            staticClass: "col-lg-2 col-md-3 col-4"
                           },
                           [
                             _c("div", { staticClass: "card" }, [
-                              _c("div", {
-                                staticClass: "card-header bg-success",
-                                domProps: { textContent: _vm._s(contract.date) }
-                              }),
-                              _vm._v(" "),
                               _c("div", { staticClass: "card-body" }, [
-                                _vm._v("Content")
+                                _c("img", {
+                                  staticClass: "img-thumbnail",
+                                  attrs: { src: "images/pdf.png" }
+                                }),
+                                _vm._v(" "),
+                                _c("p", {
+                                  staticClass:
+                                    "mb-0 text-center font-weight-bold",
+                                  domProps: {
+                                    textContent: _vm._s(contract.date)
+                                  }
+                                })
                               ]),
                               _vm._v(" "),
                               _vm._m(10, true)
@@ -60040,528 +60049,575 @@ var render = function() {
                       0
                     ),
                     _vm._v(" "),
-                    _c("div", { ref: "printMe", staticClass: "card" }, [
-                      _vm._m(11),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "card-body", attrs: { id: "printMe" } },
-                        [
-                          _c("div", { staticClass: "tab-content" }, [
-                            _c("p", [
-                              _vm._v(
-                                "Pelo presente instrumento particular, por um lado: "
-                              )
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("Sr(a)"),
-                              _c("b", [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "row justify-content-center",
+                        attrs: { id: "printMe" }
+                      },
+                      [
+                        _c("div", { staticClass: "card col-md-10 col-12" }, [
+                          _vm._m(11),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "card-body" }, [
+                            _c("div", { staticClass: "tab-content" }, [
+                              _c("p", [
                                 _vm._v(
-                                  " " +
-                                    _vm._s(_vm.formInformation.name) +
-                                    " " +
-                                    _vm._s(_vm.formInformation.surname)
+                                  "Pelo presente instrumento particular, por um lado: "
                                 )
                               ]),
-                              _vm._v(", CPF "),
-                              _c("b", [
-                                _vm._v(_vm._s(_vm.formInformation.CPF))
-                              ]),
-                              _vm._v(
-                                ", doravante denominada (a) simplesmente "
-                              ),
-                              _c("b", [_vm._v("CONTRATANTE")]),
-                              _vm._v(
-                                ";\n                                                    e a Sr(a) "
-                              ),
-                              _c(
-                                "select",
-                                {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.formContract.familyId,
-                                      expression: "formContract.familyId"
-                                    }
-                                  ],
-                                  on: {
-                                    change: [
-                                      function($event) {
-                                        var $$selectedVal = Array.prototype.filter
-                                          .call($event.target.options, function(
-                                            o
-                                          ) {
-                                            return o.selected
-                                          })
-                                          .map(function(o) {
-                                            var val =
-                                              "_value" in o ? o._value : o.value
-                                            return val
-                                          })
-                                        _vm.$set(
-                                          _vm.formContract,
-                                          "familyId",
-                                          $event.target.multiple
-                                            ? $$selectedVal
-                                            : $$selectedVal[0]
-                                        )
-                                      },
-                                      function($event) {
-                                        return _vm.onChangeContractFamily(
-                                          $event
-                                        )
-                                      }
-                                    ]
-                                  }
-                                },
-                                _vm._l(_vm.familyList, function(family, index) {
-                                  return _c("option", {
-                                    key: index,
-                                    domProps: {
-                                      value: family.id,
-                                      innerHTML: _vm._s(family.name)
-                                    }
-                                  })
-                                }),
-                                0
-                              ),
-                              _vm._v(", portador(a)  do CPF/MF sob o nr "),
-                              _c("b", [_vm._v(_vm._s(_vm.formContract.CPF))]),
-                              _vm._v(
-                                " que\n                                                     assina este Contrato como interveniente anuente e em caráter solidário ao "
-                              ),
-                              _c("b", [_vm._v("CONTRATANTE")]),
-                              _vm._v(
-                                ",\n                                                    doravante denominado simplesmente "
-                              ),
-                              _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
-                              _vm._v(";")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [_vm._v("e por outro:")]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                    816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                    neste ato representada nos termos do estatuto por "
-                              ),
-                              _c("b", [_vm._v(_vm._s(_vm.user.name))]),
-                              _vm._v(", portador da cédula de identidade nº "),
-                              _c("b", [_vm._v(_vm._s(_vm.user.RG))]),
-                              _vm._v(
-                                ",\n                                                    inscrito no CPF/MF sob o nº "
-                              ),
-                              _c("b", [_vm._v(_vm._s(_vm.user.CPF))]),
-                              _vm._v(" doravante denominada simplesmente "),
-                              _c("b", [_vm._v("CONTRATADA")]),
-                              _vm._v(". ")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "As partes acima identificadas têm, entre si, justo e acertado este Contrato de Prestação de Serviços (“Contrato”),\n                                                    conforme determina o artigo 35 da Lei nº 10.741, de 1º de outubro de 2003 – Estatuto do Idoso e demais legislação aplicável à espécie,\n                                                    que se regerá pelas cláusulas seguintes e pelas condições dispostas nas normativas a seguir descritas:"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("h4", [_vm._v("1. DO OBJETO")]),
-                            _vm._v(" "),
-                            _vm._m(12),
-                            _vm._v(" "),
-                            _vm._m(13),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("1.3\tApartamento  08    com 02 leitos.")
-                            ]),
-                            _vm._v(" "),
-                            _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
-                            _vm._v(" "),
-                            _vm._m(14),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.1.1 Serviços de hospedagem, nas condições descritas acima e que permita o adequado recebimento de visitas;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.1.2 Alimentação, por meio de seis refeições diárias balanceadas e em quantidades compatíveis com suas necessidades energéticas e nutricionais;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.1.3 Lavagem de suas roupas, limitado a 90 peças por mês."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.1.4 Auxílio na realização do seu asseio e higiene pessoal, na medida das suas necessidades e capacidades;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("2.1.5 Serviços contínuos de enfermagem;")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [_vm._v("2.1.6 Acompanhamento médico, ")]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.1.7 Promoção de atividades educacionais, esportivas, culturais e de lazer, promovendo, ainda, assistência religiosa aos idosos que assim desejarem;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("2.1.8 Convivência comunitária; e")
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(15),
-                            _vm._v(" "),
-                            _vm._m(16),
-                            _vm._v(" "),
-                            _vm._m(17),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(18),
-                            _vm._v(" "),
-                            _vm._m(19),
-                            _vm._v(" "),
-                            _vm._m(20),
-                            _vm._v(" "),
-                            _vm._m(21),
-                            _vm._v(" "),
-                            _vm._m(22),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(23),
-                            _vm._v(" "),
-                            _vm._m(24),
-                            _vm._v(" "),
-                            _c("h4", [
-                              _vm._v(
-                                "3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(25),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "3.1.1 Pagar pontualmente as mensalidades e todos os serviços extras;"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v("3.1.2 Respeitar o Regimento Interno; e")
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(26),
-                            _vm._v(" "),
-                            _vm._m(27),
-                            _vm._v(" "),
-                            _vm._m(28),
-                            _vm._v(" "),
-                            _vm._m(29),
-                            _vm._v(" "),
-                            _vm._m(30),
-                            _vm._v(" "),
-                            _vm._m(31),
-                            _vm._v(" "),
-                            _vm._m(32),
-                            _vm._v(" "),
-                            _vm._m(33),
-                            _vm._v(" "),
-                            _vm._m(34),
-                            _vm._v(" "),
-                            _vm._m(35),
-                            _vm._v(" "),
-                            _vm._m(36),
-                            _vm._v(" "),
-                            _vm._m(37),
-                            _vm._v(" "),
-                            _vm._m(38),
-                            _vm._v(" "),
-                            _vm._m(39),
-                            _vm._v(" "),
-                            _vm._m(40),
-                            _vm._v(" "),
-                            _c("h4", [
-                              _vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "4.1 O prazo deste Contrato é indeterminado, podendo ser renovado automaticamente havendo interesse entre as partes. Também pode ser rescindido a qualquer tempo, por qualquer das partes após comunicação por escrito da outra parte, com antecedência de 30 dias corridos."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(41),
-                            _vm._v(" "),
-                            _vm._m(42),
-                            _vm._v(" "),
-                            _vm._m(43),
-                            _vm._v(" "),
-                            _c("h4", [
-                              _vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "5.1 O valor  dos serviços objeto do Contrato é de R$6.500,00 (seis mil e quinhentos Reais) por mes, a ser pago antecipadamente até o dia 10 de cada mês.    "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(44),
-                            _vm._v(" "),
-                            _vm._m(45),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._m(46),
-                            _vm._v(" "),
-                            _vm._m(47),
-                            _vm._v(" "),
-                            _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
-                            _vm._v(" "),
-                            _vm._m(48),
-                            _vm._v(" "),
-                            _vm._m(49),
-                            _vm._v(" "),
-                            _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
-                            _vm._v(" "),
-                            _vm._m(50),
-                            _vm._v(" "),
-                            _vm._m(51),
-                            _vm._v(" "),
-                            _vm._m(52),
-                            _vm._v(" "),
-                            _vm._m(53),
-                            _vm._v(" "),
-                            _vm._m(54),
-                            _vm._v(" "),
-                            _vm._m(55),
-                            _vm._v(" "),
-                            _vm._m(56),
-                            _vm._v(" "),
-                            _vm._m(57),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "7.3 As partes não poderão ceder, total ou parcialmente, os direitos ou obrigações assumidas no presente contrato, salvo se expressamente aprovado pela outra parte."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "7.4 Qualquer tolerância das partes relativamente ao cumprimento das obrigações aqui assumidas não importará em novação ou alteração, tácita ou expressa, nem caracterizará renúncia de qualquer direito."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "7.5 Nenhuma das partes será responsável ou será considerada faltosa pelo descumprimento de qualquer cláusula deste Contrato, se impedida de desempenhar suas obrigações por motivos de força maior ou caso fortuito, incluindo, mas não se limitando a greves, incêndios, terremotos, guerras ou outras contingências além da previsão ou controle das partes, na forma do artigo 393 do Código Civil."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("h4", [_vm._v("8. FORO")]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "8.1 As partes elegem o Foro Central da Comarca de Barueri para dirimir as pendências que surgirem deste Contrato."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _vm._v(
-                                "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("br"),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "form-row" }, [
-                              _c(
-                                "div",
-                                { staticClass: "form-group col-md-12" },
-                                [
-                                  _c(
-                                    "label",
-                                    { attrs: { for: "commentsContract" } },
-                                    [_vm._v("Comments")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("textarea", {
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v("Sr(a)"),
+                                _c("b", [
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(_vm.formInformation.name) +
+                                      " " +
+                                      _vm._s(_vm.formInformation.surname)
+                                  )
+                                ]),
+                                _vm._v(", CPF "),
+                                _c("b", [
+                                  _vm._v(_vm._s(_vm.formInformation.CPF))
+                                ]),
+                                _vm._v(
+                                  ", doravante denominada (a) simplesmente "
+                                ),
+                                _c("b", [_vm._v("CONTRATANTE")]),
+                                _vm._v(
+                                  ";\n                                                        e a Sr(a) "
+                                ),
+                                _c(
+                                  "select",
+                                  {
                                     directives: [
                                       {
                                         name: "model",
                                         rawName: "v-model",
-                                        value: _vm.formContract.comments,
-                                        expression: "formContract.comments"
+                                        value: _vm.formContract.familyId,
+                                        expression: "formContract.familyId"
                                       }
                                     ],
-                                    staticClass: "form-control",
-                                    attrs: { id: "commentsContract" },
-                                    domProps: {
-                                      value: _vm.formContract.comments
-                                    },
                                     on: {
-                                      input: function($event) {
-                                        if ($event.target.composing) {
-                                          return
+                                      change: [
+                                        function($event) {
+                                          var $$selectedVal = Array.prototype.filter
+                                            .call(
+                                              $event.target.options,
+                                              function(o) {
+                                                return o.selected
+                                              }
+                                            )
+                                            .map(function(o) {
+                                              var val =
+                                                "_value" in o
+                                                  ? o._value
+                                                  : o.value
+                                              return val
+                                            })
+                                          _vm.$set(
+                                            _vm.formContract,
+                                            "familyId",
+                                            $event.target.multiple
+                                              ? $$selectedVal
+                                              : $$selectedVal[0]
+                                          )
+                                        },
+                                        function($event) {
+                                          return _vm.onChangeContractFamily(
+                                            $event
+                                          )
                                         }
-                                        _vm.$set(
-                                          _vm.formContract,
-                                          "comments",
-                                          $event.target.value
-                                        )
+                                      ]
+                                    }
+                                  },
+                                  _vm._l(_vm.familyList, function(
+                                    family,
+                                    index
+                                  ) {
+                                    return _c("option", {
+                                      key: index,
+                                      domProps: {
+                                        value: family.id,
+                                        innerHTML: _vm._s(family.name)
                                       }
-                                    }
-                                  })
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("br"),
-                            _c("br"),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("p", [
-                              _c("i", [
+                                    })
+                                  }),
+                                  0
+                                ),
+                                _vm._v(", portador(a)  do CPF/MF sob o nr "),
+                                _c("b", [_vm._v(_vm._s(_vm.formContract.CPF))]),
                                 _vm._v(
-                                  "Santana de Parnaíba, - " +
-                                    _vm._s(_vm.formContract.date)
+                                  " que\n                                                        assina este Contrato como interveniente anuente e em caráter solidário ao "
+                                ),
+                                _c("b", [_vm._v("CONTRATANTE")]),
+                                _vm._v(
+                                  ",\n                                                        doravante denominado simplesmente "
+                                ),
+                                _c("b", [_vm._v("RESPONSÁVEL SOLIDÁRIO")]),
+                                _vm._v(";")
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [_vm._v("e por outro:")]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "A Vivenda Quinta das Flores, com sede Santana de Parnaíba, na Rua Luís Antônio Rodrigues,\n                                                        816 - Santana de Parnaíba – SP - CEP 06503-112 , inscrita no CNPJ sob o nº 19.808.311/0001-00,\n                                                        neste ato representada nos termos do estatuto por "
+                                ),
+                                _c("b", [_vm._v(_vm._s(_vm.user.name))]),
+                                _vm._v(
+                                  ", portador da cédula de identidade nº "
+                                ),
+                                _c("b", [_vm._v(_vm._s(_vm.user.RG))]),
+                                _vm._v(
+                                  ",\n                                                        inscrito no CPF/MF sob o nº "
+                                ),
+                                _c("b", [_vm._v(_vm._s(_vm.user.CPF))]),
+                                _vm._v(" doravante denominada simplesmente "),
+                                _c("b", [_vm._v("CONTRATADA")]),
+                                _vm._v(". ")
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "As partes acima identificadas têm, entre si, justo e acertado este Contrato de Prestação de Serviços (“Contrato”),\n                                                        conforme determina o artigo 35 da Lei nº 10.741, de 1º de outubro de 2003 – Estatuto do Idoso e demais legislação aplicável à espécie,\n                                                        que se regerá pelas cláusulas seguintes e pelas condições dispostas nas normativas a seguir descritas:"
                                 )
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", [
-                              _c(
-                                "div",
-                                { staticClass: "signatures" },
-                                [
-                                  _c("VueSignaturePad", {
-                                    ref: "signaturePadContratada",
-                                    staticClass: "border-bottom bg-light",
-                                    attrs: {
-                                      width: "500px",
-                                      height: "100px",
-                                      saveType: "image/png"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("p", [
-                                    _vm._v("Contratada - "),
-                                    _c("b", [
-                                      _vm._v(
-                                        _vm._s(_vm.user.name) +
-                                          " - " +
-                                          _vm._s(_vm.user.CPF)
-                                      )
-                                    ])
-                                  ])
-                                ],
-                                1
-                              ),
+                              ]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "signatures" },
-                                [
-                                  _c("VueSignaturePad", {
-                                    ref: "signaturePadContratante",
-                                    staticClass: "border-bottom bg-light",
-                                    attrs: {
-                                      width: "500px",
-                                      height: "100px",
-                                      saveType: "image/png"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("p", [
-                                    _vm._v("Contratante - "),
-                                    _c("b", [
-                                      _vm._v(
-                                        _vm._s(_vm.formInformation.name) +
-                                          " " +
-                                          _vm._s(_vm.formInformation.surname) +
-                                          " - " +
-                                          _vm._s(_vm.formInformation.CPF)
-                                      )
-                                    ])
-                                  ])
-                                ],
-                                1
-                              ),
+                              _c("h4", [_vm._v("1. DO OBJETO")]),
                               _vm._v(" "),
-                              _c(
-                                "div",
-                                { staticClass: "signatures" },
-                                [
-                                  _c("VueSignaturePad", {
-                                    ref: "signaturePadResponsavel",
-                                    staticClass: "border-bottom bg-light",
+                              _vm._m(12),
+                              _vm._v(" "),
+                              _vm._m(13),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v("1.3\tApartamento  08    com 02 leitos.")
+                              ]),
+                              _vm._v(" "),
+                              _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
+                              _vm._v(" "),
+                              _vm._m(14),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.1 Serviços de hospedagem, nas condições descritas acima e que permita o adequado recebimento de visitas;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.2 Alimentação, por meio de seis refeições diárias balanceadas e em quantidades compatíveis com suas necessidades energéticas e nutricionais;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.3 Lavagem de suas roupas, limitado a 90 peças por mês."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.4 Auxílio na realização do seu asseio e higiene pessoal, na medida das suas necessidades e capacidades;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.5 Serviços contínuos de enfermagem;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v("2.1.6 Acompanhamento médico, ")
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.1.7 Promoção de atividades educacionais, esportivas, culturais e de lazer, promovendo, ainda, assistência religiosa aos idosos que assim desejarem;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v("2.1.8 Convivência comunitária; e")
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(15),
+                              _vm._v(" "),
+                              _vm._m(16),
+                              _vm._v(" "),
+                              _vm._m(17),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(18),
+                              _vm._v(" "),
+                              _vm._m(19),
+                              _vm._v(" "),
+                              _vm._m(20),
+                              _vm._v(" "),
+                              _vm._m(21),
+                              _vm._v(" "),
+                              _vm._m(22),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(23),
+                              _vm._v(" "),
+                              _vm._m(24),
+                              _vm._v(" "),
+                              _c("h4", [
+                                _vm._v(
+                                  "3. OBRIGAÇÕES DO CONTRATANTE E DO RESPONSÁVEL SOLIDÁRIO"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(25),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "3.1.1 Pagar pontualmente as mensalidades e todos os serviços extras;"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v("3.1.2 Respeitar o Regimento Interno; e")
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(26),
+                              _vm._v(" "),
+                              _vm._m(27),
+                              _vm._v(" "),
+                              _vm._m(28),
+                              _vm._v(" "),
+                              _vm._m(29),
+                              _vm._v(" "),
+                              _vm._m(30),
+                              _vm._v(" "),
+                              _vm._m(31),
+                              _vm._v(" "),
+                              _vm._m(32),
+                              _vm._v(" "),
+                              _vm._m(33),
+                              _vm._v(" "),
+                              _vm._m(34),
+                              _vm._v(" "),
+                              _vm._m(35),
+                              _vm._v(" "),
+                              _vm._m(36),
+                              _vm._v(" "),
+                              _vm._m(37),
+                              _vm._v(" "),
+                              _vm._m(38),
+                              _vm._v(" "),
+                              _vm._m(39),
+                              _vm._v(" "),
+                              _vm._m(40),
+                              _vm._v(" "),
+                              _c("h4", [
+                                _vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "4.1 O prazo deste Contrato é indeterminado, podendo ser renovado automaticamente havendo interesse entre as partes. Também pode ser rescindido a qualquer tempo, por qualquer das partes após comunicação por escrito da outra parte, com antecedência de 30 dias corridos."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(41),
+                              _vm._v(" "),
+                              _vm._m(42),
+                              _vm._v(" "),
+                              _vm._m(43),
+                              _vm._v(" "),
+                              _c("h4", [
+                                _vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "5.1 O valor  dos serviços objeto do Contrato é de R$6.500,00 (seis mil e quinhentos Reais) por mes, a ser pago antecipadamente até o dia 10 de cada mês.    "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(44),
+                              _vm._v(" "),
+                              _vm._m(45),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "5.2 O Contrato será reajustado anualmente, todo o mês de junho, com base no índice do IGP-M da FGV, ou pelo índice que vier a substituí-lo. Na hipótese de contratos com vigência por menos de 1 ano, o reajuste será proporcional."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "5.3 O atraso no pagamento da parcela mensal acarretará a aplicação de:"
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _vm._m(46),
+                              _vm._v(" "),
+                              _vm._m(47),
+                              _vm._v(" "),
+                              _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
+                              _vm._v(" "),
+                              _vm._m(48),
+                              _vm._v(" "),
+                              _vm._m(49),
+                              _vm._v(" "),
+                              _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
+                              _vm._v(" "),
+                              _vm._m(50),
+                              _vm._v(" "),
+                              _vm._m(51),
+                              _vm._v(" "),
+                              _vm._m(52),
+                              _vm._v(" "),
+                              _vm._m(53),
+                              _vm._v(" "),
+                              _vm._m(54),
+                              _vm._v(" "),
+                              _vm._m(55),
+                              _vm._v(" "),
+                              _vm._m(56),
+                              _vm._v(" "),
+                              _vm._m(57),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "7.3 As partes não poderão ceder, total ou parcialmente, os direitos ou obrigações assumidas no presente contrato, salvo se expressamente aprovado pela outra parte."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "7.4 Qualquer tolerância das partes relativamente ao cumprimento das obrigações aqui assumidas não importará em novação ou alteração, tácita ou expressa, nem caracterizará renúncia de qualquer direito."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "7.5 Nenhuma das partes será responsável ou será considerada faltosa pelo descumprimento de qualquer cláusula deste Contrato, se impedida de desempenhar suas obrigações por motivos de força maior ou caso fortuito, incluindo, mas não se limitando a greves, incêndios, terremotos, guerras ou outras contingências além da previsão ou controle das partes, na forma do artigo 393 do Código Civil."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("h4", [_vm._v("8. FORO")]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "8.1 As partes elegem o Foro Central da Comarca de Barueri para dirimir as pendências que surgirem deste Contrato."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "Por fim, declaram ter lido todo o Contrato e Anexos e estarem cientes e de acordo com as suas cláusulas e condições, que obrigam as partes e seus sucessores."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("p", [
+                                _vm._v(
+                                  "E por estarem justas e contratadas, as partes assinam este Contrato em duas vias de igual teor, rubricando todas as suas páginas, na presença de duas testemunhas."
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("br"),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "form-row" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-12" },
+                                  [
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "commentsContract" } },
+                                      [_vm._v("Comments")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("textarea", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.formContract.comments,
+                                          expression: "formContract.comments"
+                                        }
+                                      ],
+                                      staticClass: "form-control",
+                                      attrs: { id: "commentsContract" },
+                                      domProps: {
+                                        value: _vm.formContract.comments
+                                      },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.formContract,
+                                            "comments",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("br"),
+                              _c("br"),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("p", [
+                                _c("i", [
+                                  _vm._v(
+                                    "Santana de Parnaíba, - " +
+                                      _vm._s(_vm.formContract.date)
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", [
+                                _c("div", { staticClass: "signatures row" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "col-lg-6 col-10" },
+                                    [
+                                      _c("VueSignaturePad", {
+                                        ref: "signaturePadContratada",
+                                        staticClass: "border-bottom bg-light",
+                                        attrs: {
+                                          height: "100px",
+                                          saveType: "image/png"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("p", [
+                                        _vm._v("Contratada - "),
+                                        _c("b", [
+                                          _vm._v(
+                                            _vm._s(_vm.user.name) +
+                                              " - " +
+                                              _vm._s(_vm.user.CPF)
+                                          )
+                                        ])
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "signatures row" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "col-lg-6 col-10" },
+                                    [
+                                      _c("VueSignaturePad", {
+                                        ref: "signaturePadContratante",
+                                        staticClass: "border-bottom bg-light",
+                                        attrs: {
+                                          height: "100px",
+                                          saveType: "image/png"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("p", [
+                                        _vm._v("Contratante - "),
+                                        _c("b", [
+                                          _vm._v(
+                                            _vm._s(_vm.formInformation.name) +
+                                              " " +
+                                              _vm._s(
+                                                _vm.formInformation.surname
+                                              ) +
+                                              " - " +
+                                              _vm._s(_vm.formInformation.CPF)
+                                          )
+                                        ])
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "signatures row" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "col-lg-6 col-10" },
+                                    [
+                                      _c("VueSignaturePad", {
+                                        ref: "signaturePadResponsavel",
+                                        staticClass: "border-bottom bg-light",
+                                        attrs: {
+                                          height: "100px",
+                                          saveType: "image/png"
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c("p", [
+                                        _vm._v("Responsable - "),
+                                        _c("b", [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm.formContract.familyName
+                                            ) +
+                                              " - " +
+                                              _vm._s(_vm.formContract.CPF)
+                                          )
+                                        ])
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-success",
                                     attrs: {
-                                      width: "500px",
-                                      height: "100px",
-                                      saveType: "image/png"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("p", [
-                                    _vm._v("Responsable - "),
-                                    _c("b", [
-                                      _vm._v(
-                                        _vm._s(_vm.formContract.familyName) +
-                                          " - " +
-                                          _vm._s(_vm.formContract.CPF)
-                                      )
-                                    ])
-                                  ])
-                                ],
-                                1
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", [
-                              _c("button", { on: { click: _vm.save } }, [
-                                _vm._v("Save")
+                                      disabled: _vm.formContract.familyId == ""
+                                    },
+                                    on: { click: _vm.saveContract }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fas fa-save" }),
+                                    _vm._v(" Submit")
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-warning",
+                                    on: { click: _vm.undoContract }
+                                  },
+                                  [
+                                    _c("i", { staticClass: "fas fa-undo" }),
+                                    _vm._v(" Undo")
+                                  ]
+                                )
                               ])
                             ])
                           ])
-                        ]
-                      )
-                    ])
+                        ])
+                      ]
+                    )
                   ]
                 )
               ])
@@ -60818,11 +60874,11 @@ var staticRenderFns = [
       _vm._v("1.1\tA "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        " disponibiliza alojamentos para pessoas acima de 60 anos, oferecendo infra-estrutura e recursos humanos adequados,\n                                                    hospedagem e atenção à saúde, dentro da legislação vigente. A "
+        " disponibiliza alojamentos para pessoas acima de 60 anos, oferecendo infra-estrutura e recursos humanos adequados,\n                                                        hospedagem e atenção à saúde, dentro da legislação vigente. A "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        " tem disponível em suas dependências dormitórios com diferentes\n                                                    números de leitos, de forma que a acomodação objeto deste Contrato está especificada na cláusula 1.3. abaixo."
+        " tem disponível em suas dependências dormitórios com diferentes\n                                                        números de leitos, de forma que a acomodação objeto deste Contrato está especificada na cláusula 1.3. abaixo."
       )
     ])
   },
@@ -60838,13 +60894,13 @@ var staticRenderFns = [
       _vm._v(" das condições que a "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        " oferece e do Regimento Interno que integra este Contrato,\n                                                    neste ato o "
+        " oferece e do Regimento Interno que integra este Contrato,\n                                                        neste ato o "
       ),
       _c("b", [_vm._v("CONTRATANTE")]),
       _vm._v(" é admitido para residir no Residencial da "),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(
-        ", no endereço indicado no preâmbulo deste Contrato,\n                                                    no seguinte tipo de acomodação:"
+        ", no endereço indicado no preâmbulo deste Contrato,\n                                                        no seguinte tipo de acomodação:"
       )
     ])
   },
@@ -60854,7 +60910,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("p", [
       _vm._v(
-        "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                                                    a "
+        "2.1 Em atenção à sua saúde, abordando aspectos de promoção, proteção e prevenção e objetivando a preservação dos vínculos familiares,\n                                                        a "
       ),
       _c("b", [_vm._v("CONTRATADA")]),
       _vm._v(" disponibilizará para o "),

@@ -22,8 +22,7 @@ class ContractController extends Controller
     public function store(Request $request)
     {
 
-        $data = base64_decode($request);
-        file_put_contents( "storage/storage/uploads/contracts/contrato.pdf", $data, LOCK_EX );
+        move_uploaded_file($request['pdf'],"storage/storage/uploads/contracts/contrato.pdf" );
         return $request;
 
 
