@@ -511,11 +511,11 @@
 
 
                                         <!-- CONTRACT SHOW -->
-                                        <div class="card" ref="content">
+                                        <div class="card" ref="printMe">
                                             <div class="card-header d-flex p-0">
                                                 <h3 class="card-title p-3">CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE IDOSO CAPAZ</h3>
                                             </div>
-                                            <div class="card-body">
+                                            <div class="card-body"  id="printMe">
                                                 <div class="tab-content">
                                                     <p>Pelo presente instrumento particular, por um lado: </p><br>
                                                     <p>Sr(a)<b> {{formInformation.name}} {{formInformation.surname}}</b>, CPF <b>{{formInformation.CPF}}</b>, doravante denominada (a) simplesmente <b>CONTRATANTE</b>;
@@ -691,7 +691,6 @@
                     </div>
                 <!-- /.col -->
                 </div>
-                {{formContract.date}}
 
             </div>
 
@@ -699,8 +698,11 @@
 </template>
 
  <script>
+import html2canvas from 'html2canvas';
+import jspdf from 'jspdf';
 
     export default {
+
         data() {
             return {
                 user_id : this.$userId, //======> AUTH()->id
@@ -1291,42 +1293,81 @@
             },
             save() {
 
-                // const doc = new jsPDF();
-                // const contentHtml = this.$refs.content.innerHTML;
-                // console.log(contentHtml);
-                // doc.html(contentHtml, 15, 15, {
-                //     width: 170
-                // });
-                // doc.save("sample.pdf");
+
+                var HTML_Width = $("#printMe").width();
+                var HTML_Height = $("#printMe").height();
+
+                var top_left_margin = 15;
+                var PDF_Width = HTML_Width+(top_left_margin*2);
+                var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+                var canvas_image_width = HTML_Width;
+                var canvas_image_height = HTML_Height;
+
+                var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+                console.log(totalPDFPages);
+                console.log(window.pageYOffset);
 
 
-                   /** WITH CSS */
-    domtoimage
-    .toPng(this.$refs.content)
-    .then(function(dataUrl) {
-      var img = new Image();
-      img.src = dataUrl;
-      const doc = new jsPDF({
-        orientation: "portrait",
-        // unit: "pt",
-        format: [900, 1400]
-      });
-      doc.addImage(img, "JPEG", 20, 20);
-      const date = new Date();
-      const filename =
-        "timechart_" +
-        date.getFullYear() +
-        ("0" + (date.getMonth() + 1)).slice(-2) +
-        ("0" + date.getDate()).slice(-2) +
-        ("0" + date.getHours()).slice(-2) +
-        ("0" + date.getMinutes()).slice(-2) +
-        ("0" + date.getSeconds()).slice(-2) +
-        ".pdf";
-      doc.save(filename);
-    })
-    .catch(function(error) {
-      console.error("oops, something went wrong!", error);
-    });
+                html2canvas($("#printMe")[0],{
+                    width: window.screen.availWidth,
+                    height: 6000,
+                    windowWidth: document.body.scrollWidth,
+                    windowHeight: document.body.scrollHeight,
+                    x: 0,
+                    y: 4500
+                    }).then(function(canvas) {
+                    canvas.getContext('2d');
+
+                    console.log(canvas.height+"  "+canvas.width);
+
+
+                    var imgData = canvas.toDataURL("image/jpeg");
+                    var pdf = new jspdf('p', 'pt',  [PDF_Width, PDF_Height]);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+
+
+                    for (var i = 1; i <= totalPDFPages; i++) {
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    }
+
+                    pdf.save("HTML-Document.pdf");
+
+                    var data = btoa(pdf.output());
+
+                        axios.post("/contracts", data)
+                            .then(response =>{
+                                console.log(response);
+                            });
+
+
+                });
+
+
+
+                // html2canvas(document.getElementById('printMe'), {
+                //     // useCORS: true,
+                //     width: window.screen.availWidth,
+                //     height: 6500,
+                //     windowWidth: 1000,
+                //     windowHeight: document.body.scrollHeight,
+                //     x: 0,
+                //     y: window.pageYOffset
+                // }).then(function(canvas){
+                //     document.body.appendChild(canvas)
+                //     var imgData = canvas.toDataURL('image/png')
+
+
+
+                //     // PHOTO
+                //     const data = new FormData();
+                //     data.append('photo', imgData);
+
+                //     axios.post("/contracts", data)
+                //     .then(response =>{
+                //         console.log(response);
+                //     });
+                // })
 
 
                 // console.log(this.client.id);
