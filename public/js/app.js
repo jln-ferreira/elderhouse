@@ -4483,7 +4483,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.signaturePadResponsavel.undoSignature();
     },
     saveContract: function saveContract() {
-      //GENERATE THE CONTRACT TO PDF
+      //GETTING INFORMATION OF WINDOWS SIZES
       var HTML_Width = $("#printMe").width();
       var HTML_Height = $("#printMe").height();
       var top_left_margin = 15;
@@ -4491,9 +4491,11 @@ __webpack_require__.r(__webpack_exports__);
       var PDF_Height = PDF_Width * 1.5 + top_left_margin * 2;
       var canvas_image_width = HTML_Width;
       var canvas_image_height = HTML_Height;
-      var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1;
-      console.log(totalPDFPages);
-      console.log(window.pageYOffset);
+      var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1; // -------------------------------------
+      //contract info passing to SCOPES
+
+      var formContract = this.formContract; // CANVAS------>
+
       html2canvas__WEBPACK_IMPORTED_MODULE_0___default()($("#printMe")[0], {
         width: window.screen.availWidth,
         height: 6000,
@@ -4502,37 +4504,34 @@ __webpack_require__.r(__webpack_exports__);
         x: 0,
         y: 5000
       }).then(function (canvas) {
-        canvas.getContext('2d');
-        console.log(canvas.height + "  " + canvas.width);
+        canvas.getContext('2d'); // TURN CANVAS TO PDF
+        //------------------
+
         var imgData = canvas.toDataURL("image/jpeg");
         var pdf = new jspdf__WEBPACK_IMPORTED_MODULE_1__["default"]('p', 'mm', [PDF_Width, PDF_Height]);
-        pdf.addImage(imgData, 'jpeg', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height);
+        pdf.addImage(imgData, 'jpeg', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height); // ADD PAGES
 
         for (var i = 1; i <= totalPDFPages; i++) {
           pdf.addPage();
           pdf.addImage(imgData, 'jpeg', top_left_margin, -(PDF_Height * i) + top_left_margin * 4, canvas_image_width, canvas_image_height);
         } // SAVE
-
-
-        pdf.save("HTML-Document.pdf"); //END GENERATE THE CONTRACT TO PDF
+        // pdf.save("HTML-Document.pdf");
+        //END GENERATE THE CONTRACT TO PDF
         // Send information to PHP to save ON SERVER
+
 
         var dataPdf = pdf.output('blob');
         var formData = new FormData();
         formData.append('pdf', dataPdf);
-        axios.post("/contracts", formData).then(function (response) {
-          console.log(response);
+        formData.append('number', Math.floor(Math.random() * 99999999)); //contract info passing to SCOPES
+
+        var contractInfo = formContract;
+        axios.post("/contractSave", formData).then(function (response) {
+          console.log('this', contractInfo); // console.log(this.formContract);
+          // this.contractName = response;
+          // console.log(this.contractName);
         });
-      }); // console.log(this.client.id);
-      // SAVE CONTRACT
-      // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
-      // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
-      // const { isEmptyResponsavel, dataResponsavel } = this.$refs.signaturePadResponsavel.saveSignature();
-      // let signatures = [dataContratada, dataContratante, dataResponsavel];
-      // axios.post("/contracts", signatures)
-      // .then(response =>{
-      //     console.log(response);
-      // })
+      });
     }
   }
 });
