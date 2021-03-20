@@ -489,7 +489,7 @@
                                         <!-- //ALL CONTRACTS -->
                                         <div class="row">
 
-                                            <div class="col-lg-2 col-md-3 col-4"  v-for=" contract in allContracts" v-bind:key="contract.id">
+                                            <div class="col-lg-2 col-md-3 col-4"  v-for="contract in allContracts" v-bind:key="contract.id">
                                                 <div class="card">
                                                     <!-- <div class="card-header bg-success" v-text="contract.date"></div> -->
                                                     <div class="card-body">
@@ -738,6 +738,7 @@ import jspdf from 'jspdf';
                     'url':'',
 
                     //information
+                    'infoId'   : '',
                     'CPF'      : '',
                     'RG'       : '',
                     'otherdoc' : '',
@@ -1327,6 +1328,7 @@ import jspdf from 'jspdf';
 
                 //contract info passing to SCOPES
                 var formContract = this.formContract;
+                let self = this;
 
                 // CANVAS------>
                 html2canvas($("#printMe")[0],{
@@ -1365,6 +1367,7 @@ import jspdf from 'jspdf';
 
                     //contract info passing to SCOPES
                     var contractInfo = formContract;
+                    var selfScope     = self;
 
                     axios.post("/contractSave", formData)
                     .then(response =>{
@@ -1373,12 +1376,14 @@ import jspdf from 'jspdf';
                             contractInfo : contractInfo
                         }
 
+                        //contract info passing to SCOPES
+                        var self = selfScope;
+
                         // add new contract to DB
                         axios.post("contracts", data)
                         .then(response => {
-                            this.$router.push('/clients/');
-                            this.$toaster.success('New Contract signed!');
-
+                            self.$router.push('/clients/');
+                            self.$toaster.success('New Contract signed!');
                         })
                     });
                 });
@@ -1389,7 +1394,20 @@ import jspdf from 'jspdf';
 
             deleteContract(contractId)
             {
-                console.log(contractId);
+                if(confirm("Do you really want to delete this Contract?"))
+                {
+                    axios.post('/contracts/' + contractId, {
+                    _method: 'DELETE'
+                    })
+                    .then(response => {
+                        var count = 0
+                        this.allContracts.forEach(element => {
+                            element.id == (response.data.id) ? this.allContracts.splice(count,1) : count +=1;
+                        });
+
+                        this.$toaster.success('Successful deleted');
+                    });
+                }
             }
 
 

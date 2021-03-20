@@ -170,6 +170,7 @@ class ClientController extends Controller
 
         $client->save();
 
+
         // // modify SPECIFICATION
         $specification = Specification::find($request['infoId']);
 

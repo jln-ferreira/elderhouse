@@ -4030,6 +4030,7 @@ __webpack_require__.r(__webpack_exports__);
         'appartament': '',
         'url': '',
         //information
+        'infoId': '',
         'CPF': '',
         'RG': '',
         'otherdoc': '',
@@ -4494,7 +4495,8 @@ __webpack_require__.r(__webpack_exports__);
       var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1; // -------------------------------------
       //contract info passing to SCOPES
 
-      var formContract = this.formContract; // CANVAS------>
+      var formContract = this.formContract;
+      var self = this; // CANVAS------>
 
       html2canvas__WEBPACK_IMPORTED_MODULE_0___default()($("#printMe")[0], {
         width: window.screen.availWidth,
@@ -4504,8 +4506,6 @@ __webpack_require__.r(__webpack_exports__);
         x: 0,
         y: 5000
       }).then(function (canvas) {
-        var _this13 = this;
-
         canvas.getContext('2d'); // TURN CANVAS TO PDF
         //------------------
 
@@ -4528,22 +4528,38 @@ __webpack_require__.r(__webpack_exports__);
         formData.append('number', Math.floor(Math.random() * 99999999)); //contract info passing to SCOPES
 
         var contractInfo = formContract;
+        var selfScope = self;
         axios.post("/contractSave", formData).then(function (response) {
           var data = {
             contract_name: response.data,
             contractInfo: contractInfo
-          }; // add new contract to DB
+          }; //contract info passing to SCOPES
+
+          var self = selfScope; // add new contract to DB
 
           axios.post("contracts", data).then(function (response) {
-            _this13.$router.push('/clients/');
-
-            _this13.$toaster.success('New Contract signed!');
+            self.$router.push('/clients/');
+            self.$toaster.success('New Contract signed!');
           });
         });
       });
     },
     deleteContract: function deleteContract(contractId) {
-      console.log(contractId);
+      var _this13 = this;
+
+      if (confirm("Do you really want to delete this Contract?")) {
+        axios.post('/contracts/' + contractId, {
+          _method: 'DELETE'
+        }).then(function (response) {
+          var count = 0;
+
+          _this13.allContracts.forEach(function (element) {
+            element.id == response.data.id ? _this13.allContracts.splice(count, 1) : count += 1;
+          });
+
+          _this13.$toaster.success('Successful deleted');
+        });
+      }
     }
   }
 });

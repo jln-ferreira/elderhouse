@@ -69,8 +69,12 @@ class ContractController extends Controller
     }
 
 
-    public function destroy(Contract $contract)
+    public function destroy($contractId)
     {
-        //
+        $contract = Contract::find($contractId);
+        $contract->active = 0;
+        $contract->save();
+
+        return $contract;
     }
 }

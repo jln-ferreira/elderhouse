@@ -139,6 +139,7 @@ Route::patch('/clientCreditCard', 'BankaccountController@createClient');
 Route::get('/fullContract/{clientId}', 'ContractController@fullShow');
 Route::post('/contractSave', 'ContractController@storeContract');
 Route::post('/contracts', 'ContractController@create');
+Route::delete('/contracts/{contractId}', 'ContractController@destroy');
 // END CONTRACT
 
 // ---------------
