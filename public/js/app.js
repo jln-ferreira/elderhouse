@@ -4504,6 +4504,8 @@ __webpack_require__.r(__webpack_exports__);
         x: 0,
         y: 5000
       }).then(function (canvas) {
+        var _this13 = this;
+
         canvas.getContext('2d'); // TURN CANVAS TO PDF
         //------------------
 
@@ -4527,11 +4529,21 @@ __webpack_require__.r(__webpack_exports__);
 
         var contractInfo = formContract;
         axios.post("/contractSave", formData).then(function (response) {
-          console.log('this', contractInfo); // console.log(this.formContract);
-          // this.contractName = response;
-          // console.log(this.contractName);
+          var data = {
+            contract_name: response.data,
+            contractInfo: contractInfo
+          }; // add new contract to DB
+
+          axios.post("contracts", data).then(function (response) {
+            _this13.$router.push('/clients/');
+
+            _this13.$toaster.success('New Contract signed!');
+          });
         });
       });
+    },
+    deleteContract: function deleteContract(contractId) {
+      console.log(contractId);
     }
   }
 });
@@ -60040,7 +60052,43 @@ var render = function() {
                                 })
                               ]),
                               _vm._v(" "),
-                              _vm._m(10, true)
+                              _c("div", { staticClass: "card-footer" }, [
+                                _c("div", { staticClass: "text-right" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass:
+                                        "btn btn-sm btn-primary text-white",
+                                      attrs: {
+                                        href:
+                                          "storage/storage/uploads/contracts/" +
+                                          contract.contract_url +
+                                          ".pdf",
+                                        target: "_blank"
+                                      }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fas fa-user" }),
+                                      _vm._v(
+                                        " View\n                                                        "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "btn btn-sm bg-danger",
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.deleteContract(contract.id)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "fas fa-times" })]
+                                  )
+                                ])
+                              ])
                             ])
                           ]
                         )
@@ -60056,7 +60104,7 @@ var render = function() {
                       },
                       [
                         _c("div", { staticClass: "card col-md-10 col-12" }, [
-                          _vm._m(11),
+                          _vm._m(10),
                           _vm._v(" "),
                           _c("div", { staticClass: "card-body" }, [
                             _c("div", { staticClass: "tab-content" }, [
@@ -60187,9 +60235,9 @@ var render = function() {
                               _vm._v(" "),
                               _c("h4", [_vm._v("1. DO OBJETO")]),
                               _vm._v(" "),
-                              _vm._m(12),
+                              _vm._m(11),
                               _vm._v(" "),
-                              _vm._m(13),
+                              _vm._m(12),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v("1.3\tApartamento  08    com 02 leitos.")
@@ -60197,7 +60245,7 @@ var render = function() {
                               _vm._v(" "),
                               _c("h4", [_vm._v("2. OBRIGAÇÕES DA CONTRATADA")]),
                               _vm._v(" "),
-                              _vm._m(14),
+                              _vm._m(13),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v(
@@ -60243,17 +60291,19 @@ var render = function() {
                                 _vm._v("2.1.8 Convivência comunitária; e")
                               ]),
                               _vm._v(" "),
+                              _vm._m(14),
+                              _vm._v(" "),
                               _vm._m(15),
                               _vm._v(" "),
                               _vm._m(16),
-                              _vm._v(" "),
-                              _vm._m(17),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v(
                                   "2.3 Os serviços extras e respectivas despesas administrativas serão sempre objeto de cobrança/reembolso, na forma da cláusula abaixo, que trata de REMUNERAÇÃO, REAJUSTES E INADIMPLEMENTO."
                                 )
                               ]),
+                              _vm._v(" "),
+                              _vm._m(17),
                               _vm._v(" "),
                               _vm._m(18),
                               _vm._v(" "),
@@ -60263,17 +60313,15 @@ var render = function() {
                               _vm._v(" "),
                               _vm._m(21),
                               _vm._v(" "),
-                              _vm._m(22),
-                              _vm._v(" "),
                               _c("p", [
                                 _vm._v(
                                   "2.7.2 Informar e solicitar ao Ministério Público que requisite os documentos necessários ao exercício da cidadania àqueles CONTRANTES que não os possuírem, na forma da lei;"
                                 )
                               ]),
                               _vm._v(" "),
-                              _vm._m(23),
+                              _vm._m(22),
                               _vm._v(" "),
-                              _vm._m(24),
+                              _vm._m(23),
                               _vm._v(" "),
                               _c("h4", [
                                 _vm._v(
@@ -60281,7 +60329,7 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _vm._m(25),
+                              _vm._m(24),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v(
@@ -60292,6 +60340,8 @@ var render = function() {
                               _c("p", [
                                 _vm._v("3.1.2 Respeitar o Regimento Interno; e")
                               ]),
+                              _vm._v(" "),
+                              _vm._m(25),
                               _vm._v(" "),
                               _vm._m(26),
                               _vm._v(" "),
@@ -60321,8 +60371,6 @@ var render = function() {
                               _vm._v(" "),
                               _vm._m(39),
                               _vm._v(" "),
-                              _vm._m(40),
-                              _vm._v(" "),
                               _c("h4", [
                                 _vm._v("4. VIGÊNCIA, RENOVAÇÃO E TÉRMINO ")
                               ]),
@@ -60333,11 +60381,11 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
+                              _vm._m(40),
+                              _vm._v(" "),
                               _vm._m(41),
                               _vm._v(" "),
                               _vm._m(42),
-                              _vm._v(" "),
-                              _vm._m(43),
                               _vm._v(" "),
                               _c("h4", [
                                 _vm._v("5. REMUNERAÇÃO, REAJUSTES E MORA")
@@ -60349,9 +60397,9 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _vm._m(44),
+                              _vm._m(43),
                               _vm._v(" "),
-                              _vm._m(45),
+                              _vm._m(44),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v(
@@ -60365,17 +60413,19 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _vm._m(46),
+                              _vm._m(45),
                               _vm._v(" "),
-                              _vm._m(47),
+                              _vm._m(46),
                               _vm._v(" "),
                               _c("h4", [_vm._v("6. REGIMENTO INTERNO")]),
                               _vm._v(" "),
+                              _vm._m(47),
+                              _vm._v(" "),
                               _vm._m(48),
                               _vm._v(" "),
-                              _vm._m(49),
-                              _vm._v(" "),
                               _c("h4", [_vm._v("7. DISPOSIÇÕES DIVERSAS")]),
+                              _vm._v(" "),
+                              _vm._m(49),
                               _vm._v(" "),
                               _vm._m(50),
                               _vm._v(" "),
@@ -60390,8 +60440,6 @@ var render = function() {
                               _vm._m(55),
                               _vm._v(" "),
                               _vm._m(56),
-                              _vm._v(" "),
-                              _vm._m(57),
                               _vm._v(" "),
                               _c("p", [
                                 _vm._v(
@@ -60835,25 +60883,6 @@ var staticRenderFns = [
       },
       [_c("b", [_vm._v("Confirm ")])]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-footer" }, [
-      _c("div", { staticClass: "text-right" }, [
-        _c("a", { staticClass: "btn btn-sm btn-primary text-white" }, [
-          _c("i", { staticClass: "fas fa-user" }),
-          _vm._v(
-            " View\n                                                        "
-          )
-        ]),
-        _vm._v(" "),
-        _c("a", { staticClass: "btn btn-sm bg-danger" }, [
-          _c("i", { staticClass: "fas fa-times" })
-        ])
-      ])
-    ])
   },
   function() {
     var _vm = this

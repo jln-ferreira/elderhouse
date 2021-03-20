@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contract;
+
 use Illuminate\Http\Request;
 
 class ContractController extends Controller
@@ -13,12 +14,7 @@ class ContractController extends Controller
     }
 
 
-    public function create()
-    {
-        //
-    }
-
-
+    // SAVE NEW CONTRACT SERVER SITE
     public function storeContract(Request $request)
     {
         $nameContract = date('Y-m-d') . '.' . $request['number'];
@@ -26,6 +22,26 @@ class ContractController extends Controller
 
         return $nameContract;
     }
+
+
+    // SAVE CONTRACT ON DATABASE
+    public function create(Request $request)
+    {
+        //save new contract
+        $contract = Contract::create([
+            'client_id'    => $request['contractInfo']['clientId'],
+            'user_id'      => $request['contractInfo']['userId'],
+            'family_id'    => $request['contractInfo']['familyId'],
+            'contract_url' => $request['contract_name'],
+            'date'         => date('Y-m-d'),
+            'comments'     => $request['contractInfo']['comments'],
+        ]);
+
+        return $contract;
+    }
+
+
+
 
 
     public function show(Contract $contract)

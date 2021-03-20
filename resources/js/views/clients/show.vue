@@ -498,10 +498,10 @@
                                                     </div>
                                                     <div class="card-footer">
                                                         <div class="text-right">
-                                                            <a class="btn btn-sm btn-primary text-white" >
+                                                            <a :href="'storage/storage/uploads/contracts/' + contract.contract_url + '.pdf'" target="_blank" class="btn btn-sm btn-primary text-white" >
                                                                 <i class="fas fa-user"></i> View
                                                             </a>
-                                                            <a class="btn btn-sm bg-danger">
+                                                            <a class="btn btn-sm bg-danger" @click="deleteContract(contract.id)">
                                                                 <i class="fas fa-times"></i>
                                                             </a>
                                                         </div>
@@ -1309,6 +1309,7 @@ import jspdf from 'jspdf';
                 this.$refs.signaturePadResponsavel.undoSignature();
             },
 
+
             saveContract()
             {
                 //GETTING INFORMATION OF WINDOWS SIZES
@@ -1367,16 +1368,28 @@ import jspdf from 'jspdf';
 
                     axios.post("/contractSave", formData)
                     .then(response =>{
-                        console.log('this', contractInfo);
-                        // console.log(this.formContract);
-                        // this.contractName = response;
-                        // console.log(this.contractName);
+                        let data = {
+                            contract_name: response.data,
+                            contractInfo : contractInfo
+                        }
 
+                        // add new contract to DB
+                        axios.post("contracts", data)
+                        .then(response => {
+                            this.$router.push('/clients/');
+                            this.$toaster.success('New Contract signed!');
+
+                        })
                     });
-
-
                 });
 
+            },
+
+
+
+            deleteContract(contractId)
+            {
+                console.log(contractId);
             }
 
 
