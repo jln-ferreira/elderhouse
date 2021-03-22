@@ -2120,6 +2120,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var html2canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! html2canvas */ "./node_modules/html2canvas/dist/html2canvas.js");
+/* harmony import */ var html2canvas__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(html2canvas__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var jspdf__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jspdf */ "./node_modules/jspdf/dist/jspdf.es.min.js");
 //
 //
 //
@@ -2743,6 +2746,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2818,7 +2823,7 @@ __webpack_require__.r(__webpack_exports__);
       //Contracts
       formContract: new Form({
         'id': '',
-        'client_id': '',
+        'clientId': '',
         'userId': this.$userId,
         'familyId': '',
         'familyName': '',
@@ -2893,7 +2898,7 @@ __webpack_require__.r(__webpack_exports__);
           _this3.formAddress.client_id = _this3.formInformation.clientId;
           _this3.formFamily.client_id = _this3.formInformation.clientId;
           _this3.formDiagnostic.client_id = _this3.formInformation.clientId;
-          _this3.formContract.client_id = _this3.formInformation.clientId;
+          _this3.formContract.clientId = _this3.formInformation.clientId;
           _this3.information_save = false;
 
           _this3.$toaster.success(_this3.formInformation.name + ' successful added.');
@@ -3132,19 +3137,72 @@ __webpack_require__.r(__webpack_exports__);
       this.formContract.CPF = family.CPF;
       this.formContract.familyName = family.name + ' ' + family.surname;
     },
-    undo: function undo() {
-      this.$refs.signaturePad.undoSignature();
+    undoContract: function undoContract() {
+      this.formContract.comments = '';
+      this.$refs.signaturePadContratada.undoSignature();
+      this.$refs.signaturePadContratante.undoSignature();
+      this.$refs.signaturePadResponsavel.undoSignature();
     },
-    save: function save() {// console.log(this.client.id);
-      // SAVE CONTRACT
-      // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
-      // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
-      // const { isEmptyResponsavel, dataResponsavel } = this.$refs.signaturePadResponsavel.saveSignature();
-      // let signatures = [dataContratada, dataContratante, dataResponsavel];
-      // axios.post("/contracts", signatures)
-      // .then(response =>{
-      //     console.log(response);
-      // })
+    saveContract: function saveContract() {
+      //GETTING INFORMATION OF WINDOWS SIZES
+      var HTML_Width = $("#printMe").width();
+      var HTML_Height = $("#printMe").height();
+      var top_left_margin = 15;
+      var PDF_Width = HTML_Width + top_left_margin * 2;
+      var PDF_Height = PDF_Width * 1.5 + top_left_margin * 2;
+      var canvas_image_width = HTML_Width;
+      var canvas_image_height = HTML_Height;
+      var totalPDFPages = Math.ceil(HTML_Height / PDF_Height) - 1; // -------------------------------------
+      //contract info passing to SCOPES
+
+      var formContract = this.formContract;
+      var self = this; // CANVAS------>
+
+      html2canvas__WEBPACK_IMPORTED_MODULE_0___default()($("#printMe")[0], {
+        width: window.screen.availWidth,
+        height: 6000,
+        windowWidth: document.body.scrollWidth,
+        windowHeight: document.body.scrollHeight,
+        x: 0,
+        y: 5000
+      }).then(function (canvas) {
+        canvas.getContext('2d'); // TURN CANVAS TO PDF
+        //------------------
+
+        var imgData = canvas.toDataURL("image/jpeg");
+        var pdf = new jspdf__WEBPACK_IMPORTED_MODULE_1__["default"]('p', 'mm', [PDF_Width, PDF_Height]);
+        pdf.addImage(imgData, 'jpeg', top_left_margin, top_left_margin, canvas_image_width, canvas_image_height); // ADD PAGES
+
+        for (var i = 1; i <= totalPDFPages; i++) {
+          pdf.addPage();
+          pdf.addImage(imgData, 'jpeg', top_left_margin, -(PDF_Height * i) + top_left_margin * 4, canvas_image_width, canvas_image_height);
+        } // SAVE
+        // pdf.save("HTML-Document.pdf");
+        //END GENERATE THE CONTRACT TO PDF
+        // Send information to PHP to save ON SERVER
+
+
+        var dataPdf = pdf.output('blob');
+        var formData = new FormData();
+        formData.append('pdf', dataPdf);
+        formData.append('number', Math.floor(Math.random() * 99999999)); //contract info passing to SCOPES
+
+        var contractInfo = formContract;
+        var selfScope = self;
+        axios.post("/contractSave", formData).then(function (response) {
+          var data = {
+            contract_name: response.data,
+            contractInfo: contractInfo
+          }; //contract info passing to SCOPES
+
+          var self = selfScope; // add new contract to DB
+
+          axios.post("contracts", data).then(function (response) {
+            self.$router.push('/clients/');
+            self.$toaster.success('New Contract signed!');
+          });
+        });
+      });
     }
   }
 });
@@ -55982,7 +56040,48 @@ var render = function() {
                                 ])
                               ]),
                               _vm._v(" "),
-                              _c("div")
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: !_vm.information_save,
+                                      expression: "!information_save"
+                                    }
+                                  ]
+                                },
+                                [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-success",
+                                      attrs: {
+                                        disabled:
+                                          _vm.formContract.familyId == ""
+                                      },
+                                      on: { click: _vm.saveContract }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fas fa-save" }),
+                                      _vm._v(" Submit")
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-warning",
+                                      on: { click: _vm.undoContract }
+                                    },
+                                    [
+                                      _c("i", { staticClass: "fas fa-undo" }),
+                                      _vm._v(" Undo")
+                                    ]
+                                  )
+                                ]
+                              )
                             ])
                           ])
                         ])

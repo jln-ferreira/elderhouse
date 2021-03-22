@@ -591,9 +591,9 @@
                                                             </div>
                                                         </div>
 
-                                                        <div>
-                                                            <!-- <button @click="save">Save</button> -->
-                                                            <!-- <button @click="undo">Undo</button> -->
+                                                        <div v-show="!information_save">
+                                                            <button class="btn btn-success"  @click="saveContract" :disabled="formContract.familyId==''"><i class="fas fa-save"></i> Submit</button>
+                                                            <button class="btn btn-warning"  @click="undoContract"><i class="fas fa-undo"></i> Undo</button>
                                                         </div>
 
 
@@ -622,6 +622,8 @@
 </template>
 
 <script>
+    import html2canvas from 'html2canvas';
+    import jspdf from 'jspdf';
 
     export default {
 
@@ -714,7 +716,7 @@
                 formContract: new Form({
 
                     'id'        : '',
-                    'client_id' : '',
+                    'clientId'  : '',
                     'userId'    : this.$userId,
                     'familyId'  : '',
                     'familyName': '',
@@ -805,7 +807,7 @@
                         this.formAddress.client_id    = this.formInformation.clientId;
                         this.formFamily.client_id     = this.formInformation.clientId;
                         this.formDiagnostic.client_id = this.formInformation.clientId;
-                        this.formContract.client_id    = this.formInformation.clientId;
+                        this.formContract.clientId    = this.formInformation.clientId;
 
                         this.information_save = false;
                         this.$toaster.success(this.formInformation.name + ' successful added.');
@@ -1103,27 +1105,94 @@
                 this.formContract.familyName = family.name + ' ' + family.surname;
             },
 
-            undo() {
-                this.$refs.signaturePad.undoSignature();
+
+            undoContract()
+            {
+                this.formContract.comments = '';
+                this.$refs.signaturePadContratada.undoSignature();
+                this.$refs.signaturePadContratante.undoSignature();
+                this.$refs.signaturePadResponsavel.undoSignature();
             },
-            save() {
-
-                // console.log(this.client.id);
-                // SAVE CONTRACT
-                // const { isEmptyContratada, dataContratada } = this.$refs.signaturePadContratada.saveSignature();
-                // const { isEmptyContratante, dataContratante } = this.$refs.signaturePadContratante.saveSignature();
-                // const { isEmptyResponsavel, dataResponsavel } = this.$refs.signaturePadResponsavel.saveSignature();
-
-                // let signatures = [dataContratada, dataContratante, dataResponsavel];
-
-                // axios.post("/contracts", signatures)
-                // .then(response =>{
-                //     console.log(response);
-                // })
-
-            }
 
 
+            saveContract()
+            {
+                //GETTING INFORMATION OF WINDOWS SIZES
+                var HTML_Width = $("#printMe").width();
+                var HTML_Height = $("#printMe").height();
+
+                var top_left_margin = 15;
+                var PDF_Width = HTML_Width+(top_left_margin*2);
+                var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+                var canvas_image_width = HTML_Width;
+                var canvas_image_height = HTML_Height;
+
+                var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+                // -------------------------------------
+
+                //contract info passing to SCOPES
+                var formContract = this.formContract;
+                let self = this;
+
+                // CANVAS------>
+                html2canvas($("#printMe")[0],{
+                    width: window.screen.availWidth,
+                    height: 6000,
+                    windowWidth: document.body.scrollWidth,
+                    windowHeight: document.body.scrollHeight,
+                    x: 0,
+                    y: 5000,
+                }).then(function(canvas) {
+                    canvas.getContext('2d');
+
+                    // TURN CANVAS TO PDF
+                    //------------------
+                    var imgData = canvas.toDataURL("image/jpeg");
+                    var pdf = new jspdf('p', 'mm',  [PDF_Width, PDF_Height]);
+                    pdf.addImage(imgData, 'jpeg', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+
+                    // ADD PAGES
+                    for (var i = 1; i <= totalPDFPages; i++) {
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'jpeg', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                    }
+
+                    // SAVE
+                    // pdf.save("HTML-Document.pdf");
+                    //END GENERATE THE CONTRACT TO PDF
+
+                    // Send information to PHP to save ON SERVER
+                    var dataPdf = pdf.output('blob');
+
+                    var formData = new FormData();
+                    formData.append('pdf', dataPdf);
+                    formData.append('number', Math.floor(Math.random() * 99999999));
+
+
+                    //contract info passing to SCOPES
+                    var contractInfo = formContract;
+                    var selfScope     = self;
+
+                    axios.post("/contractSave", formData)
+                    .then(response =>{
+                        let data = {
+                            contract_name: response.data,
+                            contractInfo : contractInfo
+                        }
+
+                        //contract info passing to SCOPES
+                        var self = selfScope;
+
+                        // add new contract to DB
+                        axios.post("contracts", data)
+                        .then(response => {
+                            self.$router.push('/clients/');
+                            self.$toaster.success('New Contract signed!');
+                        })
+                    });
+                });
+
+            },
         }
     }
 
