@@ -24,11 +24,18 @@ import VueSignaturePad from 'vue-signature-pad';
 Vue.use(VueSignaturePad);
 
 // TOASTER-----------
-import Toaster from 'v-toaster'
-// You need a specific loader for CSS files like https://github.com/webpack/css-loader
-import 'v-toaster/dist/v-toaster.css'
-Vue.use(Toaster, {timeout: 3000})
+import Toaster from 'v-toaster';
+import 'v-toaster/dist/v-toaster.css';
+Vue.use(Toaster, {timeout: 3000});
 // END TOASTER
+
+//BOOTSTRAP-VUE----------
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
+
+
 
 
 

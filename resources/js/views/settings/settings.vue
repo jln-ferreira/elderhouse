@@ -73,7 +73,6 @@
 import roles from './components/roles.vue'
 import Diagnostics from './components/diagnostics.vue'
 
-
 export default {
     components: {
         roles,

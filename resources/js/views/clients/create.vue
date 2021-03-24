@@ -54,9 +54,14 @@
                                                         <div class="col-12 mt-1">
                                                             <div class="input-group">
                                                                 <div class="custom-file">
-                                                                    <input type="file" class="custom-file-input" id="image-client" @change="onFileChange">
-                                                                    <label v-if="formInformation.photoName == ''" class="custom-file-label" for="image-client">Choose file</label>
-                                                                    <label v-else  class="custom-file-label" for="image-client">{{ formInformation.photoName }}</label>
+                                                                    <!-- Styled -->
+                                                                    <b-form-file
+                                                                        type="file"
+                                                                        @change="onFileChange"
+                                                                        :state="Boolean(formInformation.photo)"
+                                                                        placeholder="Choose a file or drop it here..."
+                                                                        drop-placeholder="Drop file here..."
+                                                                    ></b-form-file>
                                                                 </div>
                                                             </div>
                                                         </div>

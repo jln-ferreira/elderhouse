@@ -195,7 +195,7 @@
                     'state'       : '',
                     'country'     : '',
                     'checkedRoles': [],
-                })
+                }),
             }
 
         },
@@ -204,7 +204,10 @@
         created() {
             // Fetch all Users
             axios.get('/users')
-                .then(response => this.users = response.data);
+                .then(response => {
+                    console.log(response.data);
+                    this.users = response.data
+                    });
 
 
              // Fetch all roles

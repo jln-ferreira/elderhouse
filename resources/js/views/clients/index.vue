@@ -34,7 +34,7 @@
                 </div>
                 <div class="card-body pt-0">
                   <div class="row">
-                    <div class="col-7">
+                    <div class="col-8">
                       <h3><b>{{ client.name }} {{ client.surname }}</b></h3>
 
                       <hr>
@@ -45,9 +45,11 @@
                       <p class="text-muted"><i class="far fa-calendar-alt" style="color: #2b2b2b;"></i> <b>Datastart: </b> {{ client.datastart }}</p>
 
                     </div>
-                    <div class="col-5 text-center">
-                      <img v-if="client.url" :src="'/storage/storage/uploads/images_clients/' + client.url" alt="" class="img-circle img-fluid">
-                      <img v-else :src="'images/AdminLTELogo.png'" alt="" class="img-circle img-fluid">
+                    <div class="col-4 text-center">
+                      <!-- <img v-if="client.url" :src="'/storage/storage/uploads/images_clients/' + client.url" alt="" class="img-circle img-fluid"> -->
+                      <!-- <img v-else :src="'images/AdminLTELogo.png'" alt="" class="img-circle img-fluid"> -->
+                      <b-avatar v-if="client.url" :src="'/storage/storage/uploads/images_clients/' + client.url" size="6rem"></b-avatar>
+                      <b-avatar v-else :src="'images/AdminLTELogo.png'" size="6rem"></b-avatar>
                     </div>
                   </div>
                 </div>

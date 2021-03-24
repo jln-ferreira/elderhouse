@@ -161,12 +161,18 @@ class ClientController extends Controller
         // // modify CLIENT
         $client = Client::find($request['clientId']);
 
+        // save new image:
+        $url = '';
+        (isset($request['url'])) ? $url = $request['url'] : $url = '';
+
+
         $client->name        = $request['name'];
         $client->surname     = $request['surname'];
         $client->datastart   = $request['datastart'];
         $client->databirth   = $request['databirth'];
         $client->phonenumber = $request['phonenumber'];
         $client->appartament = $request['appartament'];
+        $client->url         = $url;
 
         $client->save();
 
