@@ -135,12 +135,15 @@ Route::patch('/clientCreditCard', 'BankaccountController@createClient');
 // ------------------
 
 
+// ---------------
 //CONTRACT
 Route::get('/fullContract/{clientId}', 'ContractController@fullShow');
 Route::post('/contractSave', 'ContractController@storeContract');
 Route::post('/contracts', 'ContractController@create');
 Route::delete('/contracts/{contractId}', 'ContractController@destroy');
 // END CONTRACT
+// ---------------
+
 
 // ---------------
 // SETTINGS
@@ -149,6 +152,24 @@ Route::get('/menuRoleSettings', 'SettingsController@menuRole');
 // ------------------
 
 
+// ---------------
+// MEASUREMENT
+Route::get('/measurements', 'MeasurementController@index');
+route::post('/measurements', 'MeasurementController@store');
+Route::patch('/measurements', 'MeasurementController@update');
+Route::delete('/measurements/{id}', 'MeasurementController@destroy');
+// END MEASUREMENT
+// ------------------
+
+
+// ---------------
+// PRODUCTS
+Route::get('/products', 'ProductController@index');
+// route::post('/diagnostics', 'DiagnosticController@store');
+// Route::patch('/diagnostics', 'DiagnosticController@update');
+// Route::delete('/diagnostics/{diagnosticId}', 'DiagnosticController@destroy');
+// END PRODUCTS
+// ------------------
 
 
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809

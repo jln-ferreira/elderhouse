@@ -27,6 +27,14 @@ let routes = [
         component: require('./views/profile/profile').default
     },
     {
+        path: '/products',
+        component: require('./views/products/products').default
+    },
+    {
+        path: '/inventories',
+        component: require('./views/inventories/inventories').default
+    },
+    {
         path: '/settings',
         component: require('./views/settings/settings').default
     },

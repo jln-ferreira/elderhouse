@@ -28,6 +28,7 @@
                             <ul class="nav nav-pills ml-auto p-2">
                                 <li class="nav-item"><a class="nav-link active" href="#roles" data-toggle="tab">Roles</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#diagnostics" data-toggle="tab">Diagnostics</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#measurements" data-toggle="tab">Measurements</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -53,6 +54,16 @@
                                 <!-- END ROLES -->
 
 
+                                <!-- ------=========== [ MEASUREMENTS ] ===========------- -->
+                                <!-- --------------------------------------------------- -->
+                                <div class="tab-pane" id="measurements">
+
+                                    <measurements/>
+
+                                </div>
+                                <!-- END ROLES -->
+
+
                             </div>
                             <!-- /.tab-content -->
                         </div><!-- /.card-body -->
@@ -72,11 +83,13 @@
 // imports
 import roles from './components/roles.vue'
 import Diagnostics from './components/diagnostics.vue'
+import Measurements from './components/measurements.vue'
 
 export default {
     components: {
         roles,
         Diagnostics,
+        Measurements
     },
     data(){
         return{

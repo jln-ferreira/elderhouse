@@ -18,6 +18,7 @@ class CreateMenusTable extends Migration
             $table->text('name');
             $table->text('url');
             $table->text('icon');
+            $table->integer('rank');
             $table->smallInteger('active')->default('1');
             $table->timestamps();
         });

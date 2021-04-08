@@ -55,7 +55,7 @@
                                 <tr v-for="(menuRole, index) in menuRoles" v-bind:key="index">
                                     <td>{{menuRole.role_id}}</td>
                                     <td>{{menuRole.role_name}}</td>
-                                    <td><span v-for="menuName in menuRole.menus" v-bind:key="menuName.id">{{menuName.menu_name}}, </span></td>
+                                    <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="menuName in menuRole.menus" v-bind:key="menuName.id">{{menuName.menu_name}}, </span></td>
                                     <td>
                                         <button type="edit" class="btn btn-primary" @click="editRole(index)"><i class="far fa-edit"></i></button>
                                         <a type="delete" class="btn btn-danger text-white" @click="deleteRole(index)"><i class="far fa-trash-alt"></i></a>
@@ -67,7 +67,7 @@
                     <!-- /.card-body -->
                 </div>
                 <!-- /.card -->
-            </div>
+            </div>``
         </div>
     </div>
 </template>
