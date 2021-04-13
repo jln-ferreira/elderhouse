@@ -166,7 +166,7 @@ Route::delete('/measurements/{id}', 'MeasurementController@destroy');
 // PRODUCTS
 Route::get('/products', 'ProductController@index');
 route::post('/products', 'ProductController@store');
-// Route::patch('/diagnostics', 'DiagnosticController@update');
+Route::patch('/products', 'ProductController@update');
 Route::delete('/products/{productsId}', 'ProductController@destroy');
 // END PRODUCTS
 // ------------------
@@ -175,9 +175,6 @@ Route::delete('/products/{productsId}', 'ProductController@destroy');
 // ---------------
 // CATEGORIES
 Route::get('/categories', 'CategoryController@index');
-// route::post('/diagnostics', 'DiagnosticController@store');
-// Route::patch('/diagnostics', 'DiagnosticController@update');
-// Route::delete('/diagnostics/{diagnosticId}', 'DiagnosticController@destroy');
 // END CATEGORIES
 // ------------------
 

@@ -10,25 +10,20 @@ use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function index()
     {
         return Product::allProducts();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function create()
     {
        //
     }
+
 
 
     public function store(Request $request)
@@ -60,42 +55,57 @@ class ProductController extends Controller
         }
 
         return Product::getProduct($product->id);
-
-        return $product;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\product  $product
-     * @return \Illuminate\Http\Response
-     */
+
+
     public function show(product $product)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\product  $product
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit(product $product)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, product $product)
+
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+
+            'name'               => ['required', 'string', 'max:100'],
+            'measurement'        => ['required'],
+            'checkedCategories'  => ['required'],
+
+        ])->validate();
+
+        // modify product
+        $product = Product::find($request['id']);
+        $product->name        = $request['name'];
+        $product->measurement = $request['measurement'];
+        $product->comment     = $request['comment'];
+        $product->save();
+
+
+        // modify categories
+        ProductCategory::where([['active', 1],['product_id', $request['id']]])->update(['active' => 0]);
+
+        foreach($request['checkedCategories'] as $key => $value) {
+            ProductCategory::updateOrCreate(
+                [
+                    'product_id'  => $request['id'],
+                    'category_id' => $value
+                ],
+                [
+                    'category_id' => $value,
+                    'active'      => 1
+                ]
+            );
+        };
+
+        return Product::getProduct($request['id']);
     }
 
     /**

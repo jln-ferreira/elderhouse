@@ -41,7 +41,7 @@
                             <!-- CATEGORY -->
                             <div class="form-group row">
                                 <label class="col-lg-2">
-                                    <!-- Roles: -->
+                                    <!-- CATEGORIES: -->
                                 </label>
 
                                 <div class="form-row">
@@ -62,7 +62,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="save"  class="btn btn-success" v-show="this.newProduct"><i class="fa fa-plus"></i> Save</button>
-                            <a class="btn btn-primary" v-show="!this.newProduct"><i class="far fa-edit"></i> Edit</a>
+                            <a class="btn btn-primary text-white" v-show="!this.newProduct" @click="modifyProduct"><i class="far fa-edit"></i> Edit</a>
                             <a type="cancel" class="btn btn-warning text-white" v-show="!this.newProduct" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
@@ -72,11 +72,11 @@
             </div>
 
         </div>
-        <!-- END ADD NEW USER -->
+        <!-- END ADD NEW PRODUCT -->
 
 
         <!-- ---------------------- -->
-        <!-- LIST USER -->
+        <!-- LIST PRODUCT -->
         <!-- ---------------------- -->
         <div class="col-lg-12">
             <div class="card">
@@ -113,7 +113,7 @@
                                 <td>{{product.comment}}</td>
                                 <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}}, </span></td>
                                 <td>
-                                    <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
+                                    <button type="edit" class="btn btn-primary" @click="editProduct(index)"><i class="far fa-edit"></i></button>
                                     <a type="delete" class="btn btn-danger text-white" @click="deleteProduct(product.id)"><i class="far fa-trash-alt"></i></a>
                                 </td>
                             </tr>
@@ -124,7 +124,7 @@
             </div>
             <!-- /.card -->
         </div>
-        <!-- END LIST USER -->
+        <!-- END LIST PRODUCT -->
 
     </div>
 </template>
@@ -199,23 +199,11 @@
                 this.form
                     .post('/products')
                     .then(response => {
-                        console.log(response);
                         this.products.push(response[0]);
                         this.isShowing  = false;
                         this.newProduct = true;
                         this.$toaster.success('Successful added ' + response.name);
                     })
-
-                // }else{           //-------- MODIFY --------
-
-                //     this.form
-                //         .patch('/users')
-                //         .then(response => {
-                //             this.users.find(user => user.id == response.id).name = response.name;
-                //             this.isShowing = false;
-                //             this.newProduct   = true;
-                //             this.$toaster.success('Successful Updated ' + response.name);
-                //         });
             },
 
 
@@ -239,41 +227,47 @@
 
 
             // -----EDIT-----
-            editUser(index){
-                // this.isShowing = true;          //open new user
-                // this.newProduct   = false;         //button cancel and edit show
+            editProduct(index){
+                this.isShowing  = true;          //open new product
+                this.newProduct = false;         //button cancel and edit show
 
-                // let user = this.users[index];   //user clicked
+                let product = this.products[index];  //user clicked
 
-                // this.cleanFields();             //clean all fields
+                this.cleanFields();                  //clean all fields
 
-                // //show values user
-                // this.form.id    = user.id;
-                // this.form.name  = user.name;
-                // this.form.email = user.email;
-                // this.form.CPF   = user.CPF;
-                // this.form.RG    = user.RG;
+                //show values product
+                this.form.id                = product.id;
+                this.form.name              = product.name;
+                this.form.measurement       = product.measurement_id;
+                this.form.comment           = product.comment;
+                this.form.checkedCategories = [];
+
+                // populate checkbox
+                product.categories.forEach(element => {
+                   this.form.checkedCategories.push(element.category_id);
+                });
+
+            },
 
 
-                // // Fetch all address of the user
-                // axios.get('/getUserAddressRole/' + user.id)
-                // .then(response => {
-                //     // console.log(response);
-                //     // show value address
-                //     this.form.street  = response.data.address.street;
-                //     this.form.number  = response.data.address.number;
-                //     this.form.city    = response.data.address.city;
-                //     this.form.state   = response.data.address.state;
-                //     this.form.country = response.data.address.country;
+            // -----MODIFY-----
+            modifyProduct()
+            {
+                this.form
+                    .patch('/products')
+                    .then(response => {
 
-                //     // show value roles
-                //     this.form.checkedRoles = [];
-                //     response.data.role.forEach(element => {
-                //         this.form.checkedRoles.push(element.role_id)
-                //     });
+                        var index = this.products.findIndex(x => x.id === response[0].id);
 
-                // });
+                        this.products[index].name             = response[0].name;
+                        this.products[index].measurement_name = response[0].measurement_name;
+                        this.products[index].comment          = response[0].comment;
+                        this.products[index].categories       = response[0].categories;
 
+                        this.newProduct = true;
+
+                        this.$toaster.success('Product edited.');
+                    });
 
             },
 
