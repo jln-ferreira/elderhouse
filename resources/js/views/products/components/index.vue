@@ -19,70 +19,26 @@
                             <div class="form-row">
                                 <div class="form-group col-md-4">
                                     <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" required autocomplete="name" autofocus placeholder="Name" v-model="form.name">
+                                    <input type="text" class="form-control" id="name" name="name" required autocomplete="name" placeholder="Name" v-model="form.name">
                                     <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></span>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="email">Email</label>
-                                    <input type="text" class="form-control" id="email" placeholder="Email" v-model="form.email" :disabled="!newProduct" required>
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('email')" v-text="form.errors.get('email')"></span>
+                                <div class="form-group col-md-3">
+                                    <label for="measurement">Measurement</label>
+                                    <select class="form-control" v-model="form.measurement" id="measurement" name="measurement" required>
+                                        <option v-for="measurement in measurements" v-bind:key="measurement.id" :value="measurement.id">{{measurement.measurement}}</option>
+                                    </select>
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('measurement')" v-text="form.errors.get('measurement')"></span>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="email">Password</label>
-                                    <input type="password" class="form-control" id="password" placeholder="Password" v-model="form.password" :required="newProduct">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('password')" v-text="form.errors.get('password')"></span>
-                                </div>
-                            </div>
-                                <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label for="CPF">CPF</label>
-                                    <input type="number" class="form-control" id="CPF" name="CPF" placeholder="422.332.445-34" v-model="form.CPF">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('CPF')" v-text="form.errors.get('CPF')"></span>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="RG">RG</label>
-                                    <input type="number" class="form-control" id="RG" name="RG" placeholder="43.456.34-2" v-model="form.RG">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('RG')" v-text="form.errors.get('RG')"></span>
+                                <div class="form-group col-md-5">
+                                    <label for="comment">Comments</label>
+                                    <input type="comment" class="form-control" id="comment" placeholder="comment" v-model="form.comment">
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('comment')" v-text="form.errors.get('comment')"></span>
                                 </div>
                             </div>
 
                             <hr>
 
-                            <!-- ADDRESS -->
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label for="street">Street</label>
-                                    <input type="text" class="form-control" id="street" name="street" autocomplete="street" autofocus placeholder="street" v-model="form.street">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('street')" v-text="form.errors.get('street')"></span>
-                                </div>
-                                <div class="form-group col-md-2">
-                                    <label for="email">Number</label>
-                                    <input type="text" class="form-control" id="number" v-model="form.number" placeholder="92">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('number')" v-text="form.errors.get('number')"></span>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-4">
-                                    <label for="name">City</label>
-                                    <input type="text" class="form-control" id="city" name="city" autocomplete="City" autofocus placeholder="City" v-model="form.city">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('city')" v-text="form.errors.get('city')"></span>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="name">State</label>
-                                    <input type="text" class="form-control" id="state" name="state" autocomplete="State" autofocus placeholder="State" v-model="form.state">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('state')" v-text="form.errors.get('state')"></span>
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="name">Country</label>
-                                    <input type="text" class="form-control" id="country" name="country" autocomplete="Country" autofocus placeholder="Country" v-model="form.country">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('country')" v-text="form.errors.get('country')"></span>
-                                </div>
-                            </div>
-                            <!-- END ADDRESS -->
-
-                            <hr>
-
-                            <!-- ROLE -->
+                            <!-- CATEGORY -->
                             <div class="form-group row">
                                 <label class="col-lg-2">
                                     <!-- Roles: -->
@@ -91,23 +47,23 @@
                                 <div class="form-row">
                                     <div class="form-group">
                                         <div class="form-group col-md-3">
-                                            <div class="custom-control custom-switch" v-for='role in roles' v-bind:key="role.id">
-                                                <input type="checkbox" class="custom-control-input" :id="role.name" v-model="form.checkedRoles" :value="role.id">
-                                                <label class="custom-control-label" :for="role.name">{{ role.name }}</label>
+                                            <div class="custom-control custom-switch" v-for='category in categories' v-bind:key="category.id">
+                                                <input type="checkbox" class="custom-control-input" :id="category.name" v-model="form.checkedCategories" :value="category.id">
+                                                <label class="custom-control-label" :for="category.name">{{ category.name }}</label>
                                             </div>
                                         </div>
                                         <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('checkedRoles')" v-text="form.errors.get('checkedRoles')"></span>
                                     </div>
                                 </div>
                             </div>
-                            <!-- END ROLE -->
+                            <!-- END CATEGORY -->
 
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <button type="save" v-show="this.newProduct" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                            <button type="edit" v-show="!this.newProduct" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
-                            <a type="cancel" v-show="!this.newProduct" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
+                            <button type="save"  class="btn btn-success" v-show="this.newProduct"><i class="fa fa-plus"></i> Save</button>
+                            <a class="btn btn-primary" v-show="!this.newProduct"><i class="far fa-edit"></i> Edit</a>
+                            <a type="cancel" class="btn btn-warning text-white" v-show="!this.newProduct" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
                     </form>
@@ -125,7 +81,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title font-weight-bold">List Users</h3>
+                    <h3 class="card-title font-weight-bold">List Products</h3>
 
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
@@ -158,7 +114,7 @@
                                 <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}}, </span></td>
                                 <td>
                                     <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
+                                    <a type="delete" class="btn btn-danger text-white" @click="deleteProduct(product.id)"><i class="far fa-trash-alt"></i></a>
                                 </td>
                             </tr>
                         </tbody>
@@ -183,14 +139,16 @@
                 newProduct: true,
                 search:'',
 
-                roles: [],
-                products: [],
+                categories:        [],
+                products:          [],
+                measurements:      [],
+
                 form: new Form({
-                    'id'          : '',
-                    'name'        : '',
-                    'measurement' : '',
-                    'comment'     : '',
-                    'categories'  : [],
+                    'id'               : '',
+                    'name'             : '',
+                    'measurement'      : '',
+                    'comment'          : '',
+                    'checkedCategories': [],
                 }),
             }
 
@@ -199,16 +157,13 @@
 
         created() {
             // Fetch all Users
-            axios.get('/products')
-                .then(response => {
-                    console.log(response.data);
-                    this.products = response.data
-                });
+            axios.get('/products').then(response => this.products = response.data);
 
+             // Fetch all categories
+            axios.get('/categories').then(response => this.categories = response.data);
 
-             // Fetch all roles
-            // axios.get('/roles')
-            // .then(response => this.roles = response.data);
+            // Fetch all Measurement
+            axios.get('/measurements').then(response => this.measurements = response.data);
         },
 
 
@@ -230,33 +185,26 @@
             },
             cleanFields(){
                 // clean form
-                // this.form.name         = '';
-                // this.form.email        = '';
-                // this.form.password     = '';
-                // this.form.CPF          = '';
-                // this.form.RG           = '';
-                // this.form.street       = '';
-                // this.form.number       = '';
-                // this.form.city         = '';
-                // this.form.state        = '';
-                // this.form.country      = '';
-                // this.form.checkedRoles = [];
+                this.form.id                = '';
+                this.form.name              = '';
+                this.form.measurement       = '';
+                this.form.comment           = '';
+                this.form.checkedCategories = [];
             },
 
 
             // ----- ADD / MODIFY -----
             onSubmit(){
-                // if(this.newProduct){ //-------- ADD --------
 
-                //     this.form
-                //         .post('/users')
-                //         .then(user => {
-                //             console.log(user);
-                //             this.users.push(user);
-                //             this.isShowing = false;
-                //             this.newProduct   = true;
-                //             this.$toaster.success('Successful added ' + user.name);
-                //         })
+                this.form
+                    .post('/products')
+                    .then(response => {
+                        console.log(response);
+                        this.products.push(response[0]);
+                        this.isShowing  = false;
+                        this.newProduct = true;
+                        this.$toaster.success('Successful added ' + response.name);
+                    })
 
                 // }else{           //-------- MODIFY --------
 
@@ -268,27 +216,25 @@
                 //             this.newProduct   = true;
                 //             this.$toaster.success('Successful Updated ' + response.name);
                 //         });
-
-                // }
             },
 
 
             // -----DELETE-----
-            deleteUser(id){
-                // axios.post('/users/' + id, {
-                // _method: 'DELETE'
-                // })
-                // .then(response => {
-                //     var count = 0
-                //     this.users.forEach(element => {
-                //         element.id == (response.data.id) ? this.users.splice(count,1) : count +=1;
-                //     });
+            deleteProduct(id){
+                axios.post('/products/' + id, {
+                _method: 'DELETE'
+                })
+                .then(response => {
+                    var count = 0
+                    this.products.forEach(element => {
+                        element.id == (response.data.id) ? this.products.splice(count,1) : count +=1;
+                    });
 
-                //     this.isShowing = false;
-                //     this.newProduct = true;
-                //     this.cleanFields();
-                //     this.$toaster.success('Successful deleted ' + response.data.name);
-                // });
+                    this.isShowing = false;
+                    this.newProduct = true;
+                    this.cleanFields();
+                    this.$toaster.success('Successful deleted ' + response.data.name);
+                });
             },
 
 
