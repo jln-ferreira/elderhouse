@@ -42,6 +42,7 @@ class ProductController extends Controller
             'name'        => $request['name'],
             'measurement' => $request['measurement'],
             'comment'     => $request['comment'],
+            'user_id'     => $request['userId'],
 
         ]);
         $product->save();
@@ -86,6 +87,7 @@ class ProductController extends Controller
         $product->name        = $request['name'];
         $product->measurement = $request['measurement'];
         $product->comment     = $request['comment'];
+        $product->user_Id     = $request['userId'];
         $product->save();
 
 

@@ -18,6 +18,8 @@ class CreateProductsTable extends Migration
             $table->text('name');
             $table->text('measurement');
             $table->text('comment');
+            $table->integer('quantity');
+            $table->integer('user_id')->unsigned();
             $table->smallInteger('active')->default('1');
             $table->timestamps();
         });

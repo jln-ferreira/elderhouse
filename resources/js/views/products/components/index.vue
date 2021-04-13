@@ -148,6 +148,7 @@
                     'name'             : '',
                     'measurement'      : '',
                     'comment'          : '',
+                    'userId'           : this.$userId,
                     'checkedCategories': [],
                 }),
             }

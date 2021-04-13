@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Inventory;
+use App\Product;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -14,7 +15,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        //
+        return Product::allProducts();
     }
 
     /**

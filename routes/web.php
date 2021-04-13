@@ -179,5 +179,12 @@ Route::get('/categories', 'CategoryController@index');
 // ------------------
 
 
+// ---------------
+// INVENTORIES
+Route::get('/inventories', 'InventoryController@index');
+// END INVENTORIES
+// ------------------
+
+
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809
 // https://adminlte.io/themes/AdminLTE/documentation/index.html#download

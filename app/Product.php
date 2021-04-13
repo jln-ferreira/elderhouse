@@ -18,6 +18,7 @@ class Product extends Model
                     "products.measurement AS measurement_id",
                     "measurements.measurement AS measurements_name",
                     "products.comment",
+                    "products.quantity",
                     "categories.id AS categories_id",
                     "categories.name AS categories_name")
                     ->leftJoin('products', 'product_categories.product_id', '=', 'products.id')
@@ -40,6 +41,7 @@ class Product extends Model
             $result[$product->id]['measurement_id'] = $product->measurement_id;
             $result[$product->id]['measurements_name'] = $product->measurements_name;
             $result[$product->id]['comment'] = $product->comment;
+            $result[$product->id]['quantity'] = $product->quantity;
             $result[$product->id]['categories'][] = array('category_id' => $product->categories_id, 'category_name' => $product->categories_name);
         }
 
@@ -62,6 +64,7 @@ class Product extends Model
                     "products.measurement AS measurement_id",
                     "measurements.measurement AS measurements_name",
                     "products.comment",
+                    "products.quantity",
                     "categories.id AS categories_id",
                     "categories.name AS categories_name")
                     ->leftJoin('products', 'product_categories.product_id', '=', 'products.id')
@@ -85,6 +88,7 @@ class Product extends Model
             $result[$product->id]['measurement_id'] = $product->measurement_id;
             $result[$product->id]['measurements_name'] = $product->measurements_name;
             $result[$product->id]['comment'] = $product->comment;
+            $result[$product->id]['quantity'] = $product->quantity;
             $result[$product->id]['categories'][] = array('category_id' => $product->categories_id, 'category_name' => $product->categories_name);
         }
 
