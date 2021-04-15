@@ -289,11 +289,11 @@
         Opacity: 0;
     }
     .block-enter-active {
-            transition : opacity 0.7s;
+        transition : opacity 0.7s;
     }
     .block-leave-active {
-            transition : opacity 0.3s;
-            Opacity: 0;
+        transition : opacity 0.3s;
+        Opacity: 0;
     }
 
 

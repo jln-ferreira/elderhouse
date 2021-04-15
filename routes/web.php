@@ -182,6 +182,7 @@ Route::get('/categories', 'CategoryController@index');
 // ---------------
 // INVENTORIES
 Route::get('/inventories', 'InventoryController@index');
+Route::patch('/inventories/{productsId}', 'InventoryController@store');
 // END INVENTORIES
 // ------------------
 

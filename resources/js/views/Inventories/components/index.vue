@@ -2,7 +2,7 @@
     <div class="row">
 
         <!-- ---------------------- -->
-        <!-- LIST PRODUCT -->
+        <!-- LIST INVENTORY -->
         <!-- ---------------------- -->
         <div class="col-lg-12">
             <div class="card">
@@ -33,17 +33,15 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(product, index) in filteredList" v-bind:key="product.id">
+                            <tr v-for="product in filteredList" v-bind:key="product.id" :class="'product_' + product.id">
                                 <td>{{product.id}}</td>
                                 <td>{{product.name}}</td>
-                                <td class="h6"><b>{{product.quantity}}</b></td>
+                                <td><input type="number" class="form-control" v-model="product.quantity" min="1" max="999" required></td>
                                 <td>{{product.measurements_name}}</td>
                                 <td>{{product.comment}}</td>
                                 <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}}, </span></td>
-
                                 <td>
-                                    <button type="edit" class="btn btn-primary" @click="editProduct(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white"><i class="far fa-trash-alt"></i></a>
+                                    <button type="edit" class="btn btn-success" @click="editQuantity(product.id, product.quantity)"><i class="fas fa-save"></i></button>
                                 </td>
                             </tr>
                         </tbody>
@@ -53,7 +51,7 @@
             </div>
             <!-- /.card -->
         </div>
-        <!-- END LIST PRODUCT -->
+        <!-- END LIST INVENTORY -->
 
     </div>
 </template>
@@ -66,6 +64,7 @@
             return {
                 inventories: [],
                 userId     : this.$userId,
+                quantity   : "",
 
                 search:'',
             }
@@ -74,7 +73,7 @@
 
 
         created() {
-            // Fetch all products
+            // Fetch all inventory
             axios.get('/inventories').then(response => this.inventories = response.data);
         },
 
@@ -90,62 +89,20 @@
 
         methods: {
 
-            // ----- ADD -----
-            onSubmit(){
-
-                this.form
-                    .post('/products')
-                    .then(response => {
-                        this.products.push(response[0]);
-                        this.isShowing  = false;
-                        this.newProduct = true;
-                        this.$toaster.success('Successful added ' + response.name);
-                    })
-            },
-
-
-            // -----EDIT-----
-            editProduct(index){
-                this.isShowing  = true;          //open new product
-                this.newProduct = false;         //button cancel and edit show
-
-                let product = this.products[index];  //user clicked
-
-                this.cleanFields();                  //clean all fields
-
-                //show values product
-                this.form.id                = product.id;
-                this.form.name              = product.name;
-                this.form.measurement       = product.measurement_id;
-                this.form.comment           = product.comment;
-                this.form.checkedCategories = [];
-
-                // populate checkbox
-                product.categories.forEach(element => {
-                   this.form.checkedCategories.push(element.category_id);
-                });
-
-            },
-
-
-            // -----MODIFY-----
-            modifyProduct()
+            // -----MODIFY QUANTITY-----
+            editQuantity(product_id, quantity)
             {
-                this.form
-                    .patch('/products')
+                if(quantity == null) this.$toaster.error('Value cannot be null');
+                else{
+                    axios.post('/inventories/' + product_id, {
+                    _method : 'PATCH',
+                    quantity: quantity
+                    })
                     .then(response => {
-
-                        var index = this.products.findIndex(x => x.id === response[0].id);
-
-                        this.products[index].name             = response[0].name;
-                        this.products[index].measurement_name = response[0].measurement_name;
-                        this.products[index].comment          = response[0].comment;
-                        this.products[index].categories       = response[0].categories;
-
-                        this.newProduct = true;
-
-                        this.$toaster.success('Product edited.');
+                        $(".product_" + response.data.id).fadeTo(100, 0.3, function() { $(this).fadeTo(500, 1.0); });
+                        this.$toaster.success(response.data.name + ' edited.');
                     });
+                }
 
             },
 
@@ -154,18 +111,3 @@
     }
 
 </script>
-
-<style>
-    .block-enter {
-        Opacity: 0;
-    }
-    .block-enter-active {
-            transition : opacity 0.7s;
-    }
-    .block-leave-active {
-            transition : opacity 0.3s;
-            Opacity: 0;
-    }
-
-
-</style>

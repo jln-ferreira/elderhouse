@@ -28,15 +28,14 @@ class InventoryController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+
+    public function store(Request $request, Product $productsId)
     {
-        //
+        // // modify products quantity
+        $productsId->quantity = $request['quantity'];
+        $productsId->save();
+
+        return $productsId;
     }
 
     /**
