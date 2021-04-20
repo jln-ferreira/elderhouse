@@ -98,22 +98,22 @@
                     <table class="table table-hover text-center">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Measurement</th>
+                            <th class="clickHeader" @click="sortBy('id')">ID</th>
+                            <th class="clickHeader" @click="sortBy('name')">Name</th>
+                            <th class="clickHeader" @click="sortBy('measurements_name')">Measurement</th>
                             <th>Comment</th>
                             <th>Categories</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(product, index) in filteredList" v-bind:key="product.id">
+                            <tr v-for="product in filteredList" v-bind:key="product.id">
                                 <td>{{product.id}}</td>
                                 <td>{{product.name}}</td>
                                 <td>{{product.measurements_name}}</td>
                                 <td>{{product.comment}}</td>
-                                <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}}, </span></td>
+                                <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}} </span></td>
                                 <td>
-                                    <button type="edit" class="btn btn-primary" @click="editProduct(index)"><i class="far fa-edit"></i></button>
+                                    <button type="edit" class="btn btn-primary" @click="editProduct(product.id)"><i class="far fa-edit"></i></button>
                                     <a type="delete" class="btn btn-danger text-white" @click="deleteProduct(product.id)"><i class="far fa-trash-alt"></i></a>
                                 </td>
                             </tr>
@@ -138,6 +138,10 @@
                 isShowing: false,
                 newProduct: true,
                 search:'',
+                sort: {
+                    key: '',
+                    isAsc: 'asc'
+                },
 
                 categories:        [],
                 products:          [],
@@ -170,9 +174,14 @@
 
         computed: {
             filteredList() {
-                return this.products.filter(post => {
-                    return post.name.toLowerCase().includes(this.search.toLowerCase());
-                });
+
+                if(this.search){
+                    return this.products.filter(post => {
+                        return post.name.toLowerCase().includes(this.search.toLowerCase());
+                    });
+                }
+                else if(this.sort.key) return _.orderBy(this.products, this.sort.key, this.sort.isAsc);
+                else return this.products;
             }
         },
 
@@ -191,6 +200,11 @@
                 this.form.measurement       = '';
                 this.form.comment           = '';
                 this.form.checkedCategories = [];
+            },
+
+            sortBy(key) {
+                this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
+                this.sort.key = key;
             },
 
 
@@ -228,11 +242,11 @@
 
 
             // -----EDIT-----
-            editProduct(index){
+            editProduct(id){
                 this.isShowing  = true;          //open new product
                 this.newProduct = false;         //button cancel and edit show
 
-                let product = this.products[index];  //user clicked
+                let product = this.products.find(element => element.id === id);
 
                 this.cleanFields();                  //clean all fields
 
@@ -297,4 +311,13 @@
     }
 
 
+
+    .clickHeader{
+        transition: 0.8s;
+        cursor: pointer;
+    }
+    .clickHeader:active{
+        opacity: 0.7;
+        padding-left: 3px;
+    }
 </style>
