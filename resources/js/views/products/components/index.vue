@@ -313,11 +313,11 @@
 
 
     .clickHeader{
-        transition: 0.8s;
+        transition: 0.5s;
         cursor: pointer;
     }
     .clickHeader:active{
-        opacity: 0.7;
-        padding-left: 3px;
+        opacity: 0.3;
+        font-size: 10%;
     }
 </style>

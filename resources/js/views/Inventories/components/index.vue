@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <span class="badge badge-info ml-1" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id">{{category.name}}</span>
+                    <span class="badge badge-info ml-1" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id" @click="catFilter(category.id)">{{category.name}}</span>
 
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
@@ -71,6 +71,7 @@
                     key: '',
                     isAsc: 'asc'
                 },
+                categoryFilter: '',
             }
 
         },
@@ -87,13 +88,21 @@
         computed: {
             filteredList() {
 
-                if(this.search){
+                if(this.search){                                                                            //SEARCH FILTER
                     return this.inventories.filter(post => {
                         return post.name.toLowerCase().includes(this.search.toLowerCase());
                     });
                 }
-                else if(this.sort.key) return _.orderBy(this.inventories, this.sort.key, this.sort.isAsc);
-                else return this.inventories;
+
+                else if(this.categoryFilter != ''){                                                         //FILTER BY CATEGORY
+                    return this.inventories.filter(eachVal => {
+                        return eachVal.categories.some(({ category_id }) => category_id == this.categoryFilter)
+                    })
+                }
+
+                else if(this.sort.key) return _.orderBy(this.inventories, this.sort.key, this.sort.isAsc);  //SORT
+
+                else return this.inventories;                                                               //ALL PRODUCTS
 
             },
         },
@@ -117,6 +126,7 @@
                 }
             },
 
+            //------------------------------------------------------
 
             dangerQuantity(quantity){
                 return (quantity <= 0) ? "background-color: #FFD6CE;" : "background-color: white;";
@@ -126,6 +136,10 @@
             sortBy(key) {
                 this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
                 this.sort.key = key;
+            },
+
+            catFilter(categoryId){
+                this.categoryFilter = (this.categoryFilter == categoryId) ? this.categoryFilter = '' : this.categoryFilter = categoryId;
             }
 
         }
@@ -135,11 +149,11 @@
 
 <style scoped>
     .clickHeader{
-        transition: 0.8s;
+        transition: 0.5s;
         cursor: pointer;
     }
     .clickHeader:active{
-        opacity: 0.7;
-        padding-left: 3px;
+        opacity: 0.3;
+        font-size: 10%;
     }
 </style>
