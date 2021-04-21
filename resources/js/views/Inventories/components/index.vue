@@ -7,7 +7,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <span class="badge badge-info ml-1" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id" @click="catFilter(category.id)">{{category.name}}</span>
+                    <span class="badge badge-info ml-1 categoriesBtn" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id" @click="catFilter(category.id)" :style="categoryBtn(category.id)">{{category.name}}</span>
 
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
@@ -71,7 +71,8 @@
                     key: '',
                     isAsc: 'asc'
                 },
-                categoryFilter: '',
+                categoryFilter : '',
+                categoryClicked: ''
             }
 
         },
@@ -86,8 +87,8 @@
 
 
         computed: {
-            filteredList() {
-
+            filteredList()
+            {
                 if(this.search){                                                                            //SEARCH FILTER
                     return this.inventories.filter(post => {
                         return post.name.toLowerCase().includes(this.search.toLowerCase());
@@ -103,7 +104,6 @@
                 else if(this.sort.key) return _.orderBy(this.inventories, this.sort.key, this.sort.isAsc);  //SORT
 
                 else return this.inventories;                                                               //ALL PRODUCTS
-
             },
         },
 
@@ -127,19 +127,28 @@
             },
 
             //------------------------------------------------------
-
-            dangerQuantity(quantity){
+            //----style----
+            dangerQuantity(quantity)
+            {
                 return (quantity <= 0) ? "background-color: #FFD6CE;" : "background-color: white;";
             },
+            categoryBtn(categoryId)
+            {
+                return (this.categoryClicked == categoryId) ? "background-color: #007bff;" : "background-color: #6c757d;";
+            },
+            //-------------
 
 
-            sortBy(key) {
+            sortBy(key)
+            {
                 this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
                 this.sort.key = key;
             },
 
-            catFilter(categoryId){
-                this.categoryFilter = (this.categoryFilter == categoryId) ? this.categoryFilter = '' : this.categoryFilter = categoryId;
+            catFilter(categoryId)
+            {
+                (this.categoryClicked == categoryId) ? this.categoryClicked = '' : this.categoryClicked = categoryId;                    //color button
+                this.categoryFilter = (this.categoryFilter == categoryId) ? this.categoryFilter = '' : this.categoryFilter = categoryId; //filter
             }
 
         }
@@ -148,6 +157,7 @@
 </script>
 
 <style scoped>
+    /* table */
     .clickHeader{
         transition: 0.5s;
         cursor: pointer;
@@ -156,4 +166,11 @@
         opacity: 0.3;
         font-size: 10%;
     }
+    /* ----- */
+
+    /* categories - filter */
+    .categoriesBtn{
+        cursor: pointer;
+    }
+
 </style>

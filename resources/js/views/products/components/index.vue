@@ -81,7 +81,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title font-weight-bold">List Products</h3>
+                    <span class="badge badge-info ml-1 categoriesBtn" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id" @click="catFilter(category.id)" :style="categoryBtn(category.id)">{{category.name}}</span>
 
                     <div class="card-tools">
                         <div class="input-group input-group-sm" style="width: 150px;">
@@ -142,6 +142,8 @@
                     key: '',
                     isAsc: 'asc'
                 },
+                categoryFilter : '',
+                categoryClicked: '',
 
                 categories:        [],
                 products:          [],
@@ -175,13 +177,21 @@
         computed: {
             filteredList() {
 
-                if(this.search){
+                if(this.search){                                                                            //SEARCH FILTER
                     return this.products.filter(post => {
                         return post.name.toLowerCase().includes(this.search.toLowerCase());
                     });
                 }
-                else if(this.sort.key) return _.orderBy(this.products, this.sort.key, this.sort.isAsc);
-                else return this.products;
+
+                else if(this.categoryFilter != ''){                                                         //FILTER BY CATEGORY
+                    return this.products.filter(eachVal => {
+                        return eachVal.categories.some(({ category_id }) => category_id == this.categoryFilter)
+                    })
+                }
+
+                else if(this.sort.key) return _.orderBy(this.products, this.sort.key, this.sort.isAsc);  //SORT
+
+                else return this.products;                                                               //ALL PRODUCTS
             }
         },
 
@@ -287,11 +297,24 @@
             },
 
 
-            cancelEdit(){
+            cancelEdit()
+            {
                 this.newProduct = true; //show button add User
                 // clean form
                 this.cleanFields();
+            },
+            //----------------------------
+            categoryBtn(categoryId)
+            {
+                return (this.categoryClicked == categoryId) ? "background-color: #007bff;" : "background-color: #6c757d;";
+            },
+
+            catFilter(categoryId)
+            {
+                (this.categoryClicked == categoryId) ? this.categoryClicked = '' : this.categoryClicked = categoryId;                    //color button
+                this.categoryFilter = (this.categoryFilter == categoryId) ? this.categoryFilter = '' : this.categoryFilter = categoryId; //filter
             }
+
 
         }
     }
@@ -311,7 +334,7 @@
     }
 
 
-
+    /* table */
     .clickHeader{
         transition: 0.5s;
         cursor: pointer;
@@ -319,5 +342,12 @@
     .clickHeader:active{
         opacity: 0.3;
         font-size: 10%;
+    }
+    /* ----- */
+
+
+    /* categories - filter */
+    .categoriesBtn{
+        cursor: pointer;
     }
 </style>
