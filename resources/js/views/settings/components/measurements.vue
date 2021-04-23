@@ -226,9 +226,10 @@
                 this.isShowing = false;
 
                 // clean form
-                this.form.id   = '';
-                this.form.name = '';
-                this.form.rank = '';
+                this.form.id          = '';
+                this.form.name        = '';
+                this.form.measurement = '';
+                this.form.comment     = '';
             }
         }
     }

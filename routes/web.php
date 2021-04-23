@@ -187,5 +187,26 @@ Route::patch('/inventories/{productsId}', 'InventoryController@store');
 // ------------------
 
 
+// ---------------
+// PRECIFICATIONS
+Route::get('/precifications', 'PrecificationController@index');
+route::post('/precifications', 'PrecificationController@store');
+Route::patch('/precifications', 'PrecificationController@update');
+Route::delete('/precifications/{id}', 'PrecificationController@destroy');
+// END PRECIFICATIONS
+// ------------------
+
+
+// ---------------
+// PAYMENTS
+Route::get('/payments', 'PaymentController@index');
+route::post('/precifications', 'PrecificationController@store');
+Route::patch('/precifications', 'PrecificationController@update');
+Route::delete('/precifications/{id}', 'PrecificationController@destroy');
+// END PAYMENTS
+// ------------------
+
+
+
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809
 // https://adminlte.io/themes/AdminLTE/documentation/index.html#download

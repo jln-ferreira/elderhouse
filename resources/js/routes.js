@@ -35,6 +35,10 @@ let routes = [
         component: require('./views/inventories/inventories').default
     },
     {
+        path: '/payments',
+        component: require('./views/payments/payments').default
+    },
+    {
         path: '/settings',
         component: require('./views/settings/settings').default
     },
