@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
@@ -15,7 +16,26 @@ class PaymentController extends Controller
 
     public function store(Request $request)
     {
-       //
+        Validator::make($request->all(), [
+            'clientId'        => ['required', 'numeric'],
+            'precificationId' => ['required', 'numeric'],
+            'value'           => ['required', 'min:1'],
+            'date'            => ['required', 'date'],
+            'comment'         => ['max:100'],
+        ])->validate();
+
+
+        // Payment
+        $payment = Payment::Create([
+            'client_id'        => $request['clientId'],
+            'precification_id' => $request['precificationId'],
+            'value'            => $request['value'],
+            'date'             => $request['date'],
+            'comment'          => $request['comment'],
+        ]);
+        $payment->save();
+
+        return Payment::activePayment($payment->id);
     }
 
     /**

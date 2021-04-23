@@ -200,7 +200,7 @@ Route::delete('/precifications/{id}', 'PrecificationController@destroy');
 // ---------------
 // PAYMENTS
 Route::get('/payments', 'PaymentController@index');
-route::post('/precifications', 'PrecificationController@store');
+route::post('/payments', 'PaymentController@store');
 Route::patch('/precifications', 'PrecificationController@update');
 Route::delete('/precifications/{id}', 'PrecificationController@destroy');
 // END PAYMENTS

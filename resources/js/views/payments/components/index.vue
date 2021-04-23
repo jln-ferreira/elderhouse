@@ -17,17 +17,33 @@
                         <div class="card-body">
                             <div class="form-row">
                                 <div class="form-group col-md-3">
-                                    <label for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" required placeholder="Mensalidade" v-model="form.name">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('name')" v-text="form.errors.get('name')"></span>
+                                    <label for="clientName">Client Name</label>
+                                    <select class="form-control" v-model="form.clientId" id="clientName" name="clientName" required>
+                                        <option v-for="client in clients" v-bind:key="client.id" :value="client.id">{{client.name + " " + client.surname}}</option>
+                                    </select>
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('clientName')" v-text="form.errors.get('clientName')"></span>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="precification">Product</label>
+                                    <select class="form-control" v-model="form.precificationId" id="precification" name="precification" @change="onChange($event)" required>
+                                        <option v-for="precification in precifications" v-bind:key="precification.id" :price="precification.price" :value="precification.id">{{precification.name}}</option>
+                                    </select>
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('clientName')" v-text="form.errors.get('clientName')"></span>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="value">Value</label>
+                                    <input type="number" class="form-control" id="value" name="value" placeholder="2050,40" min="1" v-model="form.value" required>
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('value')" v-text="form.errors.get('value')"></span>
                                 </div>
                                 <div class="form-group col-md-3">
-                                    <label for="price">Price</label>
-                                    <input type="text" class="form-control" id="price" name="price" required placeholder="2050,40" v-model="form.price">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('price')" v-text="form.errors.get('price')"></span>
+                                    <label for="date">Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" v-model="form.date" required>
+                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('date')" v-text="form.errors.get('date')"></span>
                                 </div>
-                                 <div class="form-group col-md-6">
-                                    <label for="name">Comment</label>
+                            </div>
+                            <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="name">Comment</label>
                                     <input type="text" class="form-control" id="comment" name="comment" v-model="form.comment">
                                     <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('comment')" v-text="form.errors.get('comment')"></span>
                                 </div>
@@ -73,18 +89,22 @@
                     <table class="table table-hover text-center">
                         <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Comment</th>
+                            <th class="clickHeader" @click="sortBy('id')">ID</th>
+                            <th class="clickHeader" @click="sortBy('clientName')">Name</th>
+                            <th class="clickHeader" @click="sortBy('precificationName')">Product</th>
+                            <th class="clickHeader" @click="sortBy('price')">Price</th>
+                            <th class="clickHeader" @click="sortBy('date')">Date</th>
+                            <th class="clickHeader" @click="sortBy('comment')">Comment</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(precification, index) in filteredList" v-bind:key="precification.id">
                                 <td>{{precification.id}}</td>
-                                <td>{{precification.name}}</td>
+                                <td>{{precification.clientName + " " + precification.clientSurname}}</td>
+                                <td>{{precification.precificationName}}</td>
                                 <td>{{precification.price}}</td>
+                                <td>{{precification.date}}</td>
                                 <td>{{precification.comment}}</td>
                                 <td>
                                     <button type="edit" class="btn btn-primary" @click="editPayment(index)"><i class="far fa-edit"></i></button>
@@ -112,6 +132,10 @@
                 isShowing: false,
                 newPayment: true,
                 search:'',
+                sort: {
+                    key: '',
+                    isAsc: 'asc'
+                },
 
                 precifications: [],
                 clients       : [],
@@ -119,10 +143,7 @@
                 form: new Form({
                     'id'                : '',
                     'clientId'          : '',
-                    'clientName'        : '',
                     'precificationId'   : '',
-                    'precificationName' : '',
-                    'precificationPrice': '',
                     'value'             : '',
                     'date'              : '',
                     'comment'           : '',
@@ -150,9 +171,16 @@
         computed: {
             filteredList()
             {
-                return this.payments.filter(post => {
-                    return post.precificationName.toLowerCase().includes(this.search.toLowerCase());
-                });
+                if(this.search){
+                    console.log(this.payments)
+                    return this.payments.filter(post => {
+                        return post.clientName.toLowerCase().includes(this.search.toLowerCase());   //SEARCH FILTER
+                    });
+                }
+
+                else if(this.sort.key) return _.orderBy(this.payments, this.sort.key, this.sort.isAsc);  //SORT
+
+                else return this.payments;                                                               //ALL PRODUCTS
             }
         },
 
@@ -166,16 +194,26 @@
                 return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus";
             },
 
+            onChange(event) {
+                var options = event.target.options
+                if (options.selectedIndex > -1) this.form.value = options[options.selectedIndex].getAttribute('price');
+            },
+
+            //----------------------------
+            sortBy(key) {
+                this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
+                this.sort.key = key;
+            },
 
             // ----- ADD  -----
             onSubmit()
             {
                 this.form
-                    .post('/precifications')
+                    .post('/payments')
                     .then(response => {
-                        this.precifications.push(response);
+                        this.payments.push(response[0]);
                         this.isShowing = false;
-                        this.$toaster.success('Successful added ' + response.name);
+                        this.$toaster.success('Successful added');
                     })
             },
 
@@ -259,6 +297,17 @@
         transition : opacity 0.3s;
         Opacity: 0;
     }
+
+        /* table */
+    .clickHeader{
+        transition: 0.5s;
+        cursor: pointer;
+    }
+    .clickHeader:active{
+        opacity: 0.3;
+        font-size: 10%;
+    }
+    /* ----- */
 
 
 </style>
