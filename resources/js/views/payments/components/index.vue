@@ -63,11 +63,11 @@
             </div>
 
         </div>
-        <!-- END ADD NEW Precification -->
+        <!-- END ADD NEW PAYMENT -->
 
 
         <!-- ---------------------- -->
-        <!-- LIST PRECIFICATION -->
+        <!------- LIST PAYMENT ------->
         <!-- ---------------------- -->
         <div class="col-lg-12">
             <div class="card">
@@ -75,44 +75,31 @@
                     <h3 class="card-title font-weight-bold">List Precification</h3>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
+                        <div class="input-group input-group-sm">
+                            <!-- SEARCH BAR -->
+                            <b-input-group size="sm">
+                                <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                                <b-input-group-append>
+                                    <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                                </b-input-group-append>
+                            </b-input-group>
+                            <!-- ---------------- -->
                         </div>
                     </div>
+
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th class="clickHeader" @click="sortBy('id')">ID</th>
-                            <th class="clickHeader" @click="sortBy('clientName')">Name</th>
-                            <th class="clickHeader" @click="sortBy('precificationName')">Product</th>
-                            <th class="clickHeader" @click="sortBy('price')">Price</th>
-                            <th class="clickHeader" @click="sortBy('date')">Date</th>
-                            <th class="clickHeader" @click="sortBy('comment')">Comment</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(precification, index) in filteredList" v-bind:key="precification.id">
-                                <td>{{precification.id}}</td>
-                                <td>{{precification.clientName + " " + precification.clientSurname}}</td>
-                                <td>{{precification.precificationName}}</td>
-                                <td>{{precification.price}}</td>
-                                <td>{{precification.date}}</td>
-                                <td>{{precification.comment}}</td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editPayment(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deletePayment(precification.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                     <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="payments" :fields="fields" :filter="filter">
+                        <template #cell(clientName)="data">
+                            <b class="text-info">{{ data.item.clientName + " " + data.item.clientSurname }}</b>
+                        </template>
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editPayment(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deletePayment(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -131,11 +118,19 @@
             return {
                 isShowing: false,
                 newPayment: true,
-                search:'',
-                sort: {
-                    key: '',
-                    isAsc: 'asc'
-                },
+
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'clientName', label: 'Name', sortable: true},
+                    {key: 'precificationName', label: 'Product', sortable: true},
+                    {key: 'price', sortable: true},
+                    {key: 'date', sortable: true},
+                    {key: 'comment', sortable: false},
+                    {key: 'actions', label: 'Actions' }
+                ],
+                //---------------
 
                 precifications: [],
                 clients       : [],
@@ -167,24 +162,6 @@
 
         },
 
-
-        computed: {
-            filteredList()
-            {
-                if(this.search){
-                    console.log(this.payments)
-                    return this.payments.filter(post => {
-                        return post.clientName.toLowerCase().includes(this.search.toLowerCase());   //SEARCH FILTER
-                    });
-                }
-
-                else if(this.sort.key) return _.orderBy(this.payments, this.sort.key, this.sort.isAsc);  //SORT
-
-                else return this.payments;                                                               //ALL PRODUCTS
-            }
-        },
-
-
         methods: {
             newPaymentToggle()
             {
@@ -197,12 +174,6 @@
             onChange(event) {
                 var options = event.target.options
                 if (options.selectedIndex > -1) this.form.value = options[options.selectedIndex].getAttribute('price');
-            },
-
-            //----------------------------
-            sortBy(key) {
-                this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
-                this.sort.key = key;
             },
 
             // ----- ADD  -----
@@ -297,17 +268,5 @@
         transition : opacity 0.3s;
         Opacity: 0;
     }
-
-        /* table */
-    .clickHeader{
-        transition: 0.5s;
-        cursor: pointer;
-    }
-    .clickHeader:active{
-        opacity: 0.3;
-        font-size: 10%;
-    }
-    /* ----- */
-
 
 </style>
