@@ -59,40 +59,26 @@
                     <h3 class="card-title font-weight-bold">List Precification</h3>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
+                        <!-- SEARCH BAR -->
+                        <b-input-group size="sm">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                            <b-input-group-append>
+                                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                        <!-- ---------------- -->
                     </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Comment</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(precification, index) in filteredList" v-bind:key="precification.id">
-                                <td>{{precification.id}}</td>
-                                <td>{{precification.name}}</td>
-                                <td>{{precification.price}}</td>
-                                <td>{{precification.comment}}</td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editPrecification(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deletePrecification(precification.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="this.precifications" :fields="fields" :filter="filter">
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editPrecification(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deletePrecification(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -111,7 +97,16 @@
             return {
                 isShowing: false,
                 newPrecification: true,
-                search:'',
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'name', sortable: true},
+                    {key: 'price', sortable: true},
+                    {key: 'comment', sortable: false},
+                    {key: 'actions', label: 'Actions' }
+                ],
+                //---------------
 
                 precifications: [],
                 form: new Form({
@@ -128,21 +123,8 @@
         created()
         {
             // Fetch all precification
-            axios.get('/precifications')
-                .then(response => this.precifications = response.data);
-
+            axios.get('/precifications').then(response => this.precifications = response.data);
         },
-
-
-        computed: {
-            filteredList()
-            {
-                return this.precifications.filter(post => {
-                    return post.name.toLowerCase().includes(this.search.toLowerCase());
-                });
-            }
-        },
-
 
         methods: {
             newPrecificationToggle()
@@ -188,12 +170,12 @@
 
 
             // -----EDIT-----
-            editPrecification(index)
+            editPrecification(id)
             {
                 this.isShowing = true;                    //open new precifications
                 this.newPrecification = false;              //button cancel and edit show
 
-                let precifications = this.precifications[index];  //precifications clicked
+                var precifications = this.precifications.find(element => element.id === id);
 
                 //show values precifications
                 this.form.id      = precifications.id;

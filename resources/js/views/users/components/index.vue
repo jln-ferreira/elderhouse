@@ -106,7 +106,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="save" v-show="this.newUser" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                            <button type="edit" v-show="!this.newUser" class="btn btn-primary"><i class="far fa-edit"></i> Edit</button>
+                            <a type="edit" v-show="!this.newUser" class="btn btn-primary text-white"><i class="far fa-edit" @click="modifyUser"></i> Edit</a>
                             <a type="cancel" v-show="!this.newUser" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
@@ -128,38 +128,26 @@
                     <h3 class="card-title font-weight-bold">List Users</h3>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
+                        <!-- SEARCH BAR -->
+                        <b-input-group size="sm">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                            <b-input-group-append>
+                                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                        <!-- ---------------- -->
                     </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(user, index) in filteredList" v-bind:key="user.id">
-                                <td>{{user.id}}</td>
-                                <td>{{user.name}}</td>
-                                <td>{{user.email}}</td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editUser(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deleteUser(user.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="this.users" :fields="fields" :filter="filter">
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editUser(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deleteUser(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -178,7 +166,15 @@
             return {
                 isShowing: false,
                 newUser: true,
-                search:'',
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'name', sortable: true},
+                    {key: 'email', sortable: true},
+                    {key: 'actions', label: 'Actions'}
+                ],
+                //---------------
 
                 roles: [],
                 users: [],
@@ -203,27 +199,10 @@
 
         created() {
             // Fetch all Users
-            axios.get('/users')
-                .then(response => {
-                    console.log(response.data);
-                    this.users = response.data
-                    });
-
-
+            axios.get('/users').then(response => this.users = response.data);
              // Fetch all roles
-            axios.get('/roles')
-            .then(response => this.roles = response.data);
+            axios.get('/roles').then(response => this.roles = response.data);
         },
-
-
-        computed: {
-            filteredList() {
-                return this.users.filter(post => {
-                    return post.name.toLowerCase().includes(this.search.toLowerCase());
-                });
-            }
-        },
-
 
         methods: {
             newUserToggle(){
@@ -250,30 +229,15 @@
 
             // ----- ADD / MODIFY -----
             onSubmit(){
-                if(this.newUser){ //-------- ADD --------
-
-                    this.form
-                        .post('/users')
-                        .then(user => {
-                            console.log(user);
-                            this.users.push(user);
-                            this.isShowing = false;
-                            this.newUser   = true;
-                            this.$toaster.success('Successful added ' + user.name);
-                        })
-
-                }else{           //-------- MODIFY --------
-
-                    this.form
-                        .patch('/users')
-                        .then(response => {
-                            this.users.find(user => user.id == response.id).name = response.name;
-                            this.isShowing = false;
-                            this.newUser   = true;
-                            this.$toaster.success('Successful Updated ' + response.name);
-                        });
-
-                }
+                this.form
+                    .post('/users')
+                    .then(user => {
+                        console.log(user);
+                        this.users.push(user);
+                        this.isShowing = false;
+                        this.newUser   = true;
+                        this.$toaster.success('Successful added ' + user.name);
+                    })
             },
 
 
@@ -297,11 +261,11 @@
 
 
             // -----EDIT-----
-            editUser(index){
+            editUser(id){
                 this.isShowing = true;          //open new user
                 this.newUser   = false;         //button cancel and edit show
 
-                let user = this.users[index];   //user clicked
+                var user = this.users.find(element => element.id === id);
 
                 this.cleanFields();             //clean all fields
 
@@ -316,7 +280,7 @@
                 // Fetch all address of the user
                 axios.get('/getUserAddressRole/' + user.id)
                 .then(response => {
-                    // console.log(response);
+                    console.log(response);
                     // show value address
                     this.form.street  = response.data.address.street;
                     this.form.number  = response.data.address.number;
@@ -332,7 +296,18 @@
 
                 });
 
-
+            },
+            modifyUser(){
+                this.form
+                    .patch('/users')
+                    .then(response => {
+                        this.users.find(user => user.id == response.id).name = response.name;
+                        this.users.find(user => user.id == response.id).CPF = response.CPF;
+                        this.users.find(user => user.id == response.id).RG = response.RG;
+                        this.isShowing = false;
+                        this.newUser   = true;
+                        this.$toaster.success('Successful Updated ' + response.name);
+                    });
             },
 
 

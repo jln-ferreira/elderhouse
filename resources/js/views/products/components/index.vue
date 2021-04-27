@@ -84,41 +84,29 @@
                     <span class="badge badge-info ml-1 categoriesBtn" style="font-size: 1em;" v-for="category in categories" v-bind:key="category.id" @click="catFilter(category.id)" :style="categoryBtn(category.id)">{{category.name}}</span>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
+                        <!-- SEARCH BAR -->
+                        <b-input-group size="sm">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                            <b-input-group-append>
+                                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                        <!-- ---------------- -->
                     </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th class="clickHeader" @click="sortBy('id')">ID</th>
-                            <th class="clickHeader" @click="sortBy('name')">Name</th>
-                            <th class="clickHeader" @click="sortBy('measurements_name')">Measurement</th>
-                            <th>Comment</th>
-                            <th>Categories</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="product in filteredList" v-bind:key="product.id">
-                                <td>{{product.id}}</td>
-                                <td>{{product.name}}</td>
-                                <td>{{product.measurements_name}}</td>
-                                <td>{{product.comment}}</td>
-                                <td><span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in product.categories" v-bind:key="category.id">{{category.category_name}} </span></td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editProduct(product.id)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deleteProduct(product.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="filteredList" :fields="fields" :filter="filter">
+                        <template #cell(categories)="data">
+                            <span class="badge badge-primary ml-1" style="font-size: 1em;" v-for="category in data.item.categories" v-bind:key="category.id">{{category.category_name}} </span>
+                        </template>
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editProduct(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deleteProduct(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -137,11 +125,19 @@
             return {
                 isShowing: false,
                 newProduct: true,
-                search:'',
-                sort: {
-                    key: '',
-                    isAsc: 'asc'
-                },
+
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'name', label: 'Name', sortable: true},
+                    {key: 'measurements_name', label: 'Measurement', sortable: true},
+                    {key: 'comment', sortable: false},
+                    {key: 'categories', label: 'Categories'},
+                    {key: 'actions', label: 'Actions' }
+                ],
+                //---------------
+
                 categoryFilter : '',
                 categoryClicked: '',
 
@@ -177,19 +173,11 @@
         computed: {
             filteredList() {
 
-                if(this.search){                                                                            //SEARCH FILTER
-                    return this.products.filter(post => {
-                        return post.name.toLowerCase().includes(this.search.toLowerCase());
-                    });
-                }
-
-                else if(this.categoryFilter != ''){                                                         //FILTER BY CATEGORY
+                if(this.categoryFilter != ''){                                                         //FILTER BY CATEGORY
                     return this.products.filter(eachVal => {
                         return eachVal.categories.some(({ category_id }) => category_id == this.categoryFilter)
                     })
                 }
-
-                else if(this.sort.key) return _.orderBy(this.products, this.sort.key, this.sort.isAsc);  //SORT
 
                 else return this.products;                                                               //ALL PRODUCTS
             }
@@ -211,12 +199,6 @@
                 this.form.comment           = '';
                 this.form.checkedCategories = [];
             },
-
-            sortBy(key) {
-                this.sort.isAsc = (this.sort.key == key) ? "desc" : "asc";
-                this.sort.key = key;
-            },
-
 
             // ----- ADD / MODIFY -----
             onSubmit(){

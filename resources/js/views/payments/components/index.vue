@@ -90,10 +90,10 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                     <!-- TABLE BOOTSTRAP VUE -->
+                    <!-- TABLE BOOTSTRAP VUE -->
                     <b-table striped hover :items="payments" :fields="fields" :filter="filter">
                         <template #cell(clientName)="data">
-                            <b class="text-info">{{ data.item.clientName + " " + data.item.clientSurname }}</b>
+                            <b>{{ data.item.clientName + " " + data.item.clientSurname }}</b>
                         </template>
                         <template #cell(actions)="data">
                             <button type="edit" class="btn btn-primary" @click="editPayment(data.item.id)"><i class="far fa-edit"></i></button>

@@ -6,6 +6,7 @@
         <div class="col-lg-12">
 
             <div class="card card-dark" style="cursor:pointer;">
+
                 <div class="card-header" @click="newDiagnosticToggle">
                     <h3 class="card-title font-weight-bold">New Diagnostic Form</h3> <i :class="[faChanging(), 'float-right']" aria-hidden="true"></i>
                 </div>
@@ -54,38 +55,26 @@
                     <h3 class="card-title font-weight-bold">List Diagnostic</h3>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
+                        <!-- SEARCH BAR -->
+                        <b-input-group size="sm">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                            <b-input-group-append>
+                                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                        <!-- ---------------- -->
                     </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Diagnostic Name</th>
-                            <th>Rank</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(diagnostic, index) in filteredList" v-bind:key="diagnostic.id">
-                                <td>{{diagnostic.id}}</td>
-                                <td>{{diagnostic.name}}</td>
-                                <td>{{diagnostic.rank}}</td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editDiagnostic(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deleteDiagnostic(diagnostic.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="this.diagnostics" :fields="fields" :filter="filter">
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editDiagnostic(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deleteDiagnostic(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -104,7 +93,16 @@
             return {
                 isShowing: false,
                 newDiagnostic: true,
-                search:'',
+
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'name', label: 'Name', sortable: true},
+                    {key: 'rank', sortable: true},
+                    {key: 'actions', label: 'Actions' }
+                ],
+                //---------------
 
                 diagnostics: [],
                 form: new Form({
@@ -120,21 +118,9 @@
         created()
         {
             // Fetch all diagnostics
-            axios.get('/diagnostics')
-                .then(response => this.diagnostics = response.data);
+            axios.get('/diagnostics').then(response => this.diagnostics = response.data);
 
         },
-
-
-        computed: {
-            filteredList()
-            {
-                return this.diagnostics.filter(post => {
-                    return post.name.toLowerCase().includes(this.search.toLowerCase());
-                });
-            }
-        },
-
 
         methods: {
             newDiagnosticToggle()
@@ -144,7 +130,6 @@
             faChanging(){
                 return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus";
             },
-
 
             // ----- ADD  -----
             onSubmit()
@@ -180,18 +165,17 @@
 
 
             // -----EDIT-----
-            editDiagnostic(index)
+            editDiagnostic(id)
             {
                 this.isShowing = true;                     //open new diagnostic
                 this.newDiagnostic   = false;              //button cancel and edit show
 
-                let diagnostic = this.diagnostics[index];  //diagnostic clicked
+                var diagnostic = this.diagnostics.find(element => element.id === id);
 
                 //show values diagnostic
                 this.form.id   = diagnostic.id;
                 this.form.name = diagnostic.name;
                 this.form.rank = diagnostic.rank;
-
             },
 
 

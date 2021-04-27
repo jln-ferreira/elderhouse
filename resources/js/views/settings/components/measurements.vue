@@ -59,40 +59,26 @@
                     <h3 class="card-title font-weight-bold">List Measurement</h3>
 
                     <div class="card-tools">
-                        <div class="input-group input-group-sm" style="width: 150px;">
-                            <input type="text" name="table_search" class="form-control float-right" placeholder="Search" v-model="search">
-
-                            <div class="input-group-append">
-                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                            </div>
-                        </div>
+                        <!-- SEARCH BAR -->
+                        <b-input-group size="sm">
+                            <b-form-input id="filter-input" v-model="filter" type="search" placeholder="Type to Search"></b-form-input>
+                            <b-input-group-append>
+                                <b-button :disabled="!filter" @click="filter = ''">Clear</b-button>
+                            </b-input-group-append>
+                        </b-input-group>
+                        <!-- ---------------- -->
                     </div>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
-                    <table class="table table-hover text-center">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Measurement</th>
-                            <th>Comments</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="(measurement, index) in filteredList" v-bind:key="measurement.id">
-                                <td>{{measurement.id}}</td>
-                                <td>{{measurement.name}}</td>
-                                <td>{{measurement.measurement}}</td>
-                                <td>{{measurement.comment}}</td>
-                                <td>
-                                    <button type="edit" class="btn btn-primary" @click="editMeasurement(index)"><i class="far fa-edit"></i></button>
-                                    <a type="delete" class="btn btn-danger text-white" @click="deleteMeasurement(measurement.id)"><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- TABLE BOOTSTRAP VUE -->
+                    <b-table striped hover :items="this.measurements" :fields="fields" :filter="filter">
+                        <template #cell(actions)="data">
+                            <button type="edit" class="btn btn-primary" @click="editMeasurement(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deleteMeasurement(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                        </template>
+                    </b-table>
+
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -111,7 +97,17 @@
             return {
                 isShowing: false,
                 newMeasurement: true,
-                search:'',
+
+                // DATATABLE
+                filter:'',
+                fields: [
+                    {key: 'id', sortable: true},
+                    {key: 'name', sortable: true},
+                    {key: 'measurement', sortable: true},
+                    {key: 'comment', sortable: false},
+                    {key: 'actions', label: 'Actions' }
+                ],
+                //---------------
 
                 measurements: [],
                 form: new Form({
@@ -132,17 +128,6 @@
                 .then(response => this.measurements = response.data);
 
         },
-
-
-        computed: {
-            filteredList()
-            {
-                return this.measurements.filter(post => {
-                    return post.name.toLowerCase().includes(this.search.toLowerCase());
-                });
-            }
-        },
-
 
         methods: {
             newMeasurementToggle()
@@ -188,12 +173,12 @@
 
 
             // -----EDIT-----
-            editMeasurement(index)
+            editMeasurement(id)
             {
                 this.isShowing = true;                    //open new measurement
                 this.newMeasurement = false;              //button cancel and edit show
 
-                let measurement = this.measurements[index];  //measurement clicked
+                var measurement = this.measurements.find(element => element.id === id);
 
                 //show values measurement
                 this.form.id          = measurement.id;

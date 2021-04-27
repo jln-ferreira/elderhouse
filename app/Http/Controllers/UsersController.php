@@ -98,8 +98,8 @@ class UsersController extends Controller
             'name'         => ['required', 'string', 'max:255'],
             'email'        => ['required', 'string', 'email', 'max:255'],
             'password'     => ['nullable', 'string', 'min:8'],
-            'CPF'          => ['numeric','min:10', 'max:12'],
-            'RG'           => ['numeric','min:9', 'max:10'],
+            'CPF'          => ['required', 'numeric','digits_between:10,12'],
+            'RG'           => ['required', 'numeric','digits_between:9,10'],
             'street'       => ['nullable', 'string', 'max:55'],
             'number'       => ['nullable', 'numeric', 'min:1'],
             'city'         => ['nullable', 'string', 'max:55'],
@@ -143,9 +143,8 @@ class UsersController extends Controller
     // ---------======GET INFORMATIONS API======---------
     public function getUserAddressRole($user_id)
     {
-
         $address = Address::userAddress($user_id);
-        $role = RoleUser::getUserRole($user_id);
+        $role    = RoleUser::getUserRole($user_id);
 
         return ['address' => $address, 'role' => $role];
 
