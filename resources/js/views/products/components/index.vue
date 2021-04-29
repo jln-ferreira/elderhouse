@@ -272,6 +272,7 @@
                         this.products[index].categories       = response[0].categories;
 
                         this.newProduct = true;
+                        this.isShowing  = false;
 
                         this.$toaster.success('Product edited.');
                     });

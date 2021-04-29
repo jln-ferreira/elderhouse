@@ -28,7 +28,6 @@
                                     <select class="form-control" v-model="form.precificationId" id="precification" name="precification" @change="onChange($event)" required>
                                         <option v-for="precification in precifications" v-bind:key="precification.id" :price="precification.price" :value="precification.id">{{precification.name}}</option>
                                     </select>
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('clientName')" v-text="form.errors.get('clientName')"></span>
                                 </div>
                                 <div class="form-group col-md-2">
                                     <label for="value">Value</label>
@@ -53,7 +52,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="save" v-show="this.newPayment" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                            <a type="edit" v-show="!this.newPayment" class="btn btn-primary text-white" @click="modifyPrecification"><i class="far fa-edit"></i> Edit</a>
+                            <a type="edit" v-show="!this.newPayment" class="btn btn-primary text-white" @click="modifyPayment"><i class="far fa-edit"></i> Edit</a>
                             <a type="cancel" v-show="!this.newPayment" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
@@ -125,7 +124,7 @@
                     {key: 'id', sortable: true},
                     {key: 'clientName', label: 'Name', sortable: true},
                     {key: 'precificationName', label: 'Product', sortable: true},
-                    {key: 'price', sortable: true},
+                    {key: 'value', sortable: true},
                     {key: 'date', sortable: true},
                     {key: 'comment', sortable: false},
                     {key: 'actions', label: 'Actions' }
@@ -192,51 +191,60 @@
             // -----DELETE-----
             deletePayment(id)
             {
-                axios.post('/precifications/' + id, {
+                axios.post('/payments/' + id, {
                 _method: 'DELETE'
                 })
                 .then(response => {
                     var count = 0
-                    this.precifications.forEach(element => {
-                        element.id == (response.data.id) ? this.precifications.splice(count,1) : count +=1;
+                    this.payments.forEach(element => {
+                        element.id == (response.data.id) ? this.payments.splice(count,1) : count +=1;
                     });
 
                     this.isShowing = false;
                     this.newPayment = true;
-                    this.$toaster.success('Successful deleted ' + response.data.name);
+                    this.$toaster.success('Successful deleted');
                 });
             },
 
 
 
             // -----EDIT-----
-            editPayment(index)
+            editPayment(id)
             {
-                this.isShowing = true;                    //open new precifications
+                this.isShowing = true;                //open new payments
                 this.newPayment = false;              //button cancel and edit show
 
-                let precifications = this.precifications[index];  //precifications clicked
+                let payments = this.payments.find(element => element.id === id);
 
-                //show values precifications
-                this.form.id      = precifications.id;
-                this.form.name    = precifications.name;
-                this.form.price   = precifications.price;
-                this.form.comment = precifications.comment;
+                //show values payments
+                this.form.id               = payments.id;
+                this.form.clientId         = payments.clientId;
+                this.form.precificationId  = payments.precificationId;
+                this.form.value            = payments.value;
+                this.form.date             = payments.date;
+                this.form.comment          = payments.comment;
             },
 
 
             //-------- MODIFY --------
-            modifyPrecification()
+            modifyPayment()
             {
-               this.form
-                    .patch('/precifications')
+                this.form
+                    .patch('/payments')
                     .then(response => {
-                        this.precifications.find(precification => precification.id == response.id).name = response.name;
-                        this.precifications.find(precification => precification.id == response.id).price = response.price;
-                        this.precifications.find(precification => precification.id == response.id).comment = response.comment;
+
+                        var index = this.payments.findIndex(x => x.id === response.id);
+
+                        this.payments[index].clientId             = response.client_id;
+                        this.payments[index].precificationId = response.precification_id;
+                        this.payments[index].value          = response.value;
+                        this.payments[index].date       = response.date;
+                        this.payments[index].comment       = response.comment;
+
+                        this.newPayment = true;
                         this.isShowing = false;
-                        this.newPayment   = true;
-                        this.$toaster.success('Successful Updated ' + response.name);
+
+                        this.$toaster.success('Product edited.');
                     });
             },
 

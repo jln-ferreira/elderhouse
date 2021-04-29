@@ -26,9 +26,7 @@
                         <div class="card-header d-flex p-0">
                             <ul class="nav nav-pills ml-auto p-2">
                                 <li class="nav-item"><a class="nav-link active" href="#payments" data-toggle="tab"><i class="fas fa-coins"></i> Payments</a></li>
-                                <!-- <li class="nav-item"><a class="nav-link" href="#diagnostics" data-toggle="tab"><i class="fas fa-stethoscope"></i> Diagnostics</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#measurements" data-toggle="tab"><i class="fas fa-balance-scale-right"></i> Measurements</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#precifications" data-toggle="tab"><i class="fas fa-table"></i> Precifications</a></li> -->
+                                <li class="nav-item"><a class="nav-link" href="#invoices" data-toggle="tab"><i class="fas fa-file-invoice-dollar"></i> invoices</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -43,6 +41,16 @@
 
                                 </div>
                                 <!-- END PAYMENTS -->
+
+
+                                <!-- --------=========== [ INVOICES ] ===========-------- -->
+                                <!-- --------------------------------------------------- -->
+                                <div class="tab-pane" id="invoices">
+
+                                    <invoices/>
+
+                                </div>
+                                <!-- END INVOICES -->
 
 
                             </div>
@@ -63,10 +71,12 @@
 
 // imports
 import index from './components/index.vue'
+import invoices from './components/invoices.vue'
 
 export default {
     components: {
-        index
+        index,
+        invoices
     },
     data(){
         return{

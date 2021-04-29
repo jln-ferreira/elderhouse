@@ -201,9 +201,16 @@ Route::delete('/precifications/{id}', 'PrecificationController@destroy');
 // PAYMENTS
 Route::get('/payments', 'PaymentController@index');
 route::post('/payments', 'PaymentController@store');
-Route::patch('/precifications', 'PrecificationController@update');
-Route::delete('/precifications/{id}', 'PrecificationController@destroy');
+Route::patch('/payments', 'PaymentController@update');
+Route::delete('/payments/{id}', 'PaymentController@destroy');
 // END PAYMENTS
+// ------------------
+
+
+// ---------------
+// INVOICES
+Route::get('/paymentDates/{clientId}', 'InvoiceController@getPaymentDates');
+// END INVOICES
 // ------------------
 
 

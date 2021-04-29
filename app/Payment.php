@@ -31,4 +31,5 @@ class Payment extends Model
         ->orderBy('payments.date', 'DESC')
         ->get();
     }
+
 }

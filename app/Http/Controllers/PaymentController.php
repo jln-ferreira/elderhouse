@@ -24,7 +24,6 @@ class PaymentController extends Controller
             'comment'         => ['max:100'],
         ])->validate();
 
-
         // Payment
         $payment = Payment::Create([
             'client_id'        => $request['clientId'],
@@ -38,48 +37,44 @@ class PaymentController extends Controller
         return Payment::activePayment($payment->id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Payment $payment)
+
+    public function update(Request $request)
     {
-        //
+        Validator::make($request->all(), [
+            'clientId'        => ['required', 'numeric'],
+            'precificationId' => ['required', 'numeric'],
+            'value'           => ['required', 'min:1'],
+            'date'            => ['required', 'date'],
+            'comment'         => ['max:100'],
+        ])->validate();
+
+
+
+        // // modify payments
+        $payment = Payment::find($request['id']);
+        $payment->client_id        = $request['clientId'];
+        $payment->precification_id = $request['precificationId'];
+        $payment->value            = $request['value'];
+        $payment->date             = $request['date'];
+        $payment->comment          = $request['comment'];
+        $payment->save();
+
+        return $payment;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Payment $payment)
+
+    public function destroy($paymentId)
     {
-        //
+        $payment = Payment::find($paymentId);
+        $payment->active = 0;
+        $payment->save();
+
+        return $payment;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Payment $payment)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Payment  $payment
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Payment $payment)
+    public function getPaymentDates($clientId)
     {
-        //
+        return Payment::getPaymentDates($clientId);
     }
 }
