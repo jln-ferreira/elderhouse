@@ -24,7 +24,7 @@
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="date">Date</label>
-                                    <select class="form-control" v-model="form.date" id="date" name="date" required>
+                                    <select class="form-control" v-model="form.date" name="date" required>
                                         <option v-for="paymentDate in paymentDates" v-bind:key="paymentDate.date" :value="paymentDate.date">{{paymentDate.date}}</option>
                                     </select>
                                 </div>
@@ -222,10 +222,9 @@
             onSubmit()
             {
                 this.form
-                    .post('/payments')
+                    .post('/invoice')
                     .then(response => {
-                        this.payments.push(response[0]);
-                        this.isShowing = false;
+                        console.log(response);
                         this.$toaster.success('Successful added');
                     })
             },

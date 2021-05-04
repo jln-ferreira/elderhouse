@@ -36,7 +36,7 @@
                                 </div>
                                 <div class="form-group col-md-3">
                                     <label for="date">Date</label>
-                                    <input type="date" class="form-control" id="date" name="date" v-model="form.date" required>
+                                    <input type="date" class="form-control" name="date" v-model="form.date" required>
                                     <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('date')" v-text="form.errors.get('date')"></span>
                                 </div>
                             </div>
