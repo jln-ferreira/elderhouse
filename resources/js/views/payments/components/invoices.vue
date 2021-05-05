@@ -42,34 +42,33 @@
             </div>
 
             <!-- INVOICE -->
-            <div class="container">
+            <div class="container" v-show="showInvoice">
                 <div class="card">
                     <div class="card-header">
-                        Invoice
-                        <strong>01/01/01/2018</strong>
+                        Invoice:
+                        <strong v-html="this.invoices[0].payment_date"></strong>
                         <span class="float-right"> <strong>Status:</strong> Pending</span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
                             <div class="col-sm-6">
-                                <h6 class="mb-3">From:</h6>
+                                <h6 class="mb-3">De:</h6>
                                 <div>
-                                    <strong>Webz Poland</strong>
+                                    <strong>Vivenda Quinta das Flores</strong>
                                 </div>
-                                <div>Madalinskiego 8</div>
-                                <div>71-101 Szczecin, Poland</div>
-                                <div>Email: info@webz.com.pl</div>
-                                <div>Phone: +48 444 666 3333</div>
+                                <div>R. Luis Antonio Rodrigues, 816</div>
+                                <div>Suru, Santana de Parnaíba - SP</div>
+                                <div>Email: atendimento@vivendaquintadasflores.com.br</div>
+                                <div>Phone: +55 11 4154-4273</div>
                             </div>
-                            <div class="col-sm-6">
-                                <h6 class="mb-3">To:</h6>
+                            <div class="col-sm-6 text-right">
+                                <h6 class="mb-3">Para:</h6>
                                 <div>
-                                    <strong>Bob Mart</strong>
+                                    <strong>{{ this.invoices[0].client_name + ' ' + this.invoices[0].client_surname }}</strong>
                                 </div>
-                                <div>Attn: Daniel Marek</div>
-                                <div>43-190 Mikolow, Poland</div>
-                                <div>Email: marek@daniel.com</div>
-                                <div>Phone: +48 123 456 789</div>
+                                <div>{{ this.invoices[0].street + ', ' + this.invoices[0].number }}</div>
+                                <div>{{ this.invoices[0].city + ' - ' + this.invoices[0].state }}</div>
+                                <div>Phone: {{ this.invoices[0].client_phonenumber }}</div>
                             </div>
                         </div>
                         <div class="table-responsive-sm">
@@ -77,45 +76,21 @@
                                 <thead>
                                     <tr>
                                         <th class="center">#</th>
+                                        <th>Payment Id</th>
                                         <th>Item</th>
-                                        <th>Description</th>
-                                        <th class="right">Unit Cost</th>
-                                        <th class="center">Qty</th>
-                                        <th class="right">Total</th>
+                                        <th class="right">Description</th>
+                                        <th class="center">Date</th>
+                                        <th class="right">Value</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="center">1</td>
-                                        <td class="left strong">Origin License</td>
-                                        <td class="left">Extended License</td>
-                                        <td class="right">$999,00</td>
-                                        <td class="center">1</td>
-                                        <td class="right">$999,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">2</td>
-                                        <td class="left">Custom Services</td>
-                                        <td class="left">Instalation and Customization (cost per hour)</td>
-                                        <td class="right">$150,00</td>
-                                        <td class="center">20</td>
-                                        <td class="right">$3.000,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">3</td>
-                                        <td class="left">Hosting</td>
-                                        <td class="left">1 year subcription</td>
-                                        <td class="right">$499,00</td>
-                                        <td class="center">1</td>
-                                        <td class="right">$499,00</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="center">4</td>
-                                        <td class="left">Platinum Support</td>
-                                        <td class="left">1 year subcription 24/7</td>
-                                        <td class="right">$3.999,00</td>
-                                        <td class="center">1</td>
-                                        <td class="right">$3.999,00</td>
+                                    <tr v-for="(invoice, index) in this.invoices" v-bind:key="invoice.id">
+                                        <td class="center">{{ index + 1 }}</td>
+                                        <td class="center">{{ invoice.id }}</td>
+                                        <td class="left strong">{{ invoice.precification_name }}</td>
+                                        <td class="right">{{ invoice.precification_comment }}</td>
+                                        <td class="center">{{ invoice.payment_date }}</td>
+                                        <td class="right">${{ invoice.payment_value }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -126,25 +101,7 @@
                             <div class="col-lg-4 col-sm-5 ml-auto">
                                 <table class="table table-clear">
                                     <tbody>
-                                        <tr>
-                                            <td class="left">
-                                                <strong>Subtotal</strong>
-                                            </td>
-                                            <td class="right">$8.497,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left">
-                                                <strong>Discount (20%)</strong>
-                                            </td>
-                                            <td class="right">$1,699,40</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="left">
-                                                <strong>VAT (10%)</strong>
-                                            </td>
-                                            <td class="right">$679,76</td>
-                                        </tr>
-                                        <tr>
+                                        <tr class="text-right">
                                             <td class="left">
                                                 <strong>Total</strong>
                                             </td>
@@ -158,12 +115,7 @@
                         </div>
                     </div>
                 </div>
-                </div>
-
-
-
-
-
+            </div>
 
         </div>
         <!-- END ADD NEW PAYMENT -->
@@ -174,17 +126,35 @@
 </template>
 
 <script>
-
     export default {
 
         data() {
-
             return {
-                isShowing: true,
-                newPayment: true,
+                isShowing  : true,
+                newPayment : true,
+                showInvoice: false,
 
                 clients     : [],
                 paymentDates: [],
+                invoices    : [
+                    {
+                        "id"                   : 1,
+                        "client_id"            : 1,
+                        "client_name"          : "John",
+                        "client_surname"       : "Doe",
+                        "client_phonenumber"   : 1192201922,
+                        "street"               : "Example",
+                        "number"               : 303,
+                        "city"                 : "Barueri",
+                        "state"                : "Sao Paulo",
+                        "country"              : "Brasil",
+                        "precification_name"   : "Mensalidade",
+                        "precification_comment": "Mensalidade da estadia",
+                        "payment_value"        : 2000,
+                        "payment_date"         : "2021-01-01",
+                        "comment"              : "pagamento de Janeiro"
+                    }
+                ],
                 form: new Form({
                     'clientId': '',
                     'date'    : '',
@@ -225,6 +195,9 @@
                     .post('/invoice')
                     .then(response => {
                         console.log(response);
+                        // show invoice
+                        this.showInvoice = true;
+                        this.invoices = response;
                         this.$toaster.success('Successful added');
                     })
             },

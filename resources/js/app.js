@@ -14,6 +14,7 @@ import VueRouter from "vue-router";
 window.Vue = Vue;
 Vue.use(VueRouter);
 
+//Utilities
 import Form from "./utilities/Form";
 window.Form = Form;
 
@@ -63,5 +64,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 new Vue({
     el: '#app',
-    router
+    router,
 });
