@@ -18,6 +18,9 @@ Vue.use(VueRouter);
 import Form from "./utilities/Form";
 window.Form = Form;
 
+import Xelance from "../mixins/Xelance";
+Vue.mixin(Xelance);
+
 import router from './routes';
 
 //pads

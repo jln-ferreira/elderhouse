@@ -209,8 +209,10 @@ Route::delete('/payments/{id}', 'PaymentController@destroy');
 
 // ---------------
 // INVOICES
+Route::get('/invoices', 'InvoiceController@index');
+Route::post('/invoices', 'InvoiceController@store');
 Route::get('/paymentDates/{clientId}', 'InvoiceController@getPaymentDates');
-Route::post('/invoice', 'InvoiceController@showInvoice');
+Route::post('/createInvoice', 'InvoiceController@createInvoice');
 // END INVOICES
 // ------------------
 

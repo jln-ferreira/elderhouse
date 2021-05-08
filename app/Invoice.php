@@ -7,6 +7,20 @@ use DB;
 
 class Invoice extends Model
 {
+    protected $guarded = [];
+
+
+    public static function getInvoices()
+    {
+        return DB::table('invoices')
+        ->select('invoices.id', 'invoices.client_id', 'clients.name AS client_name','clients.phonenumber AS client_phonenumber', 'clients.surname AS client_surname', 'invoices.date', 'invoices.value', 'invoices.payDate')
+        ->leftJoin('clients', 'invoices.client_id', '=', 'clients.id')
+        ->where('invoices.active', 1)
+        ->orderBy('invoices.payDate')
+        ->get();
+    }
+
+
     public static function getPaymentDates($clientId)
     {
         return DB::table('payments')
@@ -18,7 +32,7 @@ class Invoice extends Model
     }
 
 
-    public static function getInvoice($request)
+    public static function createInvoice($request)
     {
         $date = explode('-', $request->date);
 

@@ -9,12 +9,21 @@ class InvoiceController extends Controller
 {
     public function index()
     {
-        //
+        return Invoice::getInvoices();
     }
 
     public function store(Request $request)
     {
-        //
+        // invoice
+        $invoice = Invoice::Create([
+            'client_id' => $request['clientId'],
+            'date'      => $request['date'],
+            'value'     => $request['value'],
+            'payDate'   => $request['payDate'],
+        ]);
+        $invoice->save();
+
+        return $invoice;
     }
 
 
@@ -34,8 +43,8 @@ class InvoiceController extends Controller
     }
 
     //SHOW INVOICE AFTER SELECT CLIENT AND DATE
-    public function showInvoice(Request $request)
+    public function createInvoice(Request $request)
     {
-        return Invoice::getInvoice($request);
+        return Invoice::createInvoice($request);
     }
 }

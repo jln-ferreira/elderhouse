@@ -46,7 +46,7 @@
                 <div class="card">
                     <div class="card-header">
                         Invoice:
-                        <strong v-html="this.invoices[0].payment_date"></strong>
+                        <strong v-html="fixMonthYear(this.invoices[0].payment_date)"></strong>
                         <span class="float-right"> <strong>Status:</strong> Pending</span>
                     </div>
                     <div class="card-body">
@@ -106,17 +106,22 @@
                                                 <strong>Total</strong>
                                             </td>
                                             <td class="right">
-                                                <strong>$7.477,36</strong>
+                                                <strong>${{ sumValue }}</strong>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <button class="btn btn-primary" @click="executePayment" @show="invoices.length > 1">Execute Payment</button>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- END ADD NEW PAYMENT -->
 
@@ -136,10 +141,11 @@
 
                 clients     : [],
                 paymentDates: [],
+                paidInvoices: [],
                 invoices    : [
                     {
                         "id"                   : 1,
-                        "client_id"            : 1,
+                        "clientId"             : 1,
                         "client_name"          : "John",
                         "client_surname"       : "Doe",
                         "client_phonenumber"   : 1192201922,
@@ -158,6 +164,8 @@
                 form: new Form({
                     'clientId': '',
                     'date'    : '',
+                    'value'   : '',
+                    'payDate' : '',
                 })
             }
 
@@ -168,6 +176,16 @@
         {
             // Fetch all clients
             axios.get('/clients').then(response => this.clients = response.data);
+            // Fetch all invoices
+            axios.get('/invoices').then(response => this.paidInvoices = response.data);
+        },
+        computed: {
+            sumValue()
+            {
+                const sumValue = this.invoices.reduce((prev, cur) => prev + cur.payment_value,0);
+                this.form.value = sumValue;
+                return sumValue;
+            }
         },
 
         methods: {
@@ -175,7 +193,8 @@
             {
                 this.isShowing = !this.isShowing;
             },
-            faChanging(){
+            faChanging()
+            {
                 return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus";
             },
 
@@ -184,23 +203,36 @@
                 var clientId = event.target.value;
 
                 // Fetch all payment dates
-                axios.get('/paymentDates/' + clientId)
-                .then(response => this.paymentDates = response.data);
+                axios.get('/paymentDates/' + clientId).then(response => this.paymentDates = response.data);
             },
 
             // SHOW INVOICE
             onSubmit()
             {
                 this.form
-                    .post('/invoice')
+                    .post('/createInvoice')
                     .then(response => {
-                        console.log(response);
                         // show invoice
                         this.showInvoice = true;
                         this.invoices = response;
                         this.$toaster.success('Successful added');
                     })
             },
+
+            // Execute Payment
+            executePayment()
+            {
+                this.form.clientId = this.invoices[0].client_id;
+                this.form.date     = this.fixMonthYear(this.invoices[0].payment_date);
+                this.form.payDate  = new Date().toISOString().split('T')[0]; //get date yyyy-mm-dd
+
+                this.form
+                    .post('/invoices')
+                    .then(response => {
+                        console.log(response);
+                        this.$toaster.success('Successful paid');
+                    })
+            }
 
         }
     }
