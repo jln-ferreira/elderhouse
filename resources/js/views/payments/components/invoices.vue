@@ -47,7 +47,7 @@
                     <div class="card-header">
                         Invoice:
                         <strong v-html="fixMonthYear(this.invoices[0].payment_date)"></strong>
-                        <span class="float-right"> <strong>Status:</strong> <span class="badge badge-warning" style="font-size: 1em;">Pending</span></span>
+                        <span class="float-right"> <strong>Status:</strong> <span :class="['badge', this.invoices[0].invoice_id ? 'badge-success' : 'badge-warning' ]" style="font-size: 1em;">{{ this.invoices[0].invoice_id ? 'Paid' : 'Pending' }}</span></span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
@@ -117,11 +117,12 @@
                         <hr>
 
                         <div class="row">
-                            <button class="btn btn-primary" @click="executePayment" @show="invoices.length > 1">Execute Payment</button>
+                            <button class="btn btn-primary" @click="executePayment" v-show="!this.invoices[0].invoice_id">Execute Payment</button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
         <!-- END ADD NEW PAYMENT -->
 
@@ -141,7 +142,6 @@
 
                 clients     : [],
                 paymentDates: [],
-                paidInvoices: [],
                 invoices    : [
                     {
                         "id"                   : 1,
@@ -176,8 +176,6 @@
         {
             // Fetch all clients
             axios.get('/clients').then(response => this.clients = response.data);
-            // Fetch all invoices
-            axios.get('/invoices').then(response => this.paidInvoices = response.data);
         },
         computed: {
             sumValue()
@@ -223,7 +221,7 @@
             executePayment()
             {
                 this.form.clientId = this.invoices[0].client_id;
-                this.form.date     = this.fixMonthYear(this.invoices[0].payment_date);
+                this.form.date     = this.invoices[0].payment_date.slice(0,7);
                 this.form.payDate  = new Date().toISOString().split('T')[0]; //get date yyyy-mm-dd
 
                 this.form

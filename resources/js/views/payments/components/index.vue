@@ -94,6 +94,9 @@
                         <template #cell(clientName)="data">
                             <b>{{ data.item.clientName + " " + data.item.clientSurname }}</b>
                         </template>
+                        <template #cell(invoice_id)="data">
+                            <b><span :class="['badge', data.item.invoice_id ? 'badge-success' : 'badge-warning' ]" style="font-size: 1em;">{{ data.item.invoice_id ? 'Paid' : 'Pending' }}</span></b>
+                        </template>
                         <template #cell(actions)="data">
                             <button type="edit" class="btn btn-primary" @click="editPayment(data.item.id)"><i class="far fa-edit"></i></button>
                             <a type="delete" class="btn btn-danger text-white" @click="deletePayment(data.item.id)"><i class="far fa-trash-alt"></i></a>
@@ -127,6 +130,7 @@
                     {key: 'value', sortable: true},
                     {key: 'date', sortable: true},
                     {key: 'comment', sortable: false},
+                    {key: 'invoice_id', label: 'Situation', sortable: true},
                     {key: 'actions', label: 'Actions' }
                 ],
                 //---------------

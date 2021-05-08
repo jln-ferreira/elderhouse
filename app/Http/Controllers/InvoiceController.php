@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Invoice;
+use DB;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -23,7 +24,16 @@ class InvoiceController extends Controller
         ]);
         $invoice->save();
 
-        return $invoice;
+        // update app payments
+        $date = explode('-',  $request['date']);
+
+        $payments = DB::table('payments')
+        ->where([['payments.active', 1], ['payments.client_id', $request['clientId']]])
+        ->whereYear('payments.date', '=', $date[0])
+        ->whereMonth('payments.date', '=', $date[1])
+        ->update(['invoice_id' => 1]);
+
+        return $payments;
     }
 
 
