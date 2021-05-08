@@ -47,7 +47,7 @@
                     <div class="card-header">
                         Invoice:
                         <strong v-html="fixMonthYear(this.invoices[0].payment_date)"></strong>
-                        <span class="float-right"> <strong>Status:</strong> Pending</span>
+                        <span class="float-right"> <strong>Status:</strong> <span class="badge badge-warning" style="font-size: 1em;">Pending</span></span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
