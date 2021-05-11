@@ -31,9 +31,9 @@ class InvoiceController extends Controller
         ->where([['payments.active', 1], ['payments.client_id', $request['clientId']]])
         ->whereYear('payments.date', '=', $date[0])
         ->whereMonth('payments.date', '=', $date[1])
-        ->update(['invoice_id' => 1]);
+        ->update(['invoice_id' => $invoice->id]);
 
-        return $payments;
+        return $invoice;
     }
 
 

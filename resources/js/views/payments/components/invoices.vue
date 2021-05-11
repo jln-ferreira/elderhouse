@@ -42,7 +42,7 @@
             </div>
 
             <!-- INVOICE -->
-            <div class="container" v-show="showInvoice">
+            <div id="invoice" class="container" v-show="showInvoice">
                 <div class="card">
                     <div class="card-header">
                         Invoice:
@@ -117,7 +117,12 @@
                         <hr>
 
                         <div class="row">
-                            <button class="btn btn-primary" @click="executePayment" v-show="!this.invoices[0].invoice_id">Execute Payment</button>
+                            <div class="col-6 text-left">
+                                <button class="btn btn-sm btn-info" @click="printInvoice"> <i class="fa fa-print"></i> Print</button>
+                            </div>
+                            <div class="col-6 text-right">
+                                <button class="btn btn-primary" @click="executePayment" v-show="!this.invoices[0].invoice_id"><i class="fas fa-dollar-sign"></i> Execute Payment</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,9 +232,22 @@
                 this.form
                     .post('/invoices')
                     .then(response => {
-                        console.log(response);
+                        // console.log(response);
+
+                        this.invoices.map((payment) => payment.invoice_id = response.id);
+                        this.$emit('update-payment', response)
                         this.$toaster.success('Successful paid');
                     })
+            },
+
+            // print invoice and only the invoice
+            printInvoice()
+            {
+                var printwin = window.open("");
+                printwin.document.write(document.getElementById("invoice").innerHTML);
+                printwin.stop();
+                printwin.print();
+                printwin.close();
             }
 
         }

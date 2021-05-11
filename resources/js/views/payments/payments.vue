@@ -37,7 +37,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane active" id="payments">
 
-                                    <index/>
+                                    <index :invoiceUp='invoiceUp' />
 
                                 </div>
                                 <!-- END PAYMENTS -->
@@ -47,7 +47,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="invoices">
 
-                                    <invoices/>
+                                    <invoices  @update-payment="updatePayment"/>
 
                                 </div>
                                 <!-- END INVOICES -->
@@ -80,11 +80,14 @@ export default {
     },
     data(){
         return{
-
+            invoiceUp: '',
         }
     },
     methods:{
-
+        updatePayment(e) {
+            // console.log(e);
+            this.invoiceUp = e;
+        },
     },
 }
 </script>

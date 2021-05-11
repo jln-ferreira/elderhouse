@@ -90,7 +90,7 @@
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                     <!-- TABLE BOOTSTRAP VUE -->
-                    <b-table striped hover :items="payments" :fields="fields" :filter="filter">
+                    <b-table striped hover :items="this.updatePayments" :fields="fields" :filter="filter">
                         <template #cell(clientName)="data">
                             <b>{{ data.item.clientName + " " + data.item.clientSurname }}</b>
                         </template>
@@ -108,15 +108,18 @@
             <!-- /.card -->
         </div>
         <!-- END LIST PAYMENT -->
+        <!-- {{this.updatePayments}} -->
     </div>
 </template>
 
 <script>
 
     export default {
+        props:{
+            invoiceUp: "", //after paid the invoice
+        },
 
         data() {
-
             return {
                 isShowing: false,
                 newPayment: true,
@@ -150,7 +153,6 @@
 
         },
 
-
         created()
         {
             // Fetch all payments
@@ -163,6 +165,15 @@
             axios.get('/clients')
                 .then(response => this.clients = response.data);
 
+        },
+
+        computed: {
+            updatePayments(){
+                if(this.invoiceUp != ''){
+                    this.payments.find(index => index.clientId == this.invoiceUp.client_id && index.date.substring(0, 7) == this.invoiceUp.date).invoice_id = this.invoiceUp.id;
+                    return this.payments;
+                } else return this.payments
+            }
         },
 
         methods: {
