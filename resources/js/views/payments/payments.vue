@@ -26,7 +26,8 @@
                         <div class="card-header d-flex p-0">
                             <ul class="nav nav-pills ml-auto p-2">
                                 <li class="nav-item"><a class="nav-link active" href="#payments" data-toggle="tab"><i class="fas fa-coins"></i> Payments</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#invoices" data-toggle="tab"><i class="fas fa-file-invoice-dollar"></i> invoices</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#createInvoice" data-toggle="tab"><i class="fas fa-file-invoice-dollar"></i> Create Invoices</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#showInvoice" data-toggle="tab"><i class="fas fa-folder-open"></i> invoices</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -43,14 +44,24 @@
                                 <!-- END PAYMENTS -->
 
 
-                                <!-- --------=========== [ INVOICES ] ===========-------- -->
+                                <!-- --------=========== [ CREATE INVOICES ] ===========-------- -->
                                 <!-- --------------------------------------------------- -->
-                                <div class="tab-pane" id="invoices">
+                                <div class="tab-pane" id="createInvoice">
 
-                                    <invoices  @update-payment="updatePayment"/>
+                                    <createInvoices  @update-payment="updatePayment"/>
 
                                 </div>
-                                <!-- END INVOICES -->
+                                <!-- END CREATE INVOICES -->
+
+
+                                <!-- --------=========== [ SHOW INVOICES ] ===========-------- -->
+                                <!-- --------------------------------------------------- -->
+                                <div class="tab-pane" id="showInvoice">
+
+                                    <showInvoices />
+
+                                </div>
+                                <!-- END SHOW INVOICES -->
 
 
                             </div>
@@ -71,12 +82,14 @@
 
 // imports
 import index from './components/index.vue'
-import invoices from './components/invoices.vue'
+import createInvoices from './components/create.vue'
+import showInvoices from './components/show.vue'
 
 export default {
     components: {
         index,
-        invoices
+        createInvoices,
+        showInvoices
     },
     data(){
         return{

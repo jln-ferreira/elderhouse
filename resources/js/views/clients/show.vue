@@ -27,12 +27,12 @@
                             <div class="card-header d-flex p-0">
                                 <h3 class="card-title p-3" v-text="formInformation.name"></h3>
                                 <ul class="nav nav-pills ml-auto p-2">
-                                    <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab">Information</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab">Address</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab">Family</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab">Diagnostic</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#creditcard" data-toggle="tab">Credit Card</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#contract" data-toggle="tab">Contract</a></li>
+                                    <li class="nav-item"><a class="nav-link active" href="#information" data-toggle="tab"><i class="fas fa-user-check"></i> Information</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#address" data-toggle="tab"><i class="fas fa-map-marked-alt"></i> Address</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#family" data-toggle="tab"><i class="fas fa-baby"></i> Family</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#diagnostic" data-toggle="tab"><i class="fas fa-stethoscope"></i> Diagnostic</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#creditcard" data-toggle="tab"><i class="fas fa-credit-card"></i> Credit Card</a></li>
+                                    <li class="nav-item"><a class="nav-link" href="#contract" data-toggle="tab"><i class="fas fa-file-contract"></i> Contract</a></li>
                                 </ul>
                             </div><!-- /.card-header -->
                             <div class="card-body">
