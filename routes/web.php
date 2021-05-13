@@ -211,6 +211,7 @@ Route::delete('/payments/{id}', 'PaymentController@destroy');
 // INVOICES
 Route::get('/invoices', 'InvoiceController@index');
 Route::post('/invoices', 'InvoiceController@store');
+Route::get('/invoice/{id}', 'InvoiceController@show');
 Route::get('/paymentDates/{clientId}', 'InvoiceController@getPaymentDates');
 Route::post('/createInvoice', 'InvoiceController@createInvoice');
 // END INVOICES

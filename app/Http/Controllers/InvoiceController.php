@@ -13,6 +13,13 @@ class InvoiceController extends Controller
         return Invoice::getInvoices();
     }
 
+
+    public function show($id)
+    {
+        return Invoice::getInvoice($id);
+    }
+
+
     public function store(Request $request)
     {
         // invoice

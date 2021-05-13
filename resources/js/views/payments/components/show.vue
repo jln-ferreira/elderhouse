@@ -6,11 +6,11 @@
         <div class="col-lg-12">
             <transition name="block">
 
-                <!-- <div class="card">
+                <div class="card">
                     <div class="card-header">
                         Invoice:
-                        <strong v-html="fixMonthYear(this.invoices[0].payment_date)"></strong>
-                        <span class="float-right"> <strong>Status:</strong> <span :class="['badge', this.invoices[0].invoice_id ? 'badge-success' : 'badge-warning' ]" style="font-size: 1em;">{{ this.invoices[0].invoice_id ? 'Paid' : 'Pending' }}</span></span>
+                        <strong v-html="fixMonthYear(this.invoiceSelected.invoice_date)"></strong>
+                        <span class="float-right"> <strong>Status:</strong> <span class="badge badge-success" style="font-size: 1em;">Paid</span></span>
                     </div>
                     <div class="card-body">
                         <div class="row mb-4">
@@ -27,11 +27,11 @@
                             <div class="col-sm-6 text-right">
                                 <h6 class="mb-3">Para:</h6>
                                 <div>
-                                    <strong>{{ this.invoices[0].client_name + ' ' + this.invoices[0].client_surname }}</strong>
+                                    <strong>{{ this.invoiceSelected.client_name }}</strong>
                                 </div>
-                                <div>{{ this.invoices[0].street + ', ' + this.invoices[0].number }}</div>
-                                <div>{{ this.invoices[0].city + ' - ' + this.invoices[0].state }}</div>
-                                <div>Phone: {{ this.invoices[0].client_phonenumber }}</div>
+                                <div>{{ this.invoiceSelected.street + ', ' + this.invoiceSelected.number }}</div>
+                                <div>{{ this.invoiceSelected.city + ' - ' + this.invoiceSelected.state }}</div>
+                                <div>Phone: {{ this.invoiceSelected.client_phonenumber }}</div>
                             </div>
                         </div>
                         <div class="table-responsive-sm">
@@ -47,13 +47,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(invoice, index) in this.invoices" v-bind:key="invoice.id">
+                                    <tr v-for="(payment, index) in this.invoiceSelected.payments" v-bind:key="payment.id">
                                         <td class="center">{{ index + 1 }}</td>
-                                        <td class="center">{{ invoice.id }}</td>
-                                        <td class="left strong">{{ invoice.precification_name }}</td>
-                                        <td class="right">{{ invoice.precification_comment }}</td>
-                                        <td class="center">{{ invoice.payment_date }}</td>
-                                        <td class="right">${{ invoice.payment_value }}</td>
+                                        <td class="center">{{ payment.payment_id }}</td>
+                                        <td class="left strong">{{ payment.precification_name }}</td>
+                                        <td class="right">{{ payment.precification_comment }}</td>
+                                        <td class="center">{{ payment.payment_date }}</td>
+                                        <td class="right">${{ payment.payment_value }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -69,7 +69,7 @@
                                                 <strong>Total</strong>
                                             </td>
                                             <td class="right">
-                                                <strong>${{ sumValue }}</strong>
+                                                <strong>${{ this.invoiceSelected.invoice_value }}</strong>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -84,11 +84,11 @@
                                 <button class="btn btn-sm btn-info" @click="printInvoice"> <i class="fa fa-print"></i> Print</button>
                             </div>
                             <div class="col-6 text-right">
-                                <button class="btn btn-primary" @click="executePayment" v-show="!this.invoices[0].invoice_id"><i class="fas fa-dollar-sign"></i> Execute Payment</button>
+                                <button class="btn btn-danger" @click="deleteInvoice(invoiceSelected.id)"><i class="fas fa-trash"></i> Delete Invoice</button>
                             </div>
                         </div>
                     </div>
-                </div> -->
+                </div>
 
             </transition>
         </div>
@@ -143,6 +143,30 @@
         data() {
             return {
                 invoices: [],
+                invoiceSelected: {
+                    id: '',
+                    payment_date: '',
+                    client_name: '',
+                    street: '',
+                    number: '',
+                    city: '',
+                    state: '',
+                    client_phonenumber: '',
+                    invoice_date: '',
+                    invoice_value: '',
+                    payDate: '',
+                    payments: [
+                        {
+                            payment_id: '',
+                            comment: '',
+                            payment_date: '',
+                            payment_value: '',
+                            precification_comment: '',
+                            precification_name: '',
+                        }
+                    ]
+
+                },
 
                 // DATATABLE
                 filter:'',
@@ -162,13 +186,31 @@
         created()
         {
             // Fetch all payments
-            axios.get('/invoices').then(response => {this.invoices = response.data
-            console.log(response)});
+            axios.get('/invoices').then(response => this.invoices = response.data);
 
         },
 
         methods: {
             showInvoice(id)
+            {
+                axios.get('/invoice/' + id).then(response => {
+                    console.log(response);
+                    this.invoiceSelected = response.data
+                });
+            },
+
+            // print invoice and only the invoice
+            printInvoice()
+            {
+                var printwin = window.open("");
+                printwin.document.write(document.getElementById("invoice").innerHTML);
+                printwin.stop();
+                printwin.print();
+                printwin.close();
+            },
+
+            //delete invoice
+            deleteInvoice(id)
             {
                 console.log(id);
             }

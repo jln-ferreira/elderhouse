@@ -20,6 +20,53 @@ class Invoice extends Model
         ->get();
     }
 
+    public static function getInvoice($id)
+    {
+        $invoices =  DB::table('payments')
+        ->select('invoices.id AS id','invoices.date AS invoice_date','invoices.value AS invoice_value','invoices.payDate','payments.id AS payment_id', 'payments.client_id', 'clients.name AS client_name','clients.phonenumber AS client_phonenumber', 'clients.surname AS client_surname','addresses.street','addresses.number','addresses.city','addresses.state','addresses.country', 'precifications.name AS precification_name', 'precifications.comment AS precification_comment',  'payments.value AS payment_value', 'payments.date AS payment_date', 'payments.comment', 'payments.invoice_id')
+        ->leftJoin('invoices', 'payments.invoice_id', '=', 'invoices.id')
+        ->leftJoin('clients', 'payments.client_id', '=', 'clients.id')
+        ->leftJoin('precifications', 'payments.precification_id', '=', 'precifications.id')
+        ->leftJoin('addresses', 'clients.id', '=', 'addresses.client_id')
+        ->where([['payments.active', 1],['precifications.active', 1], ['invoices.id', $id]])
+        ->orderBy('payments.date')
+        ->get();
+
+        // design new array
+        $result = [];
+        foreach ($invoices as $invoice)
+        {
+            $result[$invoice->id]['id'] = $invoice->id;
+            $result[$invoice->id]['invoice_value'] = $invoice->invoice_value;
+            $result[$invoice->id]['invoice_date'] = $invoice->invoice_date;
+            $result[$invoice->id]['payDate'] = $invoice->payDate;
+            $result[$invoice->id]['client_id'] = $invoice->client_id;
+            $result[$invoice->id]['client_name'] = $invoice->client_name . ' ' . $invoice->client_surname;
+            $result[$invoice->id]['client_phonenumber'] = $invoice->client_phonenumber;
+            $result[$invoice->id]['country'] = $invoice->country;
+            $result[$invoice->id]['city'] = $invoice->city;
+            $result[$invoice->id]['state'] = $invoice->state;
+            $result[$invoice->id]['street'] = $invoice->street;
+            $result[$invoice->id]['number'] = $invoice->number;
+            $result[$invoice->id]['payments'][] = array(
+                'payment_id' => $invoice->payment_id,
+                'payment_value' => $invoice->payment_value,
+                'payment_date' => $invoice->payment_date,
+                'precification_name' => $invoice->precification_name,
+                'precification_comment' => $invoice->precification_comment,
+                'comment' => $invoice->comment
+            );
+        }
+
+        // to array
+        $resultArray = [];
+        foreach ($result as $value) {
+            array_push($resultArray, $value);
+        };
+
+        return $resultArray[0];
+    }
+
 
     public static function getPaymentDates($clientId)
     {

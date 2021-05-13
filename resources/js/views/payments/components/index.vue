@@ -156,21 +156,24 @@
         created()
         {
             // Fetch all payments
-            axios.get('/payments')
-                .then(response => this.payments = response.data);
+            axios.get('/payments').then(response => this.payments = response.data);
             // Fetch all precification
-            axios.get('/precifications')
-                .then(response => this.precifications = response.data);
+            axios.get('/precifications').then(response => this.precifications = response.data);
             // Fetch all clients
-            axios.get('/clients')
-                .then(response => this.clients = response.data);
+            axios.get('/clients').then(response => this.clients = response.data);
 
         },
 
         computed: {
             updatePayments(){
-                if(this.invoiceUp != ''){
-                    this.payments.find(index => index.clientId == this.invoiceUp.client_id && index.date.substring(0, 7) == this.invoiceUp.date).invoice_id = this.invoiceUp.id;
+                if(this.invoiceUp != '')
+                {
+                    this.payments.map((payment) => {
+                        if(payment.clientId == this.invoiceUp.client_id && payment.date.substring(0, 7) == this.invoiceUp.date)
+                        {
+                            payment.invoice_id = this.invoiceUp.id;
+                        }
+                    })
                     return this.payments;
                 } else return this.payments
             }
