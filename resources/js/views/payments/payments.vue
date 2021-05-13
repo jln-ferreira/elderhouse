@@ -38,7 +38,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane active" id="payments">
 
-                                    <index :invoiceUp='invoiceUp' />
+                                    <index :invoiceUp='invoiceUp' :invoiceDel='invoiceDel' />
 
                                 </div>
                                 <!-- END PAYMENTS -->
@@ -58,7 +58,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="showInvoice">
 
-                                    <showInvoices />
+                                    <showInvoices  @delete-payment="deletePayment" />
 
                                 </div>
                                 <!-- END SHOW INVOICES -->
@@ -93,13 +93,17 @@ export default {
     },
     data(){
         return{
-            invoiceUp: '',
+            invoiceUp : '',
+            invoiceDel: '',
         }
     },
     methods:{
-        updatePayment(e) {
-            // console.log(e);
-            this.invoiceUp = e;
+        updatePayment(e){
+           this.invoiceUp = e
+        },
+
+        deletePayment(e){
+            this.invoiceDel = e
         },
     },
 }

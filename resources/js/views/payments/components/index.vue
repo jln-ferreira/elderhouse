@@ -113,10 +113,10 @@
 </template>
 
 <script>
-
     export default {
         props:{
             invoiceUp: "", //after paid the invoice
+            invoiceDel: "", //after delete invoice
         },
 
         data() {
@@ -166,6 +166,8 @@
 
         computed: {
             updatePayments(){
+                //CREATE
+                //WHEN CREATE THE INVOICE, THIS PAGE MUST KNOW TO CHANGE THE PAYMENT STATUS
                 if(this.invoiceUp != '')
                 {
                     this.payments.map((payment) => {
@@ -175,7 +177,20 @@
                         }
                     })
                     return this.payments;
-                } else return this.payments
+                }
+                //DELELTE
+                //WHEN DELETE THE INVOICE, THIS PAGE MUST KNOW TO CHANGE THE PAYMENT STATUS
+                else if (this.invoiceDel != '')
+                {
+                    this.payments.map((payment) => {
+                        if(payment.clientId == this.invoiceDel.client_id && payment.date.substring(0, 7) == this.invoiceDel.date)
+                        {
+                            payment.invoice_id = null;
+                        }
+                    })
+                    return this.payments;
+                }
+                else return this.payments
             }
         },
 
@@ -253,11 +268,11 @@
 
                         var index = this.payments.findIndex(x => x.id === response.id);
 
-                        this.payments[index].clientId             = response.client_id;
+                        this.payments[index].clientId        = response.client_id;
                         this.payments[index].precificationId = response.precification_id;
-                        this.payments[index].value          = response.value;
-                        this.payments[index].date       = response.date;
-                        this.payments[index].comment       = response.comment;
+                        this.payments[index].value           = response.value;
+                        this.payments[index].date            = response.date;
+                        this.payments[index].comment         = response.comment;
 
                         this.newPayment = true;
                         this.isShowing = false;

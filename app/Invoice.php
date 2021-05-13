@@ -28,7 +28,7 @@ class Invoice extends Model
         ->leftJoin('clients', 'payments.client_id', '=', 'clients.id')
         ->leftJoin('precifications', 'payments.precification_id', '=', 'precifications.id')
         ->leftJoin('addresses', 'clients.id', '=', 'addresses.client_id')
-        ->where([['payments.active', 1],['precifications.active', 1], ['invoices.id', $id]])
+        ->where([['precifications.active', 1], ['invoices.id', $id]])
         ->orderBy('payments.date')
         ->get();
 

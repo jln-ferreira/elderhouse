@@ -6,13 +6,13 @@
         <div class="col-lg-12">
             <transition name="block">
 
-                <div class="card">
+                <div class="card" v-show="invoiceShow">
                     <div class="card-header">
                         Invoice:
                         <strong v-html="fixMonthYear(this.invoiceSelected.invoice_date)"></strong>
-                        <span class="float-right"> <strong>Status:</strong> <span class="badge badge-success" style="font-size: 1em;">Paid</span></span>
+                        <span class="float-right" style="cursor: pointer;" @click="invoiceShow = false"><i class="fas fa-window-close"></i></span>
                     </div>
-                    <div class="card-body">
+                    <div id="showInvoice" class="card-body">
                         <div class="row mb-4">
                             <div class="col-sm-6">
                                 <h6 class="mb-3">De:</h6>
@@ -142,6 +142,7 @@
     export default {
         data() {
             return {
+                invoiceShow: false,
                 invoices: [],
                 invoiceSelected: {
                     id: '',
@@ -189,13 +190,16 @@
             axios.get('/invoices').then(response => this.invoices = response.data);
 
         },
+        computed:{
+
+        },
 
         methods: {
             showInvoice(id)
             {
                 axios.get('/invoice/' + id).then(response => {
-                    console.log(response);
-                    this.invoiceSelected = response.data
+                    this.invoiceSelected = response.data;
+                    this.invoiceShow = true;
                 });
             },
 
@@ -203,7 +207,7 @@
             printInvoice()
             {
                 var printwin = window.open("");
-                printwin.document.write(document.getElementById("invoice").innerHTML);
+                printwin.document.write(document.getElementById("showInvoice").innerHTML);
                 printwin.stop();
                 printwin.print();
                 printwin.close();
@@ -212,7 +216,24 @@
             //delete invoice
             deleteInvoice(id)
             {
-                console.log(id);
+                if(confirm("Do you really want to delete?"))
+                {
+                    axios.post('/invoices/' + id, {
+                    _method: 'DELETE'
+                }).then(response => {
+                        //close invoice
+                        this.invoiceShow = false;
+
+                        //remove invoice from list
+                        var count = 0
+                        this.invoices.forEach(element => {
+                            element.id == (response.data.id) ? this.invoices.splice(count,1) : count +=1;
+                        });
+                        //send payment to parents
+                        this.$emit('delete-payment', response.data)
+                        this.$toaster.success('Successful deleted');
+                    });
+                }
             }
         }
     }
