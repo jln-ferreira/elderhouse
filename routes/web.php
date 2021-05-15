@@ -219,6 +219,12 @@ Route::post('/createInvoice', 'InvoiceController@createInvoice');
 // ------------------
 
 
+// ---------------
+// CLIENT PRODUCT
+Route::get('/productMedic', 'ClientProductController@getProducts');
+// END  CLIENT PRODUCT
+// ------------------
+
 
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809
 // https://adminlte.io/themes/AdminLTE/documentation/index.html#download

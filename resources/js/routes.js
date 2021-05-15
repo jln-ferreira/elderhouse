@@ -27,6 +27,10 @@ let routes = [
         component: require('./views/profile/profile').default
     },
     {
+        path: '/scheduleMedicaments',
+        component: require('./views/scheduleMedicaments/scheduleMedicaments').default
+    },
+    {
         path: '/products',
         component: require('./views/products/products').default
     },

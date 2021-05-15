@@ -120,7 +120,7 @@
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                     <!-- TABLE BOOTSTRAP VUE -->
-                    <b-table striped hover :items="this.invoices" :fields="fields" :filter="filter">
+                    <b-table striped hover :items="updatePayments" :fields="fields" :filter="filter">
                         <template #cell(name)="data">
                             <b>{{ data.item.client_name + " " +  data.item.client_surname }}</b>
                         </template>
@@ -140,6 +140,9 @@
 <script>
 
     export default {
+        props:{
+            invoiceUp: "", //after paid the invoice
+        },
         data() {
             return {
                 invoiceShow: false,
@@ -191,7 +194,16 @@
 
         },
         computed:{
-
+            updatePayments(){
+                //CREATE
+                //WHEN CREATE THE INVOICE, THIS PAGE MUST KNOW TO CHANGE THE PAYMENT STATUS
+                if(this.invoiceUp != '')
+                {
+                    this.invoices.push(this.invoiceUp);
+                    this.$emit('invoice-added', '')
+                }
+                return this.invoices;
+            }
         },
 
         methods: {

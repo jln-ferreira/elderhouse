@@ -58,7 +58,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="showInvoice">
 
-                                    <showInvoices  @delete-payment="deletePayment" />
+                                    <showInvoices :invoiceUp='invoiceUp' @invoice-added="invoiceAdded"  @delete-payment="deletePayment" />
 
                                 </div>
                                 <!-- END SHOW INVOICES -->
@@ -105,6 +105,10 @@ export default {
         deletePayment(e){
             this.invoiceDel = e
         },
+
+        invoiceAdded(e){
+            this.invoiceUp = e
+        }
     },
 }
 </script>
