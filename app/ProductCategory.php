@@ -2,6 +2,7 @@
 
 namespace App;
 
+use  DB;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductCategory extends Model
@@ -15,7 +16,7 @@ class ProductCategory extends Model
         return DB::table('product_categories')
         ->select('products.id', 'products.name')
         ->leftJoin('products', 'product_categories.product_id', '=', 'products.id')
-        ->leftJoin('categories', 'product_categories.category', '=', 'categories.id')
+        ->leftJoin('categories', 'product_categories.category_id', '=', 'categories.id')
         ->where('categories.id', 4) //4 = Medic (can be changed )
         ->orderBy('products.name')
         ->get();

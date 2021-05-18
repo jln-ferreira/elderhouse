@@ -45,7 +45,7 @@
 
                                  <!-- ---========== [ SCHEDULE MEDICAMENTS ] ==========--- -->
                                 <!-- ---------------------------------------------------- -->
-                                <div class="tab-pane active" id="create">
+                                <div class="tab-pane" id="create">
 
                                     <create />
 
