@@ -29,10 +29,22 @@
                                         <option v-for="product in products" v-bind:key="product.id" :value="product.id">{{product.name}}</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-2" style="align-self: flex-end;">
+                                <div class="form-group col-md-2">
+                                    <label for="measurement">Measurement</label>
+                                    <select class="form-control" v-model="form.measurementId" id="measurement" name="measurement" required>
+                                        <option v-for="measurement in measurements" v-bind:key="measurement.id" :value="measurement.id">{{measurement.measurement}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" class="form-control" name="quantity" v-model="form.quantity" min="0.01" max="9999" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-lg-2" style="align-self: flex-end;">
                                     <a class="form-control btn btn-warning" @click="singleDateBtn()"><i class="fas fa-calendar-day"></i> Single Date</a>
                                 </div>
-                                <div class="form-group col-md-2" style="align-self: flex-end;">
+                                <div class="form-group col-lg-2" style="align-self: flex-end;">
                                     <a class="form-control btn btn-warning"  @click="customDateBtn()"><i class="fas fa-calendar-minus"></i> Custom Dates</a>
                                 </div>
                             </div>
@@ -48,7 +60,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="date">Date</label>
-                                        <input type="date" class="form-control" name="date" v-model="form.date" required>
+                                        <input type="date" class="form-control" name="date" v-model="form.date" :required="singleDate">
                                         <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('date')" v-text="form.errors.get('date')"></span>
                                     </div>
                                     <div class="form-group col-md-3">
@@ -70,7 +82,7 @@
                                     <div class="form-group col-md-3">
                                         <label>Week Day</label>
                                         <div class="custom-control custom-switch" v-for='weekField in this.weekFields' v-bind:key='weekField.id'>
-                                            <input type="checkbox" class="custom-control-input" :id="'week_' + weekField.id" v-model="form.week" :value="weekField.id">
+                                            <input type="checkbox" class="custom-control-input" :id="'week_' + weekField.id" v-model="form.week" :value="weekField.id" :required="!singleDate">
                                             <label class="custom-control-label" :for="'week_' + weekField.id">{{ weekField.week }}</label>
                                         </div>
                                     </div>
@@ -78,6 +90,10 @@
                                         <label for="time">Time</label>
                                         <input type="time" class="form-control" name="time" v-model="form.time" required>
                                         <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('time')" v-text="form.errors.get('time')"></span>
+                                    </div>
+                                    <div class="form-group col-md-1">
+                                        <label for="repeat">Repetition</label>
+                                        <input type="number" class="form-control" name="repeat" v-model="form.repeat" min="1" max="12" oninput="validity.valid||(value='');" :required="!singleDate">
                                     </div>
                                 </div>
 
@@ -95,9 +111,9 @@
                         </div>
                         <!-- /.card-body -->
                         <div class="card-footer">
-                            <!-- <button type="save" v-show="this.newPayment" class="btn btn-success"><i class="fa fa-plus"></i> Save</button> -->
-                            <!-- <a type="edit" v-show="!this.newPayment" class="btn btn-primary text-white" @click="modifyPayment"><i class="far fa-edit"></i> Edit</a> -->
-                            <!-- <a type="cancel" v-show="!this.newPayment" class="btn btn-warning text-white" @click="cancelEdit"><i class="fa fa-times"></i> Cancel</a> -->
+                            <button type="save" v-show="this.newClientProduct" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
+                            <a type="edit" v-show="!this.newClientProduct" class="btn btn-primary text-white"><i class="far fa-edit"></i> Edit</a>
+                            <a type="cancel" v-show="!this.newClientProduct" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
                     </form>
@@ -106,11 +122,11 @@
             </div>
 
         </div>
-        <!-- END ADD NEW PAYMENT -->
+        <!-- END ADD NEW SCHEDULE MEDICAMENTS -->
 
 
         <!-- ---------------------- -->
-        <!------- LIST PAYMENT ------->
+        <!------- LIST SCHEDULE MEDICAMENTS ------->
         <!-- ---------------------- -->
         <div class="col-lg-12">
             <div class="card">
@@ -134,25 +150,21 @@
                 <!-- /.card-header -->
                 <div class="card-body table-responsive p-0">
                     <!-- TABLE BOOTSTRAP VUE -->
-                    <!-- <b-table striped hover :items="this.updatePayments" :fields="fields" :filter="filter">
+                    <b-table striped hover :items="this.clientProducts" :fields="fields" :filter="filter">
                         <template #cell(clientName)="data">
-                            <b>{{ data.item.clientName + " " + data.item.clientSurname }}</b>
-                        </template>
-                        <template #cell(invoice_id)="data">
-                            <b><span :class="['badge', data.item.invoice_id ? 'badge-success' : 'badge-warning' ]" style="font-size: 1em;">{{ data.item.invoice_id ? 'Paid' : 'Pending' }}</span></b>
+                            <b>{{ data.item.name + " " + data.item.surname }}</b>
                         </template>
                         <template #cell(actions)="data">
                             <button type="edit" class="btn btn-primary" @click="editPayment(data.item.id)"><i class="far fa-edit"></i></button>
                             <a type="delete" class="btn btn-danger text-white" @click="deletePayment(data.item.id)"><i class="far fa-trash-alt"></i></a>
                         </template>
-                    </b-table> -->
+                    </b-table>
                 </div>
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
         </div>
-        <!-- END LIST PAYMENT -->
-        <!-- {{this.updatePayments}} -->
+        <!-- END LIST SCHEDULE MEDICAMENTS -->
     </div>
 </template>
 
@@ -161,10 +173,12 @@
         data() {
             return {
                 isShowing: false,
-                newPayment: true,
+                newClientProduct: true,
 
                 clients       : [],
                 products      : [],
+                measurements  : [],
+                clientProducts: [],
 
                 weekFields: [
                     {id: 1, week: 'Domingo'},
@@ -180,15 +194,18 @@
 
 
                 form: new Form({
-                    'id'        : '',
-                    'clientId'  : '',
-                    'productId' : '',
-                    'date'      : '',
-                    'time'      : '',
-                    'comment'   : '',
+                    'id'           : '',
+                    'clientId'     : '',
+                    'productId'    : '',
+                    'userId'       : this.$userId,
+                    'measurementId': '',
+                    'quantity'     : '',
+                    'date'         : '',
+                    'time'         : '',
+                    'comment'      : '',
 
-                    'repeat'    : '',
-                    'week'      : [],
+                    'repeat'       : '',
+                    'week'         : [],
                 }),
 
                 //custom
@@ -199,11 +216,12 @@
                 fields: [
                     {key: 'id', sortable: true},
                     {key: 'clientName', label: 'Name', sortable: true},
-                    {key: 'precificationName', label: 'Product', sortable: true},
-                    {key: 'value', sortable: true},
-                    {key: 'date', sortable: true},
-                    {key: 'comment', sortable: false},
-                    {key: 'invoice_id', label: 'Situation', sortable: true},
+                    {key: 'productName', label: 'Product', sortable: true},
+                    {key: 'measurementName', label: 'Measurement', sortable: true},
+                    {key: 'quantity', label: 'Quantity', sortable: true},
+                    {key: 'date', label: 'Date', sortable: true},
+                    {key: 'time', label: 'Time', sortable: true},
+                    {key: 'comment',  sortable: false},
                     {key: 'actions', label: 'Actions' }
                 ],
                 //---------------
@@ -213,10 +231,14 @@
 
         created()
         {
+            // Fetch all clientProducts
+            axios.get('/clientProducts').then(response => this.clientProducts = response.data);
             // Fetch all clients
             axios.get('/clients').then(response => this.clients = response.data);
             // Fetch all products
             axios.get('/productMedic').then(response => this.products = response.data);
+            // Fetch all Measurement
+            axios.get('/measurements').then(response => this.measurements = response.data);
         },
 
         computed: {
@@ -245,6 +267,20 @@
                 this.form.date = '';
             },
             // ---------------------
+
+            // ----- ADD  -----
+            onSubmit(){
+
+                this.form
+                    .post('/clientProducts')
+                    .then(response => {
+                        console.log(response);
+                        // this.products.push(response[0]);
+                        // this.isShowing  = false;
+                        // this.newProduct = true;
+                        // this.$toaster.success('Successful added ' + response.name);
+                    })
+            },
 
 
         }

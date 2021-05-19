@@ -15,28 +15,30 @@ class ClientProductController extends Controller
      */
     public function index()
     {
-        //
+        return clientProduct::getClientProducts();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        // SINGLE SCHEDULING
+        if(empty($request['week']))
+        {
+            //save new clientProduct
+            $clientProduct = clientProduct::create([
+                'client_id'      => $request['clientId'],
+                'product_id'     => $request['productId'],
+                'measurement_id' => $request['measurementId'],
+                'quantity'       => $request['quantity'],
+                'user_id'        => $request['userId'],
+                'date'           => $request['date'],
+                'time'           => $request['time'],
+                'comment'        => $request['comment']
+            ]);
+
+            return $clientProduct;
+        }
+
     }
 
     /**

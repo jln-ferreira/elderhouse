@@ -17,7 +17,9 @@ class CreateClientProductsTable extends Migration
             $table->id();
             $table->integer('client_id')->unsigned();
             $table->integer('product_id')->unsigned();
-            $table->integer('user_id');
+            $table->integer('measurement_id')->unsigned();
+            $table->integer('quantity');
+            $table->integer('user_id')->unsigned();
             $table->date('date');
             $table->time('time');
             $table->text('comment');

@@ -221,6 +221,8 @@ Route::post('/createInvoice', 'InvoiceController@createInvoice');
 
 // ---------------
 // CLIENT PRODUCT
+Route::get('/clientProducts', 'ClientProductController@index');
+Route::post('/clientProducts', 'ClientProductController@store');
 Route::get('/productMedic', 'ClientProductController@getProducts');
 // END  CLIENT PRODUCT
 // ------------------
