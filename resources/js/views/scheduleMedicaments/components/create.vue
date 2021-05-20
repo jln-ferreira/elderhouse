@@ -21,7 +21,6 @@
                                     <select class="form-control" v-model="form.clientId" id="clientName" name="clientName" required>
                                         <option v-for="client in clients" v-bind:key="client.id" :value="client.id">{{client.name + " " + client.surname}}</option>
                                     </select>
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('clientName')" v-text="form.errors.get('clientName')"></span>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="precification">Product</label>
@@ -60,7 +59,7 @@
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
                                         <label for="date">Date</label>
-                                        <input type="date" class="form-control" name="date" v-model="form.date" :required="singleDate">
+                                        <input type="date" class="form-control" name="date" v-model="form.date" :min="this.minDate" :required="singleDate">
                                         <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('date')" v-text="form.errors.get('date')"></span>
                                     </div>
                                     <div class="form-group col-md-3">
@@ -71,6 +70,7 @@
                                 </div>
 
                             </div>
+                            <!-- END SINGLE -->
 
                             <!-- CUSTOM -->
                             <!-- INPUT TO SEND TO DB  -->
@@ -82,14 +82,14 @@
                                     <div class="form-group col-md-3">
                                         <label>Week Day</label>
                                         <div class="custom-control custom-switch" v-for='weekField in this.weekFields' v-bind:key='weekField.id'>
-                                            <input type="checkbox" class="custom-control-input" :id="'week_' + weekField.id" v-model="form.week" :value="weekField.id" :required="!singleDate">
+                                            <input type="checkbox" class="custom-control-input" :id="'week_' + weekField.id" v-model="form.week" :value="weekField.id">
                                             <label class="custom-control-label" :for="'week_' + weekField.id">{{ weekField.week }}</label>
                                         </div>
+                                        <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('week')" v-text="form.errors.get('week')"></span>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="time">Time</label>
                                         <input type="time" class="form-control" name="time" v-model="form.time" required>
-                                        <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('time')" v-text="form.errors.get('time')"></span>
                                     </div>
                                     <div class="form-group col-md-1">
                                         <label for="repeat">Repetition</label>
@@ -98,6 +98,7 @@
                                 </div>
 
                             </div>
+                            <!-- END CUSTOM -->
 
 
                             <div class="form-row">
@@ -181,16 +182,17 @@
                 clientProducts: [],
 
                 weekFields: [
-                    {id: 1, week: 'Domingo'},
-                    {id: 2, week: 'Segunda-Feira'},
-                    {id: 3, week: 'Terça-Feira'},
-                    {id: 4, week: 'Quarta-Feira'},
-                    {id: 5, week: 'Quinta-Feira'},
-                    {id: 6, week: 'Sexta-Feira'},
-                    {id: 7, week: 'Sabado'},
+                    {id: 1, week: 'Segunda-Feira'},
+                    {id: 2, week: 'Terça-Feira'},
+                    {id: 3, week: 'Quarta-Feira'},
+                    {id: 4, week: 'Quinta-Feira'},
+                    {id: 5, week: 'Sexta-Feira'},
+                    {id: 6, week: 'Sabado'},
+                    {id: 7, week: 'Domingo'},
                 ],
 
                 singleDate: true,
+                minDate: '',
 
 
                 form: new Form({
@@ -239,6 +241,9 @@
             axios.get('/productMedic').then(response => this.products = response.data);
             // Fetch all Measurement
             axios.get('/measurements').then(response => this.measurements = response.data);
+
+            //min date fill
+            this.minDate = new Date().toISOString().substr(0, 10);
         },
 
         computed: {
@@ -275,10 +280,9 @@
                     .post('/clientProducts')
                     .then(response => {
                         console.log(response);
-                        // this.products.push(response[0]);
+                        // this.clientProducts.push(response[0]);
                         // this.isShowing  = false;
-                        // this.newProduct = true;
-                        // this.$toaster.success('Successful added ' + response.name);
+                        // this.$toaster.success('Successful added');
                     })
             },
 
