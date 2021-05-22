@@ -60,12 +60,10 @@
                                     <div class="form-group col-md-3">
                                         <label for="date">Date</label>
                                         <input type="date" class="form-control" name="date" v-model="form.date" :min="this.minDate" :required="singleDate">
-                                        <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('date')" v-text="form.errors.get('date')"></span>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="time">Time</label>
                                         <input type="time" class="form-control" name="time" v-model="form.time" required>
-                                        <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('time')" v-text="form.errors.get('time')"></span>
                                     </div>
                                 </div>
 
@@ -114,7 +112,7 @@
                         <div class="card-footer">
                             <button type="save" v-show="this.newClientProduct" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
                             <a type="edit" v-show="!this.newClientProduct" class="btn btn-primary text-white"><i class="far fa-edit"></i> Edit</a>
-                            <a type="cancel" v-show="!this.newClientProduct" class="btn btn-warning text-white"><i class="fa fa-times"></i> Cancel</a>
+                            <a type="cancel" v-show="!this.newClientProduct" class="btn btn-warning text-white" @click="cancelClientProduct"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
                     </form>
@@ -132,7 +130,7 @@
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="card-title font-weight-bold">List Precification</h3>
+                    <h3 class="card-title font-weight-bold">List Medicament Schedule</h3>
 
                     <div class="card-tools">
                         <div class="input-group input-group-sm">
@@ -152,12 +150,17 @@
                 <div class="card-body table-responsive p-0">
                     <!-- TABLE BOOTSTRAP VUE -->
                     <b-table striped hover :items="this.clientProducts" :fields="fields" :filter="filter">
+                        <template v-slot:cell(selected)="data">
+                            <b-form-group>
+                                <input type="checkbox" style="width: 30px; height: 30px;" v-model="deleteSelected" :value="data.item.id" />
+                            </b-form-group>
+                        </template>
                         <template #cell(clientName)="data">
                             <b>{{ data.item.name + " " + data.item.surname }}</b>
                         </template>
                         <template #cell(actions)="data">
-                            <button type="edit" class="btn btn-primary" @click="editPayment(data.item.id)"><i class="far fa-edit"></i></button>
-                            <a type="delete" class="btn btn-danger text-white" @click="deletePayment(data.item.id)"><i class="far fa-trash-alt"></i></a>
+                            <button type="edit" class="btn btn-primary" @click="editClientProduct(data.item.id)"><i class="far fa-edit"></i></button>
+                            <a type="delete" class="btn btn-danger text-white" @click="deleteClientProduct(data.item.id)"><i class="far fa-trash-alt"></i></a>
                         </template>
                     </b-table>
                 </div>
@@ -210,12 +213,12 @@
                     'week'         : [],
                 }),
 
-                //custom
-
+                deleteSelected: [],
 
                 // DATATABLE
                 filter:'',
                 fields: [
+                    {key: 'selected', label: '', sortable: false},
                     {key: 'id', sortable: true},
                     {key: 'clientName', label: 'Name', sortable: true},
                     {key: 'productName', label: 'Product', sortable: true},
@@ -259,6 +262,20 @@
                 return (this.isShowing == true) ? "fa fa-minus" : "fa fa-plus";
             },
 
+            cleanFields(){
+                    this.form.id            = '';
+                    this.form.clientId      = '';
+                    this.form.productId     = '';
+                    this.form.userId        = this.$userId;
+                    this.form.measurementId = '';
+                    this.form.quantity      = '';
+                    this.form.date          = '';
+                    this.form.time          = '';
+                    this.form.comment       = '';
+                    this.form.repeat        = '';
+                    this.form.week          = [];
+            },
+
             //Change Single to Custom BTN
             singleDateBtn()
             {
@@ -274,17 +291,96 @@
             // ---------------------
 
             // ----- ADD  -----
-            onSubmit(){
-
+            onSubmit()
+            {
                 this.form
                     .post('/clientProducts')
                     .then(response => {
-                        console.log(response);
-                        // this.clientProducts.push(response[0]);
-                        // this.isShowing  = false;
-                        // this.$toaster.success('Successful added');
+
+                        this.form.week = [];
+
+                        response.forEach(element => this.clientProducts.push(element));
+                        this.isShowing  = false;
+                        this.form.userId = this.$userId;
+                        this.$toaster.success('Successful added');
                     })
             },
+
+            //----- DELETE ------
+            deleteClientProduct(id)
+            {
+                if(this.deleteSelected.length == 0)
+                {
+                    //SINGLE DELETE
+                    if(confirm("Do you really want to delete?"))
+                    {
+                        axios.post('/clientProducts/' + id, {
+                            _method: 'DELETE'
+                        })
+                        .then(response => {
+                            var count = 0
+                            this.clientProducts.forEach(element => {
+                                element.id == (response.data.id) ? this.clientProducts.splice(count,1) : count +=1;
+                            });
+
+                            this.isShowing = false;
+                            this.newClientProduct = true;
+                            this.form.userId = this.$userId;
+                            this.$toaster.success('Successful deleted');
+                        });
+                    }
+                }
+                // BULK DELETE
+                else
+                {
+                    //SINGLE DELETE
+                    if(confirm("Do you really want to delete all these schedule?"))
+                    {
+                        axios.post('/clientProductsBulkDelete/', {
+                            deleteSelected: this.deleteSelected
+                        })
+                        .then(response => {
+                            response.data.forEach(id => {
+                                var count = 0
+                                this.clientProducts.forEach(element => {
+                                    element.id == (id) ? this.clientProducts.splice(count,1) : count +=1;
+                                });
+                            });
+
+                            this.isShowing = false;
+                            this.newClientProduct = true;
+                            this.form.userId = this.$userId;
+                            this.$toaster.success('Successful deleted');
+                        });
+                    }
+                }
+            },
+
+            editClientProduct(id)
+            {
+                this.isShowing  = true;          //open new ClientProduct
+                this.newClientProduct = false;   //button cancel and edit show
+
+                let ClientProduct = this.clientProducts.find(element => element.id === id);
+
+                this.cleanFields();                  //clean all fields
+                this.singleDate = true;              //Change for single date
+
+                //show values product
+                    this.form.id            = ClientProduct.id;
+                    this.form.clientId      = ClientProduct.client_id;
+                    this.form.productId     = ClientProduct.productId;
+                    this.form.userId        = this.$userId;
+                    this.form.measurementId = ClientProduct.measurement_id;
+                    this.form.quantity      = ClientProduct.quantity;
+                    this.form.date          = ClientProduct.date;
+                    this.form.time          = ClientProduct.time;
+                    this.form.comment       = ClientProduct.comment;
+            },
+            cancelClientProduct()
+            {
+
+            }
 
 
         }
