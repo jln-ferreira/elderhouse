@@ -44,7 +44,7 @@
                                     <a class="form-control btn btn-warning" @click="singleDateBtn()"><i class="fas fa-calendar-day"></i> Single Date</a>
                                 </div>
                                 <div class="form-group col-lg-2" style="align-self: flex-end;">
-                                    <a class="form-control btn btn-warning"  @click="customDateBtn()"><i class="fas fa-calendar-minus"></i> Custom Dates</a>
+                                    <a class="form-control btn btn-warning" :disable='disableCustom' @click="customDateBtn()"><i class="fas fa-calendar-minus"></i> Custom Dates</a>
                                 </div>
                             </div>
 
@@ -103,7 +103,6 @@
                                 <div class="form-group col-md-12">
                                     <label for="name">Comment</label>
                                     <input type="text" class="form-control" id="comment" name="comment" v-model="form.comment">
-                                    <span class="invalid-feedback d-block" role="alert" v-if="form.errors.has('comment')" v-text="form.errors.get('comment')"></span>
                                 </div>
                             </div>
 
@@ -111,7 +110,7 @@
                         <!-- /.card-body -->
                         <div class="card-footer">
                             <button type="save" v-show="this.newClientProduct" class="btn btn-success"><i class="fa fa-plus"></i> Save</button>
-                            <a type="edit" v-show="!this.newClientProduct" class="btn btn-primary text-white"><i class="far fa-edit"></i> Edit</a>
+                            <a type="edit" v-show="!this.newClientProduct" class="btn btn-primary text-white" @click="modifyClientProduct"><i class="far fa-edit"></i> Edit</a>
                             <a type="cancel" v-show="!this.newClientProduct" class="btn btn-warning text-white" @click="cancelClientProduct"><i class="fa fa-times"></i> Cancel</a>
                         </div>
                         <!-- /.card-footer -->
@@ -214,6 +213,7 @@
                 }),
 
                 deleteSelected: [],
+                disableCustom: false,
 
                 // DATATABLE
                 filter:'',
@@ -360,6 +360,7 @@
             {
                 this.isShowing  = true;          //open new ClientProduct
                 this.newClientProduct = false;   //button cancel and edit show
+                this.disableCustom = true;      //desable button custom
 
                 let ClientProduct = this.clientProducts.find(element => element.id === id);
 
@@ -377,12 +378,42 @@
                     this.form.time          = ClientProduct.time;
                     this.form.comment       = ClientProduct.comment;
             },
+            modifyClientProduct()
+            {
+                this.form
+                    .patch('/clientProducts')
+                    .then(response => {
+                        var index = this.clientProducts.findIndex(element => element.id === response[0].id);
+
+                        this.clientProducts[index].client_id       = response[0].client_id;
+                        this.clientProducts[index].name            = response[0].name;
+                        this.clientProducts[index].surname         = response[0].surname;
+                        this.clientProducts[index].productId       = response[0].productId;
+                        this.clientProducts[index].productName     = response[0].productName;
+                        this.clientProducts[index].measurement_id  = response[0].measurement_id;
+                        this.clientProducts[index].measurementName = response[0].measurementName;
+                        this.clientProducts[index].quantity        = response[0].quantity;
+                        this.clientProducts[index].date            = response[0].date;
+                        this.clientProducts[index].time            = response[0].time;
+                        this.clientProducts[index].comment         = response[0].date;
+
+                        this.singleDate = true;              //Change for single date
+                        this.isShowing  = false;             //open new ClientProduct
+                        this.newClientProduct = true;        //button cancel and edit show
+                        this.disableCustom = false;         //enable button custom
+
+                        this.form.userId  = this.$userId;
+                        this.$toaster.success('Schedule edited.');
+                    });
+            },
+
             cancelClientProduct()
             {
-
+                this.cleanFields();                  //clean all fields
+                this.singleDate = true;              //Change for single date
+                this.isShowing  = false;             //open new ClientProduct
+                this.newClientProduct = true;        //button cancel and edit show
             }
-
-
         }
     }
 
@@ -399,5 +430,6 @@
         transition : opacity 0.3s;
         Opacity: 0;
     }
+
 
 </style>

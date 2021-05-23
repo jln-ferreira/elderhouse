@@ -223,6 +223,7 @@ Route::post('/createInvoice', 'InvoiceController@createInvoice');
 // CLIENT PRODUCT
 Route::get('/clientProducts', 'ClientProductController@index');
 Route::post('/clientProducts', 'ClientProductController@store');
+Route::patch('/clientProducts', 'ClientProductController@update');
 Route::delete('/clientProducts/{id}', 'ClientProductController@destroy');
 Route::post('/clientProductsBulkDelete', 'ClientProductController@destroyBulk');
 Route::get('/productMedic', 'ClientProductController@getProducts');

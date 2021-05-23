@@ -82,10 +82,23 @@ class ClientProductController extends Controller
 
     }
 
-    public function edit(clientProduct $clientProduct)
+    public function update(Request $request)
     {
-        //
+        // // modify clientProduct
+        $clientProduct = clientProduct::find($request['id']);
+        $clientProduct->client_id      = $request['clientId'];
+        $clientProduct->product_id     = $request['productId'];
+        $clientProduct->measurement_id = $request['measurementId'];
+        $clientProduct->quantity       = $request['quantity'];
+        $clientProduct->user_id        = $request['userId'];
+        $clientProduct->date           = $request['date'];
+        $clientProduct->time           = $request['time'];
+        $clientProduct->comment        = $request['comment'];
+        $clientProduct->save();
+
+        return clientProduct::getClientProduct($clientProduct->id);
     }
+
 
     public function destroy($id)
     {
