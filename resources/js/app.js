@@ -41,8 +41,6 @@ Vue.use(IconsPlugin);
 
 
 
-
-
 //get Authentication from Laravel to VUE JS
 Vue.prototype.$userId = document.querySelector("meta[name='user_id']").getAttribute('content');
 

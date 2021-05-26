@@ -24,6 +24,9 @@
         {
 
         },
+        mounted(){
+
+        },
 
         computed: {
 

@@ -44,7 +44,7 @@
                                     <a class="form-control btn btn-warning" @click="singleDateBtn()"><i class="fas fa-calendar-day"></i> Single Date</a>
                                 </div>
                                 <div class="form-group col-lg-2" style="align-self: flex-end;">
-                                    <a class="form-control btn btn-warning" :disable='disableCustom' @click="customDateBtn()"><i class="fas fa-calendar-minus"></i> Custom Dates</a>
+                                    <a :class="['form-control', 'btn', 'btn-warning', disableCustom ? 'block-custom' : 'abble-custom']" @click="customDateBtn()"><i class="fas fa-calendar-minus"></i> Custom Dates</a>
                                 </div>
                             </div>
 
@@ -166,6 +166,7 @@
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
+            {{new Date().toString().substr(4, )}}
         </div>
         <!-- END LIST SCHEDULE MEDICAMENTS -->
     </div>
@@ -395,12 +396,12 @@
                         this.clientProducts[index].quantity        = response[0].quantity;
                         this.clientProducts[index].date            = response[0].date;
                         this.clientProducts[index].time            = response[0].time;
-                        this.clientProducts[index].comment         = response[0].date;
+                        this.clientProducts[index].comment         = response[0].comment;
 
                         this.singleDate = true;              //Change for single date
                         this.isShowing  = false;             //open new ClientProduct
                         this.newClientProduct = true;        //button cancel and edit show
-                        this.disableCustom = false;         //enable button custom
+                        this.disableCustom = false;          //enable button custom
 
                         this.form.userId  = this.$userId;
                         this.$toaster.success('Schedule edited.');
@@ -410,8 +411,9 @@
             cancelClientProduct()
             {
                 this.cleanFields();                  //clean all fields
-                this.singleDate = true;              //Change for single date
                 this.isShowing  = false;             //open new ClientProduct
+                this.disableCustom = false;
+                this.singleDate = true;              //Change for single date
                 this.newClientProduct = true;        //button cancel and edit show
             }
         }
@@ -429,6 +431,18 @@
     .block-leave-active {
         transition : opacity 0.3s;
         Opacity: 0;
+    }
+
+    /* BLOCK THE BUTTON CUSTOM */
+    .block-custom {
+        opacity: 0.7;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    .abble-custom {
+        opacity: 1;
+        cursor: pointer;
+        pointer-events: auto;
     }
 
 

@@ -231,5 +231,13 @@ Route::get('/productMedic', 'ClientProductController@getProducts');
 // ------------------
 
 
+// ---------------
+// CLIENT MEDICATES
+Route::get('/scheduleMedicates', 'MedicateController@index');
+// END  MEDICATES
+// ------------------
+
+
+
 // https://medium.com/@crydetaan/laravel-6-vuejs-adminlte-3-1e264db76809
 // https://adminlte.io/themes/AdminLTE/documentation/index.html#download
