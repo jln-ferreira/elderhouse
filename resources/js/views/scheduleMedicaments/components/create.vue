@@ -166,7 +166,7 @@
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
-            {{new Date().toString().substr(4, )}}
+
         </div>
         <!-- END LIST SCHEDULE MEDICAMENTS -->
     </div>

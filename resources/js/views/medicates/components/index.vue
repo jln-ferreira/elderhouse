@@ -27,7 +27,7 @@
                             <b>{{ data.item.name + " " + data.item.surname }}</b>
                         </template>
                         <template #cell(actions)="data">
-                            <button type="edit" class="btn btn-success" @click="checkMedicates(data.item.id)"><i class="fas fa-user-check"></i></button>
+                            <button type="edit" class="btn btn-success" @click="checkMedicates(data.item.id)" data-toggle="modal" data-target="#modelMedicates"><i class="fas fa-user-check"></i></button>
                             <a type="delete" class="btn btn-danger text-white" @click="deleteClientProduct(data.item.id)"><i class="fas fa-exclamation-triangle"></i></a>
                         </template>
                     </b-table>
@@ -37,6 +37,58 @@
             <!-- /.card -->
         </div>
         <!-- END LIST INVENTORY -->
+
+
+
+        <!-- ----------MODAL---------- -->
+        <div class="modal fade" id="modelMedicates" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" v-html="ckeckMedicate ? 'Você realmente realizou o medicamento abaixo?' : 'Porque está realizando este Rebate, conte-me?'"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="list-group">
+                        <span class="list-group-item list-group-item-action">
+                            <i class="fas fa-user-alt"></i> <span>{{this.clickedMedicate.name}} {{this.clickedMedicate.surname}}</span>
+                        </span>
+                        <span class="list-group-item list-group-item-action">
+                           <i class="fas fa-pills"></i> <span>{{this.clickedMedicate.productName}} - {{this.clickedMedicate.quantity}} {{this.clickedMedicate.measurementName}}</span>
+                        </span>
+                        <span class="list-group-item list-group-item-action">
+                            <i class="fas fa-calendar-day"></i> <span>{{this.clickedMedicate.date}}</span>
+                        </span>
+                        <span class="list-group-item list-group-item-action">
+                            <i class="fas fa-clock"></i> <span>{{this.clickedMedicate.time}}</span>
+                        </span>
+                        <span class="list-group-item list-group-item-action">
+                            <i class="fas fa-comments"></i> <span>{{this.clickedMedicate.comment}}</span>
+                        </span>
+                    </div>
+
+                    <br/>
+
+                    <!-- //coments  -->
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="name">Comment</label>
+                            <input type="text" class="form-control" id="comment" name="comment" v-model="form.comment">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    <button type="button" class="btn btn-success"><i class="fas fa-user-check"></i></button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL -->
 
     </div>
 </template>
@@ -66,8 +118,16 @@
                 ],
                 //---------------
 
-                categoryFilter : '',
-                categoryClicked: ''
+                // FORM
+                form: new Form({
+                    'id'               : '',
+                    'userId'           : this.$userId,
+                    'client_product_id': '',
+                    'date'             : new Date().toISOString().substr(0, 10),
+                    'comment'          : ''
+                }),
+                clickedMedicate: '',
+                ckeckMedicate: true,
             }
 
         },
@@ -87,8 +147,16 @@
         methods: {
             checkMedicates(id)
             {
+                //FIND MEDICATES WAS CLICKED
+                this.clickedMedicate = this.clientProducts.find(element => element.id == id);
+                this.form.client_product_id = this.clickedMedicate.id;
 
-            }
+                console.log(this.clickedMedicate);
+
+            },
+
+            // ------MODAL------
+
         }
     }
 
