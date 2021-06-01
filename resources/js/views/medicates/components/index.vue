@@ -27,8 +27,8 @@
                             <b>{{ data.item.name + " " + data.item.surname }}</b>
                         </template>
                         <template #cell(actions)="data">
-                            <button type="edit" class="btn btn-success" @click="checkMedicates(data.item.id)" data-toggle="modal" data-target="#modelMedicates"><i class="fas fa-user-check"></i></button>
-                            <a type="delete" class="btn btn-danger text-white" @click="deleteClientProduct(data.item.id)"><i class="fas fa-exclamation-triangle"></i></a>
+                            <button type="edit" class="btn btn-success" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i class="fas fa-user-check"></i></button>
+                            <button type="delete" class="btn btn-danger" @click="checkRebate($event, data.item.id)" data-toggle="modal" data-target="#modal"><i class="fas fa-exclamation-triangle"></i></button>
                         </template>
                     </b-table>
                 </div>
@@ -41,7 +41,7 @@
 
 
         <!-- ----------MODAL---------- -->
-        <div class="modal fade" id="modelMedicates" aria-hidden="true">
+        <div class="modal fade" id="modal" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -66,7 +66,7 @@
                             <i class="fas fa-clock"></i> <span>{{this.clickedMedicate.time}}</span>
                         </span>
                         <span class="list-group-item list-group-item-action">
-                            <i class="fas fa-comments"></i> <span>{{this.clickedMedicate.comment}}</span>
+                            <i class="fas fa-comments"></i> <span>{{this.clickedMedicate.comment ? this.clickedMedicate.comment : 'No Comments'}}</span>
                         </span>
                     </div>
 
@@ -83,7 +83,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                    <button type="button" class="btn btn-success"><i class="fas fa-user-check"></i></button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-user-check"></i></button>
                 </div>
                 </div>
             </div>
@@ -124,7 +124,10 @@
                     'userId'           : this.$userId,
                     'client_product_id': '',
                     'date'             : new Date().toISOString().substr(0, 10),
-                    'comment'          : ''
+                    'comment'          : '',
+
+                    // for rebate
+                    'productId'        : '',
                 }),
                 clickedMedicate: '',
                 ckeckMedicate: true,
@@ -135,7 +138,10 @@
 
         created() {
             // Fetch all clientProducts
-            axios.get('/scheduleMedicates').then(response => this.clientProducts = response.data);
+            axios.get('/scheduleMedicates').then(response => {
+                console.log(response);
+                this.clientProducts = response.data
+            });
         },
 
 
@@ -145,18 +151,37 @@
 
 
         methods: {
-            checkMedicates(id)
+            checkMedicates(event, id)
             {
+                console.log(event.target.getAttribute('type'));
+                // var options = event.target.options
+                // if (options.selectedIndex > -1) this.form.value = options[options.selectedIndex].getAttribute('type');
+
+
                 //FIND MEDICATES WAS CLICKED
                 this.clickedMedicate = this.clientProducts.find(element => element.id == id);
                 this.form.client_product_id = this.clickedMedicate.id;
-
-                console.log(this.clickedMedicate);
-
             },
 
             // ------MODAL------
+            confirmMedicate()
+            {
+                this.form
+                    .post('/medicates')
+                    .then(response => {
 
+                        //updates variables
+                        this.form.userId = this.$userId;                            //update user ID
+                        this.form.date   = new Date().toISOString().substr(0, 10);  //update date
+
+                        var count = 0
+                        this.clientProducts.forEach(element => {
+                            element.id == (response[0].id) ? this.clientProducts.splice(count,1) : count +=1;
+                        });
+
+                        this.$toaster.success('Successful Medicated.');
+                    })
+            },
         }
     }
 

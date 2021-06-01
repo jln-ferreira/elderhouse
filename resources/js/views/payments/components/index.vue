@@ -204,7 +204,7 @@
             },
 
             onChange(event) {
-                var options = event.target.options
+                var options = event.target.options;
                 if (options.selectedIndex > -1) this.form.value = options[options.selectedIndex].getAttribute('price');
             },
 

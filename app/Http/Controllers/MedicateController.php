@@ -12,67 +12,28 @@ class MedicateController extends Controller
         return Medicate::getClientProducts();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        //save new medicates
+        $medicates = Medicate::create([
+            'user_id'            => $request['userId'],
+            'client_products_id' => $request['client_product_id'],
+            'date'               => $request['date'],
+            'comment'            => $request['comment']
+        ]);
+
+        return Medicate::getClientProduct($medicates->id);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\medicate  $medicate
-     * @return \Illuminate\Http\Response
-     */
-    public function show(medicate $medicate)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\medicate  $medicate
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(medicate $medicate)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\medicate  $medicate
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, medicate $medicate)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\medicate  $medicate
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy(medicate $medicate)
     {
         //

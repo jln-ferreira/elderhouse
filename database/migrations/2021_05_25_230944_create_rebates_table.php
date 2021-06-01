@@ -17,6 +17,7 @@ class CreateRebatesTable extends Migration
             $table->id();
             $table->integer('user_id')->unsigned();
             $table->integer('client_products_id')->unsigned();
+            $table->integer('product_id')->unsigned();
             $table->date('date');
             $table->text('comment');
             $table->smallInteger('active')->default('1');
