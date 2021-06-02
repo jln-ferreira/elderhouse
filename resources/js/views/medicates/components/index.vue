@@ -27,8 +27,8 @@
                             <b>{{ data.item.name + " " + data.item.surname }}</b>
                         </template>
                         <template #cell(actions)="data">
-                            <button type="edit" class="btn btn-success" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i class="fas fa-user-check"></i></button>
-                            <button type="delete" class="btn btn-danger" @click="checkRebate($event, data.item.id)" data-toggle="modal" data-target="#modal"><i class="fas fa-exclamation-triangle"></i></button>
+                            <button type="edit" class="btn btn-success" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="edit" class="fas fa-user-check"></i></button>
+                            <button type="delete" class="btn btn-danger" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="delete" class="fas fa-exclamation-triangle"></i></button>
                         </template>
                     </b-table>
                 </div>
@@ -72,6 +72,17 @@
 
                     <br/>
 
+                    <!-- product what was missing to do the medication -->
+                    <div class="form-row">
+                        <div class="form-group col-md-12" v-show="!ckeckMedicate && productRebate">
+                            <label for="precification">Product</label>
+                            <select class="form-control" v-model="form.productId" id="precification" name="precification" required>
+                                <option v-for="product in products" v-bind:key="product.id" :value="product.id">{{product.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- --------------- -->
+
                     <!-- //coments  -->
                     <div class="form-row">
                         <div class="form-group col-md-12">
@@ -82,8 +93,13 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                    <button type="button" class="btn btn-success" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-user-check"></i></button>
+                    <div v-show="!ckeckMedicate">
+                        <button type="button" class="btn btn-danger" @click="productRebate = !productRebate"><i class="fas fa-tablets"></i></button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                        <button type="button" class="btn btn-success" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-user-check"></i></button>
+                    </div>
                 </div>
                 </div>
             </div>
@@ -100,6 +116,7 @@
 
             return {
                 userId: this.$userId,
+                products: [],
 
                 clientProducts: [],
 
@@ -131,6 +148,7 @@
                 }),
                 clickedMedicate: '',
                 ckeckMedicate: true,
+                productRebate: false,
             }
 
         },
@@ -142,6 +160,9 @@
                 console.log(response);
                 this.clientProducts = response.data
             });
+
+            // Fetch all products
+            axios.get('/productMedic').then(response => this.products = response.data);
         },
 
 
@@ -153,10 +174,9 @@
         methods: {
             checkMedicates(event, id)
             {
+                console.log(event);
                 console.log(event.target.getAttribute('type'));
-                // var options = event.target.options
-                // if (options.selectedIndex > -1) this.form.value = options[options.selectedIndex].getAttribute('type');
-
+                event.target.getAttribute('type') == "edit" ? this.ckeckMedicate = true : this.ckeckMedicate = false;
 
                 //FIND MEDICATES WAS CLICKED
                 this.clickedMedicate = this.clientProducts.find(element => element.id == id);
