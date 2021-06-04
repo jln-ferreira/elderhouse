@@ -45,7 +45,7 @@
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" v-html="ckeckMedicate ? 'Você realmente realizou o medicamento abaixo?' : 'Porque está realizando este Rebate, conte-me?'"></h5>
+                    <h5 class="modal-title" v-html="form.ckeckMedicate ? 'Você realmente realizou o medicamento abaixo?' : 'Porque está realizando este Rebate, conte-me?'"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
@@ -74,7 +74,7 @@
 
                     <!-- product what was missing to do the medication -->
                     <div class="form-row">
-                        <div class="form-group col-md-12" v-show="!ckeckMedicate && productRebate">
+                        <div class="form-group col-md-12" v-show="!form.ckeckMedicate && productRebate">
                             <label for="precification">Product</label>
                             <select class="form-control" v-model="form.productId" id="precification" name="precification" required>
                                 <option v-for="product in products" v-bind:key="product.id" :value="product.id">{{product.name}}</option>
@@ -93,7 +93,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <div v-show="!ckeckMedicate">
+                    <div v-show="!form.ckeckMedicate">
                         <button type="button" class="btn btn-danger" @click="productRebate = !productRebate"><i class="fas fa-tablets"></i></button>
                     </div>
                     <div>
@@ -145,9 +145,11 @@
 
                     // for rebate
                     'productId'        : '',
+
+                    // medicate x rebate
+                    'ckeckMedicate'    : true,
                 }),
                 clickedMedicate: '',
-                ckeckMedicate: true,
                 productRebate: false,
             }
 
@@ -174,9 +176,8 @@
         methods: {
             checkMedicates(event, id)
             {
-                console.log(event);
                 console.log(event.target.getAttribute('type'));
-                event.target.getAttribute('type') == "edit" ? this.ckeckMedicate = true : this.ckeckMedicate = false;
+                event.target.getAttribute('type') == "edit" ? this.form.ckeckMedicate = true : this.form.ckeckMedicate = false;
 
                 //FIND MEDICATES WAS CLICKED
                 this.clickedMedicate = this.clientProducts.find(element => element.id == id);
@@ -187,7 +188,7 @@
             confirmMedicate()
             {
                 this.form
-                    .post('/medicates')
+                    .post('/medicatesOrRebate')
                     .then(response => {
 
                         //updates variables

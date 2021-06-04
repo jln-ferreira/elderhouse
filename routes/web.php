@@ -233,7 +233,7 @@ Route::get('/productMedic', 'ClientProductController@getProducts');
 
 // ---------------
 // CLIENT MEDICATES
-Route::post('/medicates', 'MedicateController@store');
+Route::post('/medicatesOrRebate', 'MedicateController@storeMedicateOrRebate');
 Route::get('/scheduleMedicates', 'MedicateController@index');
 // END  MEDICATES
 // ------------------
