@@ -43,15 +43,16 @@ class Medicate extends Model
     }
 
 
-        // GET Client_Products by ID
-        public static function getClientProduct($id)
-        {
-            date_default_timezone_set ( 'America/Sao_Paulo' );
+    // GET Client_Products by ID
+    public static function getClientProduct($id)
+    {
+        date_default_timezone_set ( 'America/Sao_Paulo' );
 
-            return DB::table('client_products')
-            ->select('client_products.id', 'medicates.id AS medicate_id')
-            ->leftJoin('medicates', 'client_products.id', '=', 'medicates.client_products_id')
-            ->where([['medicates.id', $id], ['client_products.active', 1]])
-            ->get();
-        }
+        return DB::table('client_products')
+        ->select('client_products.id', 'medicates.id AS medicate_id')
+        ->leftJoin('medicates', 'client_products.id', '=', 'medicates.client_products_id')
+        ->where([['medicates.id', $id], ['client_products.active', 1]])
+        ->get();
+    }
+
 }

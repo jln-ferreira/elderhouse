@@ -28,7 +28,7 @@
                         </template>
                         <template #cell(actions)="data">
                             <button type="edit" class="btn btn-success" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="edit" class="fas fa-user-check"></i></button>
-                            <button type="delete" class="btn btn-danger" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="delete" class="fas fa-exclamation-triangle"></i></button>
+                            <button type="rebate" class="btn btn-danger" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="rebate" class="fas fa-exclamation-triangle"></i></button>
                         </template>
                     </b-table>
                 </div>
@@ -87,7 +87,8 @@
                     <div class="form-row">
                         <div class="form-group col-md-12">
                             <label for="name">Comment</label>
-                            <input type="text" class="form-control" id="comment" name="comment" v-model="form.comment">
+                            <input v-if="form.ckeckMedicate" type="text" class="form-control" id="comment" name="comment" v-model="form.comment">
+                            <input v-else type="text" class="form-control" id="commentRebate" name="commentRebate" v-model="form.commentRebate">
                         </div>
                     </div>
 
@@ -98,7 +99,8 @@
                     </div>
                     <div>
                         <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i></button>
-                        <button type="button" class="btn btn-success" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-user-check"></i></button>
+                        <button v-if="form.ckeckMedicate" type="button" class="btn btn-success" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-user-check"></i></button>
+                        <button v-else :disabled="!form.ckeckMedicate && form.commentRebate.length < 3" type="button" class="btn btn-danger" data-dismiss="modal" @click="confirmMedicate"><i class="fas fa-exclamation-triangle"></i></button>
                     </div>
                 </div>
                 </div>
@@ -145,12 +147,13 @@
 
                     // for rebate
                     'productId'        : '',
+                    'commentRebate'    : '',
 
                     // medicate x rebate
                     'ckeckMedicate'    : true,
                 }),
                 clickedMedicate: '',
-                productRebate: false,
+                productRebate: false, //drop down with all products
             }
 
         },
@@ -176,7 +179,6 @@
         methods: {
             checkMedicates(event, id)
             {
-                console.log(event.target.getAttribute('type'));
                 event.target.getAttribute('type') == "edit" ? this.form.ckeckMedicate = true : this.form.ckeckMedicate = false;
 
                 //FIND MEDICATES WAS CLICKED
@@ -190,17 +192,23 @@
                 this.form
                     .post('/medicatesOrRebate')
                     .then(response => {
+                        console.log(response);
 
                         //updates variables
                         this.form.userId = this.$userId;                            //update user ID
                         this.form.date   = new Date().toISOString().substr(0, 10);  //update date
 
-                        var count = 0
-                        this.clientProducts.forEach(element => {
-                            element.id == (response[0].id) ? this.clientProducts.splice(count,1) : count +=1;
-                        });
+                        //RETURN MEDICATES
+                        if(response[0].medicate_id)
+                        {
+                            var count = 0
+                            this.clientProducts.forEach(element => {
+                                element.id == (response[0].id) ? this.clientProducts.splice(count,1) : count +=1;
+                            });
 
-                        this.$toaster.success('Successful Medicated.');
+                            this.$toaster.success('Successful Medicated.');
+
+                        }
                     })
             },
         }

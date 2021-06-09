@@ -22,6 +22,7 @@ class MedicateController extends Controller
     public function storeMedicateOrRebate(Request $request)
     {
         // MEDICATE x REBATE
+        // CHECKMEDICATE = TRUE -> MEDICATE
         if($request['ckeckMedicate'] == true)
         {
            //save new medicates
@@ -35,17 +36,16 @@ class MedicateController extends Controller
             return Medicate::getClientProduct($medicates->id);
         }
 
-        // Rebate
         //save new medicates
         $rebate = Rebate::create([
             'user_id'            => $request['userId'],
             'client_products_id' => $request['client_product_id'],
             'date'               => $request['date'],
-            'comment'            => $request['comment'],
+            'comment'            => $request['commentRebate'],
             'product_id'         => $request['productId']
         ]);
 
-        // return Medicate::getClientProduct($medicates->id);
+        return Rebate::getRebate($rebate->id);
     }
 
 
