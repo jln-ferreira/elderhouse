@@ -80,11 +80,36 @@ class Medicate extends Model
     {
         date_default_timezone_set ( 'America/Sao_Paulo' );
 
-        return DB::table('client_products')
-        ->select('client_products.id', 'medicates.id AS medicate_id')
-        ->leftJoin('medicates', 'client_products.id', '=', 'medicates.client_products_id')
+        return DB::table('medicates')
+        ->select(
+            'medicates.id  AS medicate_id',
+            'clients.name',
+            'clients.surname',
+            'products.name AS productName',
+            'measurements.name AS measurementName',
+            'client_products.quantity',
+            'medicates.date',
+            'client_products.time',
+            'medicates.comment AS medicateComment',
+            'users.name AS userName',
+            'rebates.id AS rebateId',
+            'rebates.comment AS rebateComment'
+        )
+        ->leftJoin('users', 'medicates.user_id', 'users.id')
+        ->leftJoin('client_products', 'medicates.client_products_id', 'client_products.id')
+        ->leftJoin('products', 'client_products.product_id', 'products.id')
+        ->leftJoin('measurements', 'client_products.measurement_id', 'measurements.id')
+        ->leftJoin('clients', 'client_products.client_id', 'clients.id')
+        ->leftJoin('rebates', 'client_products.id', 'rebates.client_products_id')
         ->where([['medicates.id', $id], ['client_products.active', 1]])
+        ->orderBy('medicates.date')
         ->get();
+
+        // return DB::table('client_products')
+        // ->select('client_products.id', 'medicates.id AS medicate_id')
+        // ->leftJoin('medicates', 'client_products.id', '=', 'medicates.client_products_id')
+        // ->where([['medicates.id', $id], ['client_products.active', 1]])
+        // ->get();
     }
 
 }

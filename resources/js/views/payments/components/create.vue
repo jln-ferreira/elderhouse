@@ -236,7 +236,7 @@
                         // console.log('respose', response[0]);
 
                         this.invoices.map((payment) => payment.invoice_id = response[0].id);
-                        this.$emit('update-payment', response[0])
+                        this.$emit('update-payment', response[0]);
                         this.$toaster.success('Successful paid');
                     })
             },

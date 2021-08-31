@@ -142,7 +142,6 @@
                     'id'               : '',
                     'userId'           : this.$userId,
                     'client_product_id': '',
-                    'date'             : new Date().toISOString().substr(0, 10),
                     'comment'          : '',
 
                     // for rebate
@@ -200,7 +199,6 @@
 
                         //updates variables
                         this.form.userId = this.$userId;                            //update user ID
-                        this.form.date   = new Date().toISOString().substr(0, 10);  //update date
 
                         //RETURN MEDICATES
                         if(response[0].medicate_id)
@@ -209,6 +207,10 @@
                             this.clientProducts.forEach(element => {
                                 element.id == (response[0].id) ? this.clientProducts.splice(count,1) : count +=1;
                             });
+
+                            // Send to medicates
+                            console.log(response[0]);
+                            // this.$emit('newMedicate', response[0]);
 
                             this.$toaster.success('Successful Medicated.');
                         }
@@ -219,7 +221,7 @@
                             findClientProduct.rebate_id = response[0].rebate_id;
                             findClientProduct.rebate_comment = response[0].comment;
 
-                            console.log(this.clientProducts);
+                            // console.log(this.clientProducts);
                             this.$toaster.success('Successful Rebate.');
                         }
                     })

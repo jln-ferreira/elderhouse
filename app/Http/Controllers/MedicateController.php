@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Medicate;
 use App\Rebate;
+use DateTime;
+
 use Illuminate\Http\Request;
 
 class MedicateController extends Controller
@@ -26,6 +28,10 @@ class MedicateController extends Controller
 
     public function storeMedicateOrRebate(Request $request)
     {
+        // get todays date
+        $date = new DateTime("now", new \DateTimeZone('America/Sao_Paulo') );
+        $date = $date->format('Y-m-d');
+
         // MEDICATE x REBATE
         // CHECKMEDICATE = TRUE -> MEDICATE
         if($request['ckeckMedicate'] == true)
@@ -34,7 +40,7 @@ class MedicateController extends Controller
             $medicates = Medicate::create([
                 'user_id'            => $request['userId'],
                 'client_products_id' => $request['client_product_id'],
-                'date'               => $request['date'],
+                'date'               => $date,
                 'comment'            => $request['comment']
             ]);
 
@@ -46,7 +52,7 @@ class MedicateController extends Controller
             [
                 'user_id'            => $request['userId'],
                 'client_products_id' => $request['client_product_id'],
-                'date'               => $request['date'],
+                'date'               => $date,
             ],
             [
                 'user_id'            => $request['userId'],

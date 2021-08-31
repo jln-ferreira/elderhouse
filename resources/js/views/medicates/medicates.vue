@@ -25,7 +25,7 @@
                     <div class="card">
                         <div class="card-header d-flex p-0">
                             <ul class="nav nav-pills ml-auto p-2">
-                                <li class="nav-item"><a class="nav-link active" href="#payments" data-toggle="tab"><i class="fas fa-tablets"></i> Medication Schedule</a></li>
+                                <li class="nav-item"><a class="nav-link active" href="#medicateSchedule" data-toggle="tab"><i class="fas fa-tablets"></i> Medication Schedule</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#medicates" data-toggle="tab"><i class="fas fa-hand-holding-medical"></i> Medicates</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#rebates" data-toggle="tab"><i class="fab fa-affiliatetheme"></i> Rebates</a></li>
                             </ul>
@@ -36,7 +36,7 @@
 
                                 <!-- --------=========== [ INDEX ] ===========-------- -->
                                 <!-- --------------------------------------------------- -->
-                                <div class="tab-pane active" id="payments">
+                                <div class="tab-pane active" id="medicateSchedule">
 
                                     <checkMedicates />
 
