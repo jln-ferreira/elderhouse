@@ -17,6 +17,11 @@ class RebateController extends Controller
         //
     }
 
+    public function getRebates()
+    {
+        return Rebate::getRebates();
+    }
+
     /**
      * Show the form for creating a new resource.
      *

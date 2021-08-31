@@ -27,6 +27,7 @@
                             <ul class="nav nav-pills ml-auto p-2">
                                 <li class="nav-item"><a class="nav-link active" href="#payments" data-toggle="tab"><i class="fas fa-tablets"></i> Medication Schedule</a></li>
                                 <li class="nav-item"><a class="nav-link" href="#medicates" data-toggle="tab"><i class="fas fa-hand-holding-medical"></i> Medicates</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#rebates" data-toggle="tab"><i class="fab fa-affiliatetheme"></i> Rebates</a></li>
                             </ul>
                         </div><!-- /.card-header -->
                         <div class="card-body">
@@ -43,7 +44,7 @@
                                 <!-- END CHECK MEDICATES -->
 
 
-                                <!-- --------=========== [ MEDICATES ] ===========-------- -->
+                                <!-- --------=========== [ SHOW MEDICATES ] ===========-------- -->
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="medicates">
 
@@ -51,6 +52,16 @@
 
                                 </div>
                                 <!-- END MEDICATES -->
+
+
+                                <!-- --------=========== [ SHOW REBATES ] ===========-------- -->
+                                <!-- --------------------------------------------------- -->
+                                <div class="tab-pane" id="rebates">
+
+                                    <rebates />
+
+                                </div>
+                                <!-- END REBATES -->
 
 
                             </div>
@@ -70,13 +81,15 @@
 <script>
     // imports
     import checkMedicates from './components/index'
-    import medicates from './components/show'
+    import medicates from './components/showMedicates'
+    import rebates from './components/showRebates'
 
 
     export default {
         components: {
             checkMedicates,
             medicates,
+            rebates,
         },
 
         data() {

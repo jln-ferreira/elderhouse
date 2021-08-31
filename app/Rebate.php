@@ -9,6 +9,35 @@ class Rebate extends Model
 {
     protected $guarded = [];
 
+    //Get medicates
+    public static function getRebates()
+    {
+        return DB::table('rebates')
+        ->select(
+            'rebates.id',
+            'clients.name',
+            'clients.surname',
+            'products.name AS productName',
+            'measurements.name AS measurementName',
+            'client_products.quantity',
+            'client_products.time',
+            'rebates.date',
+            'rebates.comment AS rebateComment',
+            'users.name AS userName',
+            'medicates.id AS medicateId',
+            'medicates.comment AS medicateComment'
+        )
+        ->leftJoin('users', 'rebates.user_id', 'users.id')
+        ->leftJoin('client_products', 'rebates.client_products_id', 'client_products.id')
+        ->leftJoin('products', 'client_products.product_id', 'products.id')
+        ->leftJoin('measurements', 'client_products.measurement_id', 'measurements.id')
+        ->leftJoin('clients', 'client_products.client_id', 'clients.id')
+        ->leftJoin('medicates', 'client_products.id', 'medicates.client_products_id')
+        ->where([['rebates.active', 1]])
+        ->orderBy('rebates.date')
+        ->get();
+    }
+
     // GET THE REBATE
     public static function getRebate($id)
     {

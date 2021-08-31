@@ -24,7 +24,7 @@
                     <!-- TABLE BOOTSTRAP VUE -->
                     <b-table striped hover :items="this.clientProducts" :fields="fields" :filter="filter">
                         <template #cell(clientName)="data">
-                            <b>{{ data.item.name + " " + data.item.surname }}</b>
+                            <b>{{ data.item.name + " " + data.item.surname }} <i v-show="data.item.rebate_id" type="rebate" class="fas fa-exclamation-triangle text-danger"></i></b>
                         </template>
                         <template #cell(actions)="data">
                             <button type="edit" class="btn btn-success" @click="checkMedicates($event, data.item.id)" data-toggle="modal" data-target="#modal"><i type="edit" class="fas fa-user-check"></i></button>
@@ -179,11 +179,16 @@
         methods: {
             checkMedicates(event, id)
             {
-                event.target.getAttribute('type') == "edit" ? this.form.ckeckMedicate = true : this.form.ckeckMedicate = false;
-
                 //FIND MEDICATES WAS CLICKED
                 this.clickedMedicate = this.clientProducts.find(element => element.id == id);
                 this.form.client_product_id = this.clickedMedicate.id;
+                this.form.productId = this.clickedMedicate.rebate_product_id;
+                this.form.commentRebate = (this.clickedMedicate.rebate_comment == null) ? "" : this.clickedMedicate.rebate_comment;
+
+                // Find if MEDICATE  X REBATE
+                event.target.getAttribute('type') == "edit" ? this.form.ckeckMedicate = true : this.form.ckeckMedicate = false;
+
+
             },
 
             // ------MODAL------
@@ -192,7 +197,6 @@
                 this.form
                     .post('/medicatesOrRebate')
                     .then(response => {
-                        console.log(response);
 
                         //updates variables
                         this.form.userId = this.$userId;                            //update user ID
@@ -207,7 +211,16 @@
                             });
 
                             this.$toaster.success('Successful Medicated.');
+                        }
+                        //REBATE
+                        else{
+                            let findClientProduct = this.clientProducts.find(element => element.id == response[0].client_product_id);
+                            findClientProduct.rebate_product_id = response[0].product_id;
+                            findClientProduct.rebate_id = response[0].rebate_id;
+                            findClientProduct.rebate_comment = response[0].comment;
 
+                            console.log(this.clientProducts);
+                            this.$toaster.success('Successful Rebate.');
                         }
                     })
             },

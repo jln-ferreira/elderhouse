@@ -13,6 +13,11 @@ class MedicateController extends Controller
         return Medicate::getClientProducts();
     }
 
+    public function getMedicates()
+    {
+        return Medicate::getMedicates();
+    }
+
 
     public function store(Request $request)
     {
@@ -36,14 +41,23 @@ class MedicateController extends Controller
             return Medicate::getClientProduct($medicates->id);
         }
 
-        //save new medicates
-        $rebate = Rebate::create([
-            'user_id'            => $request['userId'],
-            'client_products_id' => $request['client_product_id'],
-            'date'               => $request['date'],
-            'comment'            => $request['commentRebate'],
-            'product_id'         => $request['productId']
-        ]);
+        //save new Rebate
+        $rebate = Rebate::updateOrCreate(
+            [
+                'user_id'            => $request['userId'],
+                'client_products_id' => $request['client_product_id'],
+                'date'               => $request['date'],
+            ],
+            [
+                'user_id'            => $request['userId'],
+                'client_products_id' => $request['client_product_id'],
+                'date'               => $request['date'],
+                'comment'            => $request['commentRebate'],
+                'product_id'         => $request['productId']
+            ]
+        );
+
+        $rebate->save();
 
         return Rebate::getRebate($rebate->id);
     }

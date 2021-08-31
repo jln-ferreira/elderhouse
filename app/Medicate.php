@@ -9,6 +9,35 @@ class Medicate extends Model
 {
     protected $guarded = [];
 
+    //Get medicates
+    public static function getMedicates()
+    {
+        return DB::table('medicates')
+        ->select(
+            'medicates.id',
+            'clients.name',
+            'clients.surname',
+            'products.name AS productName',
+            'measurements.name AS measurementName',
+            'client_products.quantity',
+            'medicates.date',
+            'client_products.time',
+            'medicates.comment AS medicateComment',
+            'users.name AS userName',
+            'rebates.id AS rebateId',
+            'rebates.comment AS rebateComment'
+        )
+        ->leftJoin('users', 'medicates.user_id', 'users.id')
+        ->leftJoin('client_products', 'medicates.client_products_id', 'client_products.id')
+        ->leftJoin('products', 'client_products.product_id', 'products.id')
+        ->leftJoin('measurements', 'client_products.measurement_id', 'measurements.id')
+        ->leftJoin('clients', 'client_products.client_id', 'clients.id')
+        ->leftJoin('rebates', 'client_products.id', 'rebates.client_products_id')
+        ->where([['medicates.active', 1]])
+        ->orderBy('medicates.date')
+        ->get();
+    }
+
 
     // GET ALL Client_Products of today
     public static function getClientProducts()
@@ -30,7 +59,10 @@ class Medicate extends Model
             'client_products.time',
             'client_products.comment',
             'medicates.id AS medicate_id',
-            'rebates.id AS rebate_id'
+            'rebates.id AS rebate_id',
+            'rebates.user_id AS rebate_user_id',
+            'rebates.product_id AS rebate_product_id',
+            'rebates.comment AS rebate_comment'
         )
         ->leftJoin('products', 'client_products.product_id', '=', 'products.id')
         ->leftJoin('clients', 'client_products.client_id', '=', 'clients.id')
