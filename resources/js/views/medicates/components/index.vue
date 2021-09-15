@@ -113,7 +113,6 @@
 
 <script>
     export default {
-
         data() {
 
             return {
@@ -161,7 +160,7 @@
         created() {
             // Fetch all clientProducts
             axios.get('/scheduleMedicates').then(response => {
-                console.log(response);
+                // console.log(response);
                 this.clientProducts = response.data
             });
 
@@ -205,12 +204,12 @@
                         {
                             var count = 0
                             this.clientProducts.forEach(element => {
-                                element.id == (response[0].id) ? this.clientProducts.splice(count,1) : count +=1;
+                                element.id == (response[0].client_products_id) ? this.clientProducts.splice(count,1) : count +=1;
                             });
 
                             // Send to medicates
-                            console.log(response[0]);
-                            // this.$emit('newMedicate', response[0]);
+                            // console.log(response[0]);
+                            this.$emit('new-Medicate', response[0]);
 
                             this.$toaster.success('Successful Medicated.');
                         }

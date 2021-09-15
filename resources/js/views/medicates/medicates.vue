@@ -38,7 +38,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane active" id="medicateSchedule">
 
-                                    <checkMedicates />
+                                    <checkMedicates @new-Medicate="newMedicate"/>
 
                                 </div>
                                 <!-- END CHECK MEDICATES -->
@@ -48,7 +48,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="medicates">
 
-                                    <medicates />
+                                    <medicates :madicateUp='madicateUp' />
 
                                 </div>
                                 <!-- END MEDICATES -->
@@ -92,11 +92,17 @@
             rebates,
         },
 
-        data() {
-
-            return {
+        data(){
+            return{
+                madicateUp : '',
             }
-        }
+        },
+        methods:{
+            newMedicate(e){
+            this.madicateUp = e
+            console.log('medicate', e);
+            },
+        },
     }
 </script>
 

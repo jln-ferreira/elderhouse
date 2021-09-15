@@ -83,6 +83,7 @@ class Medicate extends Model
         return DB::table('medicates')
         ->select(
             'medicates.id  AS medicate_id',
+            'client_products.id as client_products_id',
             'clients.name',
             'clients.surname',
             'products.name AS productName',

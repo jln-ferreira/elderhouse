@@ -30,7 +30,6 @@
                             <input type="number" class="form-control" v-model="data.item.quantity" min="1" max="999" :style="dangerQuantity(data.item.quantity)" required>
                         </template> -->
                     </b-table>
-
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -43,7 +42,9 @@
 
 <script>
     export default {
-
+        props:{
+            madicateUp: "", //after paid the invoice
+        },
         data() {
 
             return {
@@ -73,21 +74,31 @@
             // Fetch all inventory
             axios.get('/getMedicates').then(response => {
                 this.medicates = response.data
-                console.log(this.medicates);
-                });
+                // console.log(this.medicates);
+            });
         },
 
 
         computed: {
             filteredList()
             {
+                //CREATE
+                //WHEN CREATE THE INVOICE, THIS PAGE MUST KNOW TO CHANGE THE PAYMENT STATUS
+                if(this.madicateUp != '') {
+                    this.madicateUp.id = this.madicateUp.medicate_id; //create new attr id to insert into table
+                    this.medicates.push(this.madicateUp);
+                }
+
                 if(this.medicatesFilter != ''){                                                         //FILTER BY medicates
                     return this.medicates.filter(eachVal => {
                         return eachVal.medicates.some(({ medicate_id }) => medicate_id == this.medicatesFilter)
                     })
                 }
                 else return this.medicates;                                                               //ALL MEDICATES
+
+
             },
+
         },
 
 
