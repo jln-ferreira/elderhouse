@@ -43,7 +43,9 @@
 
 <script>
     export default {
-
+        props:{
+            rebateUp: "", //after paid the invoice
+        },
         data() {
 
             return {
@@ -82,6 +84,12 @@
         computed: {
             filteredList()
             {
+                // Add new rebate here
+                if(this.rebateUp != '') {
+                    let findRebate = this.rebates.find(element => element.id == this.rebateUp.id );
+                    findRebate.rebateComment = this.rebateUp.rebateComment
+                    // this.rebates.push(this.rebateUp);
+                }
                 if(this.rebatesFilter != ''){                                                         //FILTER BY rebates
                     return this.rebates.filter(eachVal => {
                         return eachVal.rebates.some(({ medicate_id }) => medicate_id == this.rebatesFilter)

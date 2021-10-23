@@ -195,6 +195,8 @@
                 this.form
                     .post('/medicatesOrRebate')
                     .then(response => {
+                        console.log(response[0] )
+
 
                         //updates variables
                         this.form.userId = this.$userId;                            //update user ID
@@ -215,12 +217,12 @@
                         }
                         //REBATE
                         else{
-                            let findClientProduct = this.clientProducts.find(element => element.id == response[0].client_product_id);
-                            findClientProduct.rebate_product_id = response[0].product_id;
-                            findClientProduct.rebate_id = response[0].rebate_id;
-                            findClientProduct.rebate_comment = response[0].comment;
+                            let findClientProduct = this.clientProducts.find(element => element.id == response[0].clientProductId );
+                            findClientProduct.rebate_id = response[0].id;
+                            findClientProduct.rebate_comment = response[0].rebateComment;
 
-                            // console.log(this.clientProducts);
+                            // Send to Rebates
+                            this.$emit('new-Rebate', response[0]);
                             this.$toaster.success('Successful Rebate.');
                         }
                     })

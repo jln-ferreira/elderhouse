@@ -38,7 +38,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane active" id="medicateSchedule">
 
-                                    <checkMedicates @new-Medicate="newMedicate"/>
+                                    <checkMedicates @new-Medicate="newMedicate" @new-Rebate="newRebate"/>
 
                                 </div>
                                 <!-- END CHECK MEDICATES -->
@@ -58,7 +58,7 @@
                                 <!-- --------------------------------------------------- -->
                                 <div class="tab-pane" id="rebates">
 
-                                    <rebates />
+                                    <rebates :rebateUp='rebateUp'/>
 
                                 </div>
                                 <!-- END REBATES -->
@@ -95,12 +95,17 @@
         data(){
             return{
                 madicateUp : '',
+                rebateUp   : '',
             }
         },
         methods:{
             newMedicate(e){
-            this.madicateUp = e
-            console.log('medicate', e);
+                this.madicateUp = e
+                console.log('medicate', e);
+            },
+            newRebate(e){
+                this.rebateUp = e
+                console.log('rebate', e);
             },
         },
     }

@@ -82,8 +82,7 @@
         computed: {
             filteredList()
             {
-                //CREATE
-                //WHEN CREATE THE INVOICE, THIS PAGE MUST KNOW TO CHANGE THE PAYMENT STATUS
+                //add new medication lline here
                 if(this.madicateUp != '') {
                     this.madicateUp.id = this.madicateUp.medicate_id; //create new attr id to insert into table
                     this.medicates.push(this.madicateUp);

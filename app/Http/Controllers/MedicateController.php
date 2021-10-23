@@ -57,7 +57,7 @@ class MedicateController extends Controller
             [
                 'user_id'            => $request['userId'],
                 'client_products_id' => $request['client_product_id'],
-                'date'               => $request['date'],
+                'date'               => $date,
                 'comment'            => $request['commentRebate'],
                 'product_id'         => $request['productId']
             ]
